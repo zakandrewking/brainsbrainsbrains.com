@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+
 export default function Home() {
   return (
     <div className="flex flex-col gap-2 min-h-screen">
@@ -13,9 +15,15 @@ export default function Home() {
         />
         Reach me on:
         <div className="flex flex-row gap-3">
-          <a href="https://github.com/zakandrewking">GitHub</a>
-          <a href="https://twitter.com/brainsbrainsbr">Twitter</a>
-          <a href="https://www.linkedin.com/in/zakandrewking/">LinkedIn</a>
+          <Button variant="link" asChild>
+            <a href="https://github.com/zakandrewking">GitHub</a>
+          </Button>
+          <Button variant="link" asChild>
+            <a href="https://twitter.com/brainsbrainsbr">Twitter</a>
+          </Button>
+          <Button variant="link" asChild>
+            <a href="https://www.linkedin.com/in/zakandrewking/">LinkedIn</a>
+          </Button>
         </div>
       </header>
       <main className="p-10 flex flex-col gap-4">{/* <div>Posts</div> */}</main>
