@@ -5,11 +5,13 @@ import Ink from "./ink";
 export default function Paper({ children }: { children?: React.ReactNode }) {
   return (
     <div className="w-full relative">
+      <div className="shadow-md w-[101%] left-[-0.5%] h-[101%] top-[-0.5%] absolute rounded-sm"></div>
+
       <div
-        className="shadow-xl w-[101%] left-[-0.5%] h-[101%] top-[-0.5%] absolute border-[#f3f3f3] dark:border-[#3d3d3d] border-8 rounded-sm"
+        className="w-[101%] left-[-0.5%] h-[101%] top-[-0.5%] absolute border-[#f3f3f3] dark:border-[#3d3d3d] border-8 rounded-sm"
         style={{ filter: "url(#rough-paper-outline)" }}
       ></div>
-      <div className="w-full h-full absolute bg-gray-100 shadow-sm overflow-hidden">
+      <div className="w-full h-full absolute bg-gray-100 overflow-hidden">
         <div className="paper-filter w-full h-full top-0 left-0"></div>
       </div>
 
