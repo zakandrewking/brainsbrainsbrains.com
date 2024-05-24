@@ -1,7 +1,13 @@
+import { Metadata } from "next";
+
 import Paper from "@/components/paper";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { H1, H3, P } from "@/components/ui/typography";
+import { Card } from "@/components/ui/card";
+
+export const metadata: Metadata = {
+  title: "Zak King",
+  description: "The personal website of Zak King",
+};
 
 export default function Home() {
   return (
@@ -25,9 +31,7 @@ export default function Home() {
               {/* TODO wrap */}
               <div className="flex flex-row flex-wrap gap-3 mx-3 justify-center">
                 <Button variant="link" asChild>
-                  <span>
-                    <a href="https://github.com/zakandrewking">GitHub</a>
-                  </span>
+                  <a href="https://github.com/zakandrewking">GitHub</a>
                 </Button>
                 <Button variant="link" asChild>
                   <a href="https://twitter.com/brainsbrainsbr">Twitter</a>
@@ -48,7 +52,7 @@ export default function Home() {
             I am VP of Engineering at{" "}
             <a
               href="https://delfina.com"
-              className="underline underline-offset-4 fg-primary"
+              className="fg-primary"
             >
               Delfina
             </a>
@@ -73,6 +77,19 @@ export default function Home() {
           logic.
         </a>
       </main> */}
+      <footer className="flex flex-col mt-20 text-muted-foreground">
+        <div>Credits:</div>
+        <a
+          href="https://www.flaticon.com/free-icons/mountain"
+          title="mountain icons"
+        >
+          Mountain icons created by Freepik - Flaticon
+        </a>
+        <a href="https://heredragonsabound.blogspot.com/2020/02/creating-pencil-effect-in-svg.html">
+          Pencil effects
+        </a>
+        <a href="https://codepen.io/Chokcoco/full/OJWLXPY">Paper texture</a>
+      </footer>
     </div>
   );
 }
