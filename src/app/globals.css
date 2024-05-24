@@ -11,12 +11,18 @@
     opacity: 0.7;
   }
 
+  p {
+    &:not(:last-child) {
+      margin-bottom: 15px;
+    }
+  }
+
   :root {
     --background: 0 0% 99%;
-    --foreground: 0 0% 2%;
+    --foreground: 0 0% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 34.9%;
+    --card-foreground: 0 0% 15%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
@@ -46,13 +52,13 @@
   @media (prefers-color-scheme: dark) {
     :root {
       --background: 216 6% 15%;
-      --foreground: 210 40% 99%;
+      --foreground: 0 0% 99%;
 
       --card: 294 6% 17%%;
-      --card-foreground: 294 40% 98%;
+      --card-foreground: 0 0% 99%;
 
       --popover: 222.2 84% 4.9%;
-      --popover-foreground: 210 40% 98%;
+      --popover-foreground: 0 0% 99%;
 
       --primary: 210 40% 98%;
       --primary-foreground: 222.2 47.4% 11.2%;

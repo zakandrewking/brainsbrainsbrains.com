@@ -1,14 +1,12 @@
 import "./paper.css";
 
-import Ink from "./ink";
-
 export default function Paper({ children }: { children?: React.ReactNode }) {
   return (
     <div className="w-full relative">
-      <div className="shadow-md w-[101%] left-[-0.5%] h-[101%] top-[-0.5%] absolute rounded-sm"></div>
+      <div className="shadow-md w-[calc(100%+2px)] left-[-1px] h-[calc(100%+2px)] top-[-1px] absolute rounded-sm"></div>
 
       <div
-        className="w-[101%] left-[-0.5%] h-[101%] top-[-0.5%] absolute border-[#f3f3f3] dark:border-[#3d3d3d] border-8 rounded-sm"
+        className="w-[calc(100%+4px)] left-[-2px] h-[calc(100%+4px)] top-[-1px] absolute border-[#f3f3f3] dark:border-[#3d3d3d] border-8 rounded-sm"
         style={{ filter: "url(#rough-paper-outline)" }}
       ></div>
       <div className="w-full h-full absolute bg-gray-100 overflow-hidden">
@@ -17,7 +15,7 @@ export default function Paper({ children }: { children?: React.ReactNode }) {
 
       <div
         className="w-full h-full relative p-6"
-        style={{ filter: "url(#pencil-texture-5)" }}
+        style={{ filter: "url(#pencil-texture)" }}
       >
         {children}
       </div>
@@ -78,7 +76,69 @@ export default function Paper({ children }: { children?: React.ReactNode }) {
           </feDiffuseLighting>
         </filter>
       </svg>
-      <Ink />
+
+      <svg id="svg" width="0" height="0" viewBox="-500 -500 1000 1000">
+        <defs>
+          <filter
+            x="-20%"
+            y="-20%"
+            width="140%"
+            height="140%"
+            filterUnits="objectBoundingBox"
+            id="pencil-texture"
+          >
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="2"
+              numOctaves="4"
+              stitchTiles="stitch"
+              result="t1"
+            ></feTurbulence>
+            <feColorMatrix
+              type="matrix"
+              values="0 0 0 0 0, 0 0 0 0 0, 0 0 0 0 0, 0 0 0 -1.5 1.5"
+              result="t2"
+            ></feColorMatrix>
+            <feComposite
+              operator="in"
+              in2="t2"
+              in="SourceGraphic"
+              result="SourceTextured"
+            ></feComposite>
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.05"
+              numOctaves="3"
+              seed="1"
+              result="f1"
+            ></feTurbulence>
+            <feDisplacementMap
+              xChannelSelector="R"
+              yChannelSelector="G"
+              scale="2"
+              in="SourceTextured"
+              in2="f1"
+              result="f4"
+            ></feDisplacementMap>
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.4"
+              numOctaves="4"
+              seed="100"
+              result="f3"
+            ></feTurbulence>
+            <feDisplacementMap
+              xChannelSelector="R"
+              yChannelSelector="G"
+              scale="2"
+              in="SourceTextured"
+              in2="f3"
+              result="f6"
+            ></feDisplacementMap>
+            <feBlend mode="multiply" in="f4" in2="f6" result="out2"></feBlend>
+          </filter>
+        </defs>
+      </svg>
     </div>
   );
 }
