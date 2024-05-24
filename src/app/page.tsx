@@ -61,8 +61,11 @@ export default function Home() {
                   </a>
                   . Previously I led DevOps at{" "}
                   <a href="https://www.amyris.com">Amyris</a>, and before that
-                  you might have found me modeling microorganisms at UC San
-                  Diego or haunting{" "}
+                  you might have found me{" "}
+                  <a href="https://scholar.google.com/citations?user=ESLgsdUAAAAJ&hl=en">
+                    modeling microorganisms
+                  </a>{" "}
+                  at UC San Diego or haunting{" "}
                   <a href="https://www.google.com/maps/@42.2783983,-83.7414089,3a,25.4y,88.35h,92.52t/data=!3m8!1e1!3m6!1sAF1QipPP8EKHRsoQYKOEzgkySqXr3YwlnjYMGCXC1nAX!2e10!3e11!6shttps:%2F%2Flh5.googleusercontent.com%2Fp%2FAF1QipPP8EKHRsoQYKOEzgkySqXr3YwlnjYMGCXC1nAX%3Dw203-h100-k-no-pi-0-ya315.63397-ro-0-fo100!7i8704!8i4352?entry=ttu">
                     Comet Coffee
                   </a>{" "}
