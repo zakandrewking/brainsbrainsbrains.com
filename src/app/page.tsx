@@ -16,20 +16,20 @@ export default function Home() {
         <Paper>
           <div className="flex flex-col gap-2 items-center">
             <div className="flex flex-col gap-2 items-center">
-              <div className="underline underline-offset-4">
+              <div className="underline underline-offset-4 text-lg">
                 The personal website of
               </div>
-              <span className="font-bold text-2xl">Zak King</span>
+              <span className="font-bold text-3xl">Zak King</span>
             </div>
             <img
               src="/zak.png"
               alt="Pic of Zak"
               className="rounded-lg w-48 my-3 border-2"
             />
-            <span>Find me here:</span>
+            <span className="text-lg">Find me here:</span>
             <Card>
               {/* TODO wrap */}
-              <div className="flex flex-row flex-wrap gap-3 mx-3 justify-center">
+              <div className="flex flex-row flex-wrap gap-3 mx-3 justify-center text-lg">
                 <Button variant="link" asChild>
                   <a href="https://github.com/zakandrewking">GitHub</a>
                 </Button>

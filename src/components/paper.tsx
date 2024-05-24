@@ -6,7 +6,7 @@ export default function Paper({ children }: { children?: React.ReactNode }) {
   return (
     <div className="w-full relative">
       <div
-        className="shadow-xl w-[101%] left-[-0.5%] h-[101%] top-[-0.5%] absolute border-[#efefef] dark:border-[#404040] border-8 rounded-sm"
+        className="shadow-xl w-[101%] left-[-0.5%] h-[101%] top-[-0.5%] absolute border-[#f3f3f3] dark:border-[#3d3d3d] border-8 rounded-sm"
         style={{ filter: "url(#rough-paper-outline)" }}
       ></div>
       <div className="w-full h-full absolute bg-gray-100 shadow-sm overflow-hidden">
@@ -28,13 +28,6 @@ export default function Paper({ children }: { children?: React.ReactNode }) {
           filterUnits="objectBoundingBox"
           id="rough-paper-outline"
         >
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="2"
-            numOctaves="4"
-            stitchTiles="stitch"
-            result="t1"
-          ></feTurbulence>
           <feComposite
             operator="in"
             in="SourceGraphic"
@@ -50,7 +43,7 @@ export default function Paper({ children }: { children?: React.ReactNode }) {
           <feDisplacementMap
             xChannelSelector="R"
             yChannelSelector="G"
-            scale="4"
+            scale="2"
             in="SourceTextured"
             in2="f1"
             result="f4"
