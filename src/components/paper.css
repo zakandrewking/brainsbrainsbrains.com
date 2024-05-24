@@ -1,14 +1,9 @@
-.paper {
-  filter: url(#roughpaper);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+.paper-filter {
+  filter: url(#rough-paper);
 }
 
 @media (prefers-color-scheme: dark) {
-  .paper {
-    filter: url(#roughpaper-dark);
+  .paper-filter {
+    filter: url(#rough-paper-dark);
   }
 }

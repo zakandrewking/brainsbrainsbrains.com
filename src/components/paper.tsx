@@ -1,39 +1,89 @@
 import "./paper.css";
 
+import Ink from "./ink";
+
 export default function Paper({ children }: { children?: React.ReactNode }) {
   return (
-    <div className="w-full rounded-lg shadow-lg relative overflow-hidden">
-      <div className="paper"></div>
+    <div className="w-full relative">
+      <div
+        className="shadow-xl w-[101%] left-[-0.5%] h-[101%] top-[-0.5%] absolute border-[#efefef] dark:border-[#404040] border-8 rounded-sm"
+        style={{ filter: "url(#rough-paper-outline)" }}
+      ></div>
+      <div className="w-full h-full absolute bg-gray-100 shadow-sm overflow-hidden">
+        <div className="paper-filter w-full h-full top-0 left-0"></div>
+      </div>
 
-      <div className="relative p-6">{children}</div>
-
+      <div
+        className="w-full h-full relative p-6"
+        style={{ filter: "url(#pencil-texture-5)" }}
+      >
+        {children}
+      </div>
       <svg className="w-0 h-0">
-        <filter id="roughpaper">
+        <filter
+          x="-20%"
+          y="-20%"
+          width="140%"
+          height="140%"
+          filterUnits="objectBoundingBox"
+          id="rough-paper-outline"
+        >
           <feTurbulence
             type="fractalNoise"
-            baseFrequency="0.04"
-            result="noise"
-            numOctaves="5"
-          />
-          <feDiffuseLighting in="noise" lighting-color="#fff" surfaceScale="2">
-            <feDistantLight azimuth="45" elevation="60" />
-          </feDiffuseLighting>
+            baseFrequency="2"
+            numOctaves="4"
+            stitchTiles="stitch"
+            result="t1"
+          ></feTurbulence>
+          <feComposite
+            operator="in"
+            in="SourceGraphic"
+            result="SourceTextured"
+          ></feComposite>
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.05"
+            numOctaves="3"
+            seed="1"
+            result="f1"
+          ></feTurbulence>
+          <feDisplacementMap
+            xChannelSelector="R"
+            yChannelSelector="G"
+            scale="4"
+            in="SourceTextured"
+            in2="f1"
+            result="f4"
+          ></feDisplacementMap>
         </filter>
       </svg>
-
       <svg className="w-0 h-0">
-        <filter id="roughpaper-dark">
+        <filter id="rough-paper">
           <feTurbulence
             type="fractalNoise"
             baseFrequency="0.06"
             result="noise"
             numOctaves="4"
           />
-          <feDiffuseLighting in="noise" lighting-color="#444" surfaceScale="2">
-            <feDistantLight azimuth="45" elevation="50" />
+          <feDiffuseLighting in="noise" lightingColor="#fff" surfaceScale="2">
+            <feDistantLight azimuth="45" elevation="60" />
           </feDiffuseLighting>
         </filter>
       </svg>
+      <svg className="w-0 h-0">
+        <filter id="rough-paper-dark">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.06"
+            result="noise"
+            numOctaves="4"
+          />
+          <feDiffuseLighting in="noise" lightingColor="#666" surfaceScale="1">
+            <feDistantLight azimuth="45" elevation="20" />
+          </feDiffuseLighting>
+        </filter>
+      </svg>
+      <Ink />
     </div>
   );
 }

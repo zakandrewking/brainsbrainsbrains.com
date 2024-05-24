@@ -5,25 +5,29 @@ import { H1, H3, P } from "@/components/ui/typography";
 
 export default function Home() {
   return (
-    <div className="flex flex-col gap-2 min-h-screen pb-10">
-      <header className="p-10">
+    <div className="flex flex-col gap-2 min-h-screen pb-10 items-center">
+      <header className="p-10 max-w-3xl">
         <Paper>
           <div className="flex flex-col gap-2 items-center">
             <div className="flex flex-col gap-2 items-center">
-              The personal website of
-              <span className="font-bold text-lg">Zak King</span>
+              <div className="underline underline-offset-4">
+                The personal website of
+              </div>
+              <span className="font-bold text-2xl">Zak King</span>
             </div>
             <img
               src="/zak.png"
               alt="Pic of Zak"
-              className="rounded-lg h-48 w-48 my-3"
+              className="rounded-lg w-48 my-3 border-2"
             />
-            Find me here:
+            <span>Find me here:</span>
             <Card>
               {/* TODO wrap */}
               <div className="flex flex-row flex-wrap gap-3 mx-3 justify-center">
                 <Button variant="link" asChild>
-                  <a href="https://github.com/zakandrewking">GitHub</a>
+                  <span>
+                    <a href="https://github.com/zakandrewking">GitHub</a>
+                  </span>
                 </Button>
                 <Button variant="link" asChild>
                   <a href="https://twitter.com/brainsbrainsbr">Twitter</a>

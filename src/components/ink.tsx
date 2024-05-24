@@ -1,0 +1,68 @@
+export default function Ink() {
+  return (
+    <div>
+      <svg id="svg" width="0" height="0" viewBox="-500 -500 1000 1000">
+        <defs>
+          <filter
+            x="-20%"
+            y="-20%"
+            width="140%"
+            height="140%"
+            filterUnits="objectBoundingBox"
+            id="pencil-texture-5"
+          >
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="2"
+              numOctaves="4"
+              stitchTiles="stitch"
+              result="t1"
+            ></feTurbulence>
+            <feColorMatrix
+              type="matrix"
+              values="0 0 0 0 0, 0 0 0 0 0, 0 0 0 0 0, 0 0 0 -1.5 1.5"
+              result="t2"
+            ></feColorMatrix>
+            <feComposite
+              operator="in"
+              in2="t2"
+              in="SourceGraphic"
+              result="SourceTextured"
+            ></feComposite>
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.05"
+              numOctaves="3"
+              seed="1"
+              result="f1"
+            ></feTurbulence>
+            <feDisplacementMap
+              xChannelSelector="R"
+              yChannelSelector="G"
+              scale="4"
+              in="SourceTextured"
+              in2="f1"
+              result="f4"
+            ></feDisplacementMap>
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.4"
+              numOctaves="4"
+              seed="100"
+              result="f3"
+            ></feTurbulence>
+            <feDisplacementMap
+              xChannelSelector="R"
+              yChannelSelector="G"
+              scale="2"
+              in="SourceTextured"
+              in2="f3"
+              result="f6"
+            ></feDisplacementMap>
+            <feBlend mode="multiply" in="f4" in2="f6" result="out2"></feBlend>
+          </filter>
+        </defs>
+      </svg>
+    </div>
+  );
+}
