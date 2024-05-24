@@ -17,6 +17,12 @@
     }
   }
 
+  .pencil {
+    stroke: hsl(var(--foreground));
+    fill: none;
+    stroke-width: 0.2;
+  }
+
   :root {
     --background: 0 0% 99%;
     --foreground: 0 0% 15%;

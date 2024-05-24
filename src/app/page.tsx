@@ -2,7 +2,13 @@ import { Metadata } from "next";
 
 import Paper from "@/components/paper";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Zak King",
@@ -53,7 +59,12 @@ export default function Home() {
                 <CardTitle>About me</CardTitle>
               </CardHeader>
               <CardContent>
-                <p>
+                <p
+                  style={{
+                    transform:
+                      "rotate(-0.6deg) translate(0.2rem, -0.3rem) skewX(-2deg)",
+                  }}
+                >
                   <span className="mr-2 text-2xl">🛜</span> I am VP of
                   Engineering at{" "}
                   <a href="https://delfina.com" className="fg-primary">
@@ -72,7 +83,12 @@ export default function Home() {
                   between classes at UofM (Go Blue!).
                 </p>
 
-                <p>
+                <p
+                  style={{
+                    transform:
+                      "rotate(-0.2deg) translate(0.6rem, -0.3rem) skewX(-3deg)",
+                  }}
+                >
                   <span className="mr-2 text-2xl">❤️</span> Occasional fan of
                   skeuomorphism; real fan of{" "}
                   <a href="https://supabase.com/">Supabase</a> and Dan Dennett's{" "}
@@ -82,13 +98,36 @@ export default function Home() {
                   . Aplogies for my bad handrighting and bad speling.
                 </p>
 
-                <p>
+                <p
+                  style={{
+                    transform:
+                      "rotate(-0.5deg) translate(0.5rem, -0.3rem) skewX(-2deg)",
+                  }}
+                >
                   <span className="mr-2 text-2xl">📍</span> I live in San Diego
                   with the best three people on planet Earth (two of them are
                   still very small).
                 </p>
               </CardContent>
             </Card>
+            <div className="mt-2">
+              <svg height="100" width="100" xmlns="http://www.w3.org/2000/svg">
+                <polygon
+                  points="20,80 50,30 80,80"
+                  className="pencil"
+                  style={{ strokeWidth: 0.3 }}
+                />
+                <circle cx="50" cy="30" r="30" className="pencil" />
+                <circle cx="50" cy="30" r="19" className="pencil" />
+                <circle cx="50" cy="30" r="10" className="pencil" />
+                <circle cx="50" cy="30" r="5" className="pencil" />
+                <path
+                  d="M 20 80 Q 50 90 80 80"
+                  className="pencil"
+                  style={{ strokeWidth: 0.3 }}
+                ></path>
+              </svg>
+            </div>
           </div>
         </Paper>
       </header>

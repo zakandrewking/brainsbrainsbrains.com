@@ -14,7 +14,7 @@ export default function Paper({ children }: { children?: React.ReactNode }) {
       </div>
 
       <div
-        className="w-full h-full relative p-6"
+        className="w-full h-full relative p-6 pb-2"
         style={{ filter: "url(#pencil-texture)" }}
       >
         {children}
