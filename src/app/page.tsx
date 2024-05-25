@@ -65,7 +65,7 @@ export default function Home() {
                       "rotate(-0.6deg) translate(0.2rem, -0.3rem) skewX(-2deg)",
                   }}
                 >
-                  <span className="mr-2 text-2xl">🛜</span> I am VP of
+                  <span className="mr-2 text-2xl">📱</span> I am VP of
                   Engineering at{" "}
                   <a href="https://delfina.com" className="fg-primary">
                     Delfina
