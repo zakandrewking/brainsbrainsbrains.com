@@ -6,10 +6,11 @@ export default function Paper({ children }: { children?: React.ReactNode }) {
       <div className="shadow-md w-[calc(100%+2px)] left-[-1px] h-[calc(100%+2px)] top-[-1px] absolute rounded-sm"></div>
 
       <div
-        className="w-[calc(100%+4px)] left-[-2px] h-[calc(100%+4px)] top-[-1px] absolute border-[#f3f3f3] dark:border-[#3d3d3d] border-8 rounded-sm"
+        className="w-[calc(100%+4px)] left-[-2px] h-[calc(100%+4px)] top-[-2px] absolute border-[#eeeae4] dark:border-[#3d3d3d] border-8 rounded-sm"
         style={{ filter: "url(#rough-paper-outline)" }}
       ></div>
-      <div className="w-full h-full absolute bg-gray-100 overflow-hidden">
+
+      <div className="w-full h-full absolute overflow-hidden">
         <div className="paper-filter w-full h-full top-0 left-0"></div>
       </div>
 
@@ -19,6 +20,7 @@ export default function Paper({ children }: { children?: React.ReactNode }) {
       >
         {children}
       </div>
+
       <svg className="w-0 h-0">
         <filter
           x="-20%"
@@ -50,19 +52,25 @@ export default function Paper({ children }: { children?: React.ReactNode }) {
           ></feDisplacementMap>
         </filter>
       </svg>
+
       <svg className="w-0 h-0">
         <filter id="rough-paper">
           <feTurbulence
             type="fractalNoise"
-            baseFrequency="0.06"
+            baseFrequency="0.12"
             result="noise"
             numOctaves="4"
           />
-          <feDiffuseLighting in="noise" lightingColor="#fff" surfaceScale="2">
-            <feDistantLight azimuth="45" elevation="60" />
+          <feDiffuseLighting
+            in="noise"
+            lightingColor="#f9f5f0"
+            surfaceScale="2"
+          >
+            <feDistantLight azimuth="90" elevation="65" />
           </feDiffuseLighting>
         </filter>
       </svg>
+
       <svg className="w-0 h-0">
         <filter id="rough-paper-dark">
           <feTurbulence
@@ -115,7 +123,7 @@ export default function Paper({ children }: { children?: React.ReactNode }) {
             <feDisplacementMap
               xChannelSelector="R"
               yChannelSelector="G"
-              scale="2"
+              scale="4"
               in="SourceTextured"
               in2="f1"
               result="f4"

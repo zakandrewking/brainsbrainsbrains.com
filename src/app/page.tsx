@@ -95,7 +95,9 @@ export default function Home() {
                   <a href="https://en.wikipedia.org/wiki/Consciousness_Explained">
                     "Consciousness Explained"
                   </a>
-                  . Aplogies for my bad handrighting and bad speling.
+                  . Check out{" "}
+                  <a href="https://www.youtube.com/@veritasium">Veritasium</a>{" "}
+                  too for simply the best science content on the Internet.
                 </p>
 
                 <p
@@ -105,8 +107,7 @@ export default function Home() {
                   }}
                 >
                   <span className="mr-2 text-2xl">📍</span> I live in San Diego
-                  with the best three people on planet Earth (two of them are
-                  still very small).
+                  with my wife Gaby and two kids Elise (8) and Julian (5).
                 </p>
               </CardContent>
             </Card>
@@ -151,6 +152,7 @@ export default function Home() {
           Pencil effects
         </a>
         <a href="https://codepen.io/Chokcoco/full/OJWLXPY">Paper texture</a>
+        <a href="https://www.fxhash.xyz/generative/12059">Inspiration</a>
       </footer>
     </div>
   );
