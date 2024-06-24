@@ -28,7 +28,7 @@ export default function Home() {
               <span className="font-bold text-4xl">Zak King</span>
             </div>
             <img
-              src="/zak.png"
+              src="/zak.jpeg"
               alt="Pic of Zak"
               className="rounded-lg w-48 my-3 border-2"
             />
