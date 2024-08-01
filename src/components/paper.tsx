@@ -1,8 +1,17 @@
-import "./paper.css";
+import './paper.css';
 
-export default function Paper({ children }: { children?: React.ReactNode }) {
+export default function Paper({
+  height,
+  children,
+}: {
+  height: string;
+  children?: React.ReactNode;
+}) {
   return (
-    <div className="w-full relative">
+    <div
+      className="w-full relative transition-all duration-500 ease-in-out overflow-hidden"
+      style={{ height }}
+    >
       <div className="shadow-md w-[calc(100%+2px)] left-[-1px] h-[calc(100%+2px)] top-[-1px] absolute rounded-sm"></div>
 
       <div

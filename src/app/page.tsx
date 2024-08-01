@@ -1,29 +1,28 @@
 "use client";
 
-// import { Metadata } from 'next';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import Paper from '@/components/paper';
 import RollUpAnimation from '@/components/RollUpAnimation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-
-// export const metadata: Metadata = {
-//   title: "Zak King",
-//   description: "The personal website of Zak King",
-// };
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function Home() {
   const [isRolledUp, setIsRolledUp] = useState(false);
+  const [paperHeight, setPaperHeight] = useState("auto");
 
   const toggleRollUp = () => {
     setIsRolledUp(!isRolledUp);
   };
 
+  const handleHeightChange = useCallback((height: number) => {
+    setPaperHeight(`${height + 130}px`); // Add 180px for the header content
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen p-8 items-center">
       <header className="max-w-xl">
-        <Paper>
+        <Paper height={paperHeight}>
           <Button
             onClick={toggleRollUp}
             className="absolute top-2 right-2 w-16"
@@ -31,13 +30,16 @@ export default function Home() {
             {isRolledUp ? "Unroll" : "Roll Up"}
           </Button>
           <div className="flex flex-col gap-6 items-center">
-            <div className="flex flex-col gap-2 items-center">
+            <div className="flex flex-col gap-2 items-center mb-6">
               <div className="underline underline-offset-4 text-xl">
                 The personal website of
               </div>
               <span className="font-bold text-4xl">Zak King</span>
             </div>
-            <RollUpAnimation isRolledUp={isRolledUp}>
+            <RollUpAnimation
+              isRolledUp={isRolledUp}
+              onHeightChange={handleHeightChange}
+            >
               <div className="flex flex-col gap-6 items-center">
                 <img
                   src="/zak.jpeg"

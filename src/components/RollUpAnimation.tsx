@@ -1,25 +1,32 @@
-"use client";
-
 import { motion } from 'framer-motion';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect, useRef } from 'react';
 
 interface RollUpAnimationProps {
   children: ReactNode;
   isRolledUp: boolean;
+  onHeightChange: (height: number) => void;
 }
 
 const RollUpAnimation: React.FC<RollUpAnimationProps> = ({
   children,
   isRolledUp,
+  onHeightChange,
 }) => {
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      const height = isRolledUp ? 0 : contentRef.current.scrollHeight + 20;
+      onHeightChange(height);
+    }
+  }, [isRolledUp, onHeightChange]);
+
   return (
     <motion.div
-      style={{
-        originY: 0,
-        overflow: "hidden",
-      }}
+      ref={contentRef}
+      initial={false}
       animate={{
-        scaleY: isRolledUp ? 0 : 1,
+        height: isRolledUp ? 0 : "auto",
         opacity: isRolledUp ? 0 : 1,
       }}
       transition={{
