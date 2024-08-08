@@ -1,33 +1,39 @@
 "use client";
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState } from "react";
 
-import Paper from '@/components/paper';
-import RollUpAnimation from '@/components/RollUpAnimation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import Paper from "@/components/paper";
+import RollUpAnimation from "@/components/RollUpAnimation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Home() {
-  const [isRolledUp, setIsRolledUp] = useState(false);
+  const [isRolledUp, setIsRolledUp] = useState(true);
   const [paperHeight, setPaperHeight] = useState("auto");
 
   const toggleRollUp = () => {
     setIsRolledUp(!isRolledUp);
   };
 
+  // roll-up height
   const handleHeightChange = useCallback((height: number) => {
-    setPaperHeight(`${height + 130}px`); // Add 180px for the header content
+    setPaperHeight(`${height + 140}px`); // + height of the header
   }, []);
 
   return (
     <div className="flex flex-col min-h-screen p-8 items-center">
       <header className="max-w-xl">
-        <Paper height={paperHeight}>
+        <Paper
+          height={paperHeight}
+          isRolledUp={isRolledUp}
+          setIsRolledUp={setIsRolledUp}
+        >
           <Button
             onClick={toggleRollUp}
-            className="absolute top-2 right-2 w-16"
+            variant="outline"
+            className="absolute top-2 right-2 w-20"
           >
-            {isRolledUp ? "Unroll" : "Roll Up"}
+            {isRolledUp ? "About Me" : "Roll Up"}
           </Button>
           <div className="flex flex-col gap-6 items-center">
             <div className="flex flex-col gap-2 items-center mb-6">

@@ -7,3 +7,34 @@
     filter: url(#rough-paper-dark);
   }
 }
+
+/* do the ends like https://css-tricks.com/the-shapes-of-css/ */
+.scroll {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transform-origin: bottom;
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.2),
+    transparent 45%,
+    rgba(0, 0, 0, 0.1)
+  );
+}
+
+.scroll.rolled-up {
+  transform: translateY(-100%) rotate3d(1, 0, 0, 180deg);
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+  .scroll {
+    background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.3),
+      transparent 45%,
+      rgba(0, 0, 0, 0.2)
+    );
+  }
+}

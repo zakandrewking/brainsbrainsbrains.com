@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
-import React, { ReactNode, useEffect, useRef } from 'react';
+import { motion } from "framer-motion";
+import React, { ReactNode, useEffect, useRef } from "react";
 
 interface RollUpAnimationProps {
   children: ReactNode;
@@ -16,7 +16,7 @@ const RollUpAnimation: React.FC<RollUpAnimationProps> = ({
 
   useEffect(() => {
     if (contentRef.current) {
-      const height = isRolledUp ? 0 : contentRef.current.scrollHeight + 20;
+      const height = isRolledUp ? 0 : contentRef.current.scrollHeight + 30;
       onHeightChange(height);
     }
   }, [isRolledUp, onHeightChange]);
@@ -27,11 +27,14 @@ const RollUpAnimation: React.FC<RollUpAnimationProps> = ({
       initial={false}
       animate={{
         height: isRolledUp ? 0 : "auto",
-        opacity: isRolledUp ? 0 : 1,
+        opacity: 1,
       }}
       transition={{
         duration: 0.5,
         ease: "easeInOut",
+      }}
+      style={{
+        transformOrigin: "top",
       }}
     >
       {children}

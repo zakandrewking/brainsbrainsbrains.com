@@ -1,34 +1,51 @@
-import './paper.css';
+import "./paper.css";
 
 export default function Paper({
   height,
   children,
+  isRolledUp,
+  setIsRolledUp,
 }: {
   height: string;
   children?: React.ReactNode;
+  isRolledUp: boolean;
+  setIsRolledUp: (isRolledUp: boolean) => void;
 }) {
   return (
     <div
-      className="w-full relative transition-all duration-500 ease-in-out overflow-hidden"
+      className="w-full relative transition-all duration-500 ease-in-out overflow-hidden rounded-t-lg"
       style={{ height }}
     >
-      <div className="shadow-md w-[calc(100%+2px)] left-[-1px] h-[calc(100%+2px)] top-[-1px] absolute rounded-sm"></div>
+      <div className="shadow-md w-[calc(100%+2px)] left-[-1px] h-[calc(100%+2px)] top-[-1px] absolute rounded-lg"></div>
 
       <div
-        className="w-[calc(100%+4px)] left-[-2px] h-[calc(100%+4px)] top-[-2px] absolute border-[#eeeae4] dark:border-[#3d3d3d] border-8 rounded-sm"
+        className="w-[calc(100%+4px)] left-[-2px] h-[calc(100%+4px)] top-[-2px] absolute border-[#eeeae4] dark:border-[#3d3d3d] border-8 rounded-lg"
         style={{ filter: "url(#rough-paper-outline)" }}
       ></div>
 
-      <div className="w-full h-full absolute overflow-hidden">
+      <div className="w-full h-[calc(100%-24px)] absolute overflow-hidden">
         <div className="paper-filter w-full h-full top-0 left-0"></div>
       </div>
 
       <div
-        className="w-full h-full relative p-6 pb-2"
-        style={{ filter: "url(#pencil-texture)" }}
+        className="w-full relative p-6 pb-2 rounded-lg overflow-hidden"
+        style={{ filter: "url(#pencil-texture)", height: "calc(100% + 2rem)" }}
       >
         {children}
       </div>
+
+      {/* filter under scroll */}
+      <div className="w-full h-8 top-[calc(100%-24px)] absolute overflow-hidden">
+        <div className="paper-filter w-full h-full top-0 left-0"></div>
+      </div>
+
+      {/* scroll cylinder effect */}
+      <div
+        className={`h-6 scroll cursor-pointer ${isRolledUp ? "rolled-up" : ""}`}
+        onClick={() => {
+          setIsRolledUp(!isRolledUp);
+        }}
+      ></div>
 
       <svg className="w-0 h-0">
         <filter
