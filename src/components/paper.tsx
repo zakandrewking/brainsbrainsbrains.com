@@ -1,15 +1,16 @@
+import Link from "next/link";
 import "./paper.css";
 
 export default function Paper({
   height,
   children,
   isRolledUp,
-  setIsRolledUp,
-}: {
+}: // setIsRolledUp,
+{
   height: string;
   children?: React.ReactNode;
   isRolledUp: boolean;
-  setIsRolledUp: (isRolledUp: boolean) => void;
+  // setIsRolledUp?: (isRolledUp: boolean) => void | null;
 }) {
   return (
     <div
@@ -40,12 +41,13 @@ export default function Paper({
       </div>
 
       {/* scroll cylinder effect */}
-      <div
-        className={`h-6 scroll cursor-pointer ${isRolledUp ? "rolled-up" : ""}`}
-        onClick={() => {
-          setIsRolledUp(!isRolledUp);
-        }}
-      ></div>
+      <Link href={isRolledUp ? "/about-me" : "/"}>
+        <div
+          className={`h-6 scroll cursor-pointer ${
+            isRolledUp ? "rolled-up" : ""
+          }`}
+        ></div>
+      </Link>
 
       <svg className="w-0 h-0">
         <filter
