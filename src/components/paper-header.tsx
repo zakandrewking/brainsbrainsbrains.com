@@ -14,11 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 const rolledHeight = "140px";
 const unrolledHeight = "900px";
 
-export default function PaperHeaderStatic({
-  isRolledUp,
-}: {
-  isRolledUp: boolean;
-}) {
+export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
   const isSSR = useIsSSR();
   const router = useRouter();
   const paperStore = useContext(PaperStoreContext);

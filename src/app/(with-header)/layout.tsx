@@ -1,27 +1,23 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { memo } from "react";
+import { ReactNode } from "react";
 
-import PaperHeaderStatic from "@/components/header-static";
+import PaperHeader from "@/components/paper-header";
 import useIsSSR from "@/hooks/useIsSSR";
 import { PaperStoreProvider } from "@/stores/paper-store";
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   const isSSR = useIsSSR();
   const pathname = usePathname();
 
-  //   const Header = memo(PaperHeaderStatic);
-
-  console.log({ isSSR, pathname });
-
   return (
     <PaperStoreProvider>
-      {!isSSR && <PaperHeaderStatic isRolledUp={pathname === "/"} />}
+      {!isSSR && <PaperHeader isRolledUp={pathname !== "/about-me"} />}
       {children}
     </PaperStoreProvider>
   );

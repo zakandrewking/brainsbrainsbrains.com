@@ -1,9 +1,9 @@
 "use client";
 
-import PaperHeaderStatic from "@/components/header-static";
+import PaperHeader from "@/components/paper-header";
 import useIsSSR from "@/hooks/useIsSSR";
 
 export default function AboutMe() {
   const isSSR = useIsSSR();
-  return <>{isSSR && <PaperHeaderStatic isRolledUp={false} />}</>;
+  return isSSR ? <PaperHeader isRolledUp={false} /> : <></>;
 }

@@ -1,10 +1,11 @@
-import type { Metadata } from "next";
-import { Exo_2 as FontSans } from "next/font/google";
 import "./globals.css";
+import { Exo_2 as FontSans } from "next/font/google";
+import { ReactNode } from "react";
 
 import Footer from "@/components/footer";
 import { cn } from "@/lib/utils";
 
+import type { Metadata } from "next";
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
     <html lang="en">
@@ -29,10 +30,7 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <div
-          className="flex flex-col min-h-screen p-8 items-center"
-          style={{ height: "2000px" }}
-        >
+        <div className="flex flex-col min-h-screen p-8 items-center">
           {children}
           <Footer />
         </div>
