@@ -17,7 +17,17 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
   const isSSR = useIsSSR();
   const router = useRouter();
   const paperStore = useContext(PaperStoreContext);
-  const { width: screenWidth } = useWindowDimensions();
+
+  const handleResize = ({ width }: { width: number | null }) => {
+    const unrolledHeight = getUnrolledHeight(width || 0);
+    console.log({ width, unrolledHeight });
+    paperStore.dispatch({
+      type: "update",
+      height: unrolledHeight,
+    });
+  };
+
+  const { width: screenWidth } = useWindowDimensions(handleResize);
 
   const unrolledHeight = getUnrolledHeight(screenWidth || 0);
 
@@ -45,9 +55,17 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
 
   useEffect(() => {
     if (isRolledUp) {
-      paperStore.dispatch({ type: "update", height: rolledHeight });
+      paperStore.dispatch({
+        type: "update",
+        height: rolledHeight,
+        wasRolledUp: true,
+      });
     } else {
-      paperStore.dispatch({ type: "update", height: unrolledHeight });
+      paperStore.dispatch({
+        type: "update",
+        height: unrolledHeight,
+        wasRolledUp: false,
+      });
     }
   }, []);
 

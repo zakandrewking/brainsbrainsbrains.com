@@ -3,6 +3,7 @@
 import { drag as d3Drag } from "d3-drag";
 import { select as d3Select } from "d3-selection";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { MouseEvent, useContext, useEffect, useRef } from "react";
 import "./paper.css";
 
@@ -25,6 +26,7 @@ export default function Paper({
   const paperStore = useContext(PaperStoreContext);
   const dragRef = useRef<HTMLAnchorElement>(null);
   const { width: screenWidth } = useWindowDimensions();
+  const router = useRouter();
 
   const unrolledHeight = getUnrolledHeight(screenWidth || 0);
 
@@ -48,12 +50,13 @@ export default function Paper({
           unrolledHeight,
           rolledHeight,
         });
+        router.push(paperStore.state.wasRolledUp ? "/about-me" : "/");
       });
     selection.call(drag);
     return () => {
       selection.on(".drag", null);
     };
-  }, [dragRef, paperStore.dispatch]);
+  }, [dragRef, paperStore.dispatch, paperStore.state.wasRolledUp]);
 
   return (
     <div

@@ -1,7 +1,8 @@
 "use client";
 
+import Footer from "@/components/footer";
 import PaperHeader from "@/components/paper-header";
-import { H1 } from "@/components/ui/typography";
+import { H3 } from "@/components/ui/typography";
 import useIsSSR from "@/hooks/useIsSSR";
 
 export default function Home() {
@@ -9,9 +10,10 @@ export default function Home() {
   return (
     <>
       {isSSR && <PaperHeader isRolledUp={true} />}
-      <main className="flex flex-col items-start w-full mt-40 px-8">
-        <H1>Posts</H1>
+      <main className="flex flex-col items-center w-full mt-48 px-8">
+        <H3>:anticipation grows:</H3>
       </main>
+      <Footer />
     </>
   );
 }

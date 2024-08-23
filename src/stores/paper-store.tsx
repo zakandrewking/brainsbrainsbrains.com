@@ -32,7 +32,6 @@ function reducer(state: PaperStore, action: PaperStoreAction) {
       ...state,
       height: `${Math.max(parseInt(state.height) + action.dy, 40)}px`,
     };
-    console.log("reducer", action.type, action, newState);
     return newState;
   } else if (action.type === "go_to_stop_point") {
     const newState = {
@@ -46,7 +45,6 @@ function reducer(state: PaperStore, action: PaperStoreAction) {
       ...state,
       ...action,
     };
-    console.log("reducer", action.type, action, newState);
     return newState;
   } else {
     throw Error("Invalid action type");
