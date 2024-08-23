@@ -1,13 +1,13 @@
-import Footer from "@/components/footer";
-import PaperHeaderDynamic from "@/components/header-dynamic";
 import PaperHeaderStatic from "@/components/header-static";
+import { H1 } from "@/components/ui/typography";
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen p-8 items-center">
+    <>
       <PaperHeaderStatic isRolledUp={true} />
-      {/* <PaperHeaderDynamic /> */}
-      <Footer />
-    </div>
+      <main className="flex flex-col items-start w-full mt-8 px-8">
+        <H1>Posts</H1>
+      </main>
+    </>
   );
 }

@@ -24,10 +24,6 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
 
-.scroll.rolled-up {
-  transform: translateY(-100%) rotate3d(1, 0, 0, 180deg);
-}
-
 /* Dark mode styles */
 @media (prefers-color-scheme: dark) {
   .scroll {

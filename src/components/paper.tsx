@@ -1,17 +1,24 @@
 import Link from "next/link";
+import { DragEvent } from "react";
 import "./paper.css";
 
 export default function Paper({
   height,
   children,
   isRolledUp,
-}: // setIsRolledUp,
-{
+  handleRoll,
+}: {
   height: string;
   children?: React.ReactNode;
   isRolledUp: boolean;
-  // setIsRolledUp?: (isRolledUp: boolean) => void | null;
+  handleRoll: (height?: string) => void;
 }) {
+  const handleDrag = (e: DragEvent<HTMLAnchorElement>) => {
+    // handleRoll(height);
+  };
+
+  console.log({ height });
+
   return (
     <div
       className="w-full relative transition-all duration-500 ease-in-out overflow-hidden rounded-t-lg"
@@ -41,9 +48,13 @@ export default function Paper({
       </div>
 
       {/* scroll cylinder effect */}
-      <Link href={isRolledUp ? "/about-me" : "/"}>
+      <Link
+        href={isRolledUp ? "/about-me" : "/"}
+        onClick={() => handleRoll()}
+        onDrag={handleDrag}
+      >
         <div
-          className={`h-6 scroll cursor-pointer ${
+          className={`h-6 scroll cursor-ns-resize ${
             isRolledUp ? "rolled-up" : ""
           }`}
         ></div>
