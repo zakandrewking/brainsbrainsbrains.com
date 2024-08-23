@@ -86,7 +86,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
             {linkText}
           </Link>
         </Button>
-        <div className="flex flex-col gap-6 items-center mt-4">
+        <div className="flex flex-col gap-6 items-center mt-6">
           <div className="flex flex-col gap-2 items-center mb-8">
             <div className="underline underline-offset-4 text-xl">
               The personal website of
