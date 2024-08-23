@@ -5,19 +5,21 @@ import { useRouter } from "next/navigation";
 import { MouseEvent, useContext } from "react";
 
 import useIsSSR from "@/hooks/useIsSSR";
+import useWindowDimensions from "@/hooks/useWindowDimensions";
 import { PaperStoreContext } from "@/stores/paper-store";
 
 import Paper from "./paper";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
-const rolledHeight = "140px";
-const unrolledHeight = "900px";
-
 export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
   const isSSR = useIsSSR();
   const router = useRouter();
   const paperStore = useContext(PaperStoreContext);
+  const { width: screenWidth } = useWindowDimensions();
+
+  const rolledHeight = "160px";
+  const unrolledHeight = (screenWidth ?? 0) < 768 ? "1320px" : "950px";
 
   const handleRoll = ({
     height,
@@ -41,15 +43,15 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
     }
   };
 
+  console.log({ state: paperStore.state });
+
   const baselineHeight = isRolledUp ? rolledHeight : unrolledHeight;
   const height = paperStore.state.height ?? baselineHeight;
   const linkUrl = isRolledUp ? "/about-me" : "/";
   const linkText = isRolledUp ? "☺ About Me" : "← Home";
 
-  console.log({ isRolledUp, height });
-
   return (
-    <header className="min-w-[576px] absolute">
+    <header className="absolute pb-8 w-[350px] md:w-[750px]">
       <Paper scrollUrl={linkUrl} height={height} handleRoll={handleRoll}>
         <Button
           variant="link"
@@ -60,7 +62,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
             {linkText}
           </Link>
         </Button>
-        <div className="flex flex-col gap-6 items-center">
+        <div className="flex flex-col gap-6 items-center mt-4">
           <div className="flex flex-col gap-2 items-center mb-8">
             <div className="underline underline-offset-4 text-xl">
               The personal website of

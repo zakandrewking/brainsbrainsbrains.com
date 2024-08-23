@@ -1,6 +1,12 @@
+"use client";
+
+import { drag as d3Drag } from "d3-drag";
+import { select as d3Select } from "d3-selection";
 import Link from "next/link";
-import { DragEvent, MouseEvent } from "react";
+import { DragEvent, MouseEvent, useContext, useEffect, useRef } from "react";
 import "./paper.css";
+
+import { PaperStoreContext } from "@/stores/paper-store";
 
 export default function Paper({
   height,
@@ -19,9 +25,27 @@ export default function Paper({
     event?: MouseEvent<HTMLAnchorElement>;
   }) => void;
 }) {
-  const handleDrag = (e: DragEvent<HTMLAnchorElement>) => {
-    // handleRoll({height});
-  };
+  const paperStore = useContext(PaperStoreContext);
+  const dragRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    if (!dragRef.current) return;
+    const currentHeightStr = paperStore.state.height;
+    if (!currentHeightStr) return;
+    const selection = d3Select(dragRef.current);
+    const drag: any = d3Drag().on("drag", (event) => {
+      const height = parseFloat(currentHeightStr);
+      const newHeight = height - event.dy;
+      console.log({ height, dy: event.dy, newHeight });
+      handleRoll({
+        height: `${newHeight}px`,
+      });
+    });
+    selection.call(drag);
+    return () => {
+      selection.on(".drag", null);
+    };
+  }, [dragRef]);
 
   return (
     <div
@@ -55,7 +79,8 @@ export default function Paper({
       <Link
         href={scrollUrl}
         onClick={(event) => handleRoll({ event })}
-        onDrag={handleDrag}
+        className="drag-scroll"
+        ref={dragRef}
       >
         <div className="h-6 scroll cursor-ns-resize"></div>
       </Link>
