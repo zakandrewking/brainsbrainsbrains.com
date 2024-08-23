@@ -4,7 +4,6 @@ import "./globals.css";
 
 import Footer from "@/components/footer";
 import { cn } from "@/lib/utils";
-import { PaperStoreProvider } from "@/stores/paper-store";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -23,20 +22,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <PaperStoreProvider>
-      <html lang="en">
-        <body
-          className={cn(
-            "min-h-screen bg-background font-sans antialiased",
-            fontSans.variable
-          )}
+    <html lang="en">
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable
+        )}
+      >
+        <div
+          className="flex flex-col min-h-screen p-8 items-center"
+          style={{ height: "2000px" }}
         >
-          <div className="flex flex-col min-h-screen p-8 items-center">
-            {children}
-            <Footer />
-          </div>
-        </body>
-      </html>
-    </PaperStoreProvider>
+          {children}
+          <Footer />
+        </div>
+      </body>
+    </html>
   );
 }

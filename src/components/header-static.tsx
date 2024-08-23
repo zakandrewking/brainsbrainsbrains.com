@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useContext } from "react";
+import { useRouter } from "next/navigation";
+import { MouseEvent, useContext } from "react";
 
+import useIsSSR from "@/hooks/useIsSSR";
 import { PaperStoreContext } from "@/stores/paper-store";
 
 import Paper from "./paper";
@@ -17,9 +19,23 @@ export default function PaperHeaderStatic({
 }: {
   isRolledUp: boolean;
 }) {
+  const isSSR = useIsSSR();
+  const router = useRouter();
   const paperStore = useContext(PaperStoreContext);
 
-  const handleRoll = (height?: string) => {
+  const handleRoll = ({
+    height,
+    event,
+  }: {
+    height?: string;
+    event?: MouseEvent<HTMLAnchorElement>;
+  }) => {
+    if (!isSSR && event) {
+      event.preventDefault();
+      router.push(event.currentTarget.href, {
+        scroll: false,
+      });
+    }
     if (height) {
       paperStore.dispatch({ height });
     } else if (isRolledUp) {
@@ -31,26 +47,22 @@ export default function PaperHeaderStatic({
 
   const baselineHeight = isRolledUp ? rolledHeight : unrolledHeight;
   const height = paperStore.state.height ?? baselineHeight;
+  const linkUrl = isRolledUp ? "/about-me" : "/";
+  const linkText = isRolledUp ? "☺ About Me" : "← Home";
 
-  console.log({ isRolledUp, height, stateHeight: paperStore.state.height });
+  console.log({ isRolledUp, height });
 
   return (
-    <header className="min-w-[576px]">
-      <Paper isRolledUp={isRolledUp} height={height} handleRoll={handleRoll}>
+    <header className="min-w-[576px] absolute">
+      <Paper scrollUrl={linkUrl} height={height} handleRoll={handleRoll}>
         <Button
           variant="link"
           className="absolute top-2 left-4 w-20 hover:no-underline hover:text-fuchsia-700 dark:hover:text-fuchsia-300"
           asChild
         >
-          {isRolledUp ? (
-            <Link href="/about-me" onClick={() => handleRoll()}>
-              ☺ About Me
-            </Link>
-          ) : (
-            <Link href="/" onClick={() => handleRoll()}>
-              ← Home
-            </Link>
-          )}
+          <Link href={linkUrl} onClick={(event) => handleRoll({ event })}>
+            {linkText}
+          </Link>
         </Button>
         <div className="flex flex-col gap-6 items-center">
           <div className="flex flex-col gap-2 items-center mb-8">
@@ -64,7 +76,7 @@ export default function PaperHeaderStatic({
           <img
             src="/zak.jpeg"
             alt="Pic of Zak"
-            className="rounded-lg w-48 my-3 border-2"
+            className="rounded-lg h-40 my-3 border-2"
           />
           <div className="flex flex-col gap-2">
             <span className="text-xl">Find me here:</span>

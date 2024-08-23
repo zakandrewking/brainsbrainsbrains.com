@@ -1,23 +1,27 @@
 import Link from "next/link";
-import { DragEvent } from "react";
+import { DragEvent, MouseEvent } from "react";
 import "./paper.css";
 
 export default function Paper({
   height,
   children,
-  isRolledUp,
+  scrollUrl,
   handleRoll,
 }: {
   height: string;
   children?: React.ReactNode;
-  isRolledUp: boolean;
-  handleRoll: (height?: string) => void;
+  scrollUrl: string;
+  handleRoll: ({
+    height,
+    event,
+  }: {
+    height?: string;
+    event?: MouseEvent<HTMLAnchorElement>;
+  }) => void;
 }) {
   const handleDrag = (e: DragEvent<HTMLAnchorElement>) => {
-    // handleRoll(height);
+    // handleRoll({height});
   };
-
-  console.log({ height });
 
   return (
     <div
@@ -49,15 +53,11 @@ export default function Paper({
 
       {/* scroll cylinder effect */}
       <Link
-        href={isRolledUp ? "/about-me" : "/"}
-        onClick={() => handleRoll()}
+        href={scrollUrl}
+        onClick={(event) => handleRoll({ event })}
         onDrag={handleDrag}
       >
-        <div
-          className={`h-6 scroll cursor-ns-resize ${
-            isRolledUp ? "rolled-up" : ""
-          }`}
-        ></div>
+        <div className="h-6 scroll cursor-ns-resize"></div>
       </Link>
 
       <svg className="w-0 h-0">
