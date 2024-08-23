@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { MouseEvent, useContext } from "react";
+import { MouseEvent, useContext, useEffect } from "react";
 
 import useIsSSR from "@/hooks/useIsSSR";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
 import { PaperStoreContext } from "@/stores/paper-store";
+import { getUnrolledHeight, rolledHeight } from "@/util/paper-util";
 
 import Paper from "./paper";
 import { Button } from "./ui/button";
@@ -18,32 +19,37 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
   const paperStore = useContext(PaperStoreContext);
   const { width: screenWidth } = useWindowDimensions();
 
-  const rolledHeight = "160px";
-  const unrolledHeight = (screenWidth ?? 0) < 768 ? "1320px" : "950px";
+  const unrolledHeight = getUnrolledHeight(screenWidth || 0);
 
-  const handleRoll = ({
-    height,
-    event,
-  }: {
-    height?: string;
-    event?: MouseEvent<HTMLAnchorElement>;
-  }) => {
+  const handleRoll = (event?: MouseEvent<HTMLAnchorElement>) => {
     if (!isSSR && event) {
       event.preventDefault();
       router.push(event.currentTarget.href, {
         scroll: false,
       });
     }
-    if (height) {
-      paperStore.dispatch({ height });
-    } else if (isRolledUp) {
-      paperStore.dispatch({ height: unrolledHeight });
+    if (isRolledUp) {
+      paperStore.dispatch({
+        type: "update",
+        height: unrolledHeight,
+        wasRolledUp: false,
+      });
     } else {
-      paperStore.dispatch({ height: rolledHeight });
+      paperStore.dispatch({
+        type: "update",
+        height: rolledHeight,
+        wasRolledUp: true,
+      });
     }
   };
 
-  console.log({ state: paperStore.state });
+  useEffect(() => {
+    if (isRolledUp) {
+      paperStore.dispatch({ type: "update", height: rolledHeight });
+    } else {
+      paperStore.dispatch({ type: "update", height: unrolledHeight });
+    }
+  }, []);
 
   const baselineHeight = isRolledUp ? rolledHeight : unrolledHeight;
   const height = paperStore.state.height ?? baselineHeight;
@@ -58,7 +64,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
           className="absolute top-2 left-4 w-20 hover:no-underline hover:text-fuchsia-700 dark:hover:text-fuchsia-300"
           asChild
         >
-          <Link href={linkUrl} onClick={(event) => handleRoll({ event })}>
+          <Link href={linkUrl} onClick={handleRoll}>
             {linkText}
           </Link>
         </Button>

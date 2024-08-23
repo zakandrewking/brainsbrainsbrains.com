@@ -3,10 +3,13 @@
 import { drag as d3Drag } from "d3-drag";
 import { select as d3Select } from "d3-selection";
 import Link from "next/link";
-import { DragEvent, MouseEvent, useContext, useEffect, useRef } from "react";
+import { MouseEvent, useContext, useEffect, useRef } from "react";
 import "./paper.css";
 
+import useWindowDimensions from "@/hooks/useWindowDimensions";
+import { cn } from "@/lib/utils";
 import { PaperStoreContext } from "@/stores/paper-store";
+import { getUnrolledHeight, rolledHeight } from "@/util/paper-util";
 
 export default function Paper({
   height,
@@ -17,39 +20,49 @@ export default function Paper({
   height: string;
   children?: React.ReactNode;
   scrollUrl: string;
-  handleRoll: ({
-    height,
-    event,
-  }: {
-    height?: string;
-    event?: MouseEvent<HTMLAnchorElement>;
-  }) => void;
+  handleRoll: (event?: MouseEvent<HTMLAnchorElement>) => void;
 }) {
   const paperStore = useContext(PaperStoreContext);
   const dragRef = useRef<HTMLAnchorElement>(null);
+  const { width: screenWidth } = useWindowDimensions();
+
+  const unrolledHeight = getUnrolledHeight(screenWidth || 0);
 
   useEffect(() => {
     if (!dragRef.current) return;
-    const currentHeightStr = paperStore.state.height;
-    if (!currentHeightStr) return;
     const selection = d3Select(dragRef.current);
-    const drag: any = d3Drag().on("drag", (event) => {
-      const height = parseFloat(currentHeightStr);
-      const newHeight = height - event.dy;
-      console.log({ height, dy: event.dy, newHeight });
-      handleRoll({
-        height: `${newHeight}px`,
+    const drag: any = d3Drag()
+      .on("start", () => {
+        paperStore.dispatch({ type: "update", shouldTransition: false });
+      })
+      .on("drag", (event) => {
+        paperStore.dispatch({
+          type: "drag_height",
+          dy: event.dy,
+        });
+      })
+      .on("end", () => {
+        paperStore.dispatch({ type: "update", shouldTransition: true });
+        paperStore.dispatch({
+          type: "go_to_stop_point",
+          unrolledHeight,
+          rolledHeight,
+        });
       });
-    });
     selection.call(drag);
     return () => {
       selection.on(".drag", null);
     };
-  }, [dragRef]);
+  }, [dragRef, paperStore.dispatch]);
 
   return (
     <div
-      className="w-full relative transition-all duration-500 ease-in-out overflow-hidden rounded-t-lg"
+      className={cn(
+        "w-full relative overflow-hidden rounded-t-lg",
+        paperStore.state.shouldTransition
+          ? "transition-all duration-500 ease-in-out"
+          : ""
+      )}
       style={{ height }}
     >
       <div className="shadow-md w-[calc(100%+2px)] left-[-1px] h-[calc(100%+2px)] top-[-1px] absolute rounded-lg"></div>
@@ -78,7 +91,7 @@ export default function Paper({
       {/* scroll cylinder effect */}
       <Link
         href={scrollUrl}
-        onClick={(event) => handleRoll({ event })}
+        onClick={handleRoll}
         className="drag-scroll"
         ref={dragRef}
       >
