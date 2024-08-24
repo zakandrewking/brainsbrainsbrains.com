@@ -53,16 +53,17 @@ function reducer(state: State, action: Action) {
   }
 }
 
+const rolledHeight = 160;
+const unrolledHeight = 550;
+
 const initialState = {
-  height: "100px",
+  height: `${rolledHeight}px`,
   shouldTransition: true,
   wasRolledUp: true,
 };
 
 export default function RollupTest() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const rolledHeight = 100;
-  const unrolledHeight = 550;
   const getHeight = (isRolledUp: boolean) => {
     return isRolledUp ? `${rolledHeight}px` : `${unrolledHeight}px`;
   };
@@ -110,22 +111,30 @@ export default function RollupTest() {
   return (
     <div
       className={cn(
-        "relative pb-8 w-[350px] md:w-[750px] overflow-hidden rounded-t-lg",
-        state.shouldTransition ? "transition-all duration-500 ease-in-out" : ""
+        "relative pb-6 w-[350px] md:w-[750px]",
+        state.shouldTransition
+          ? "transition-[height] duration-500 ease-in-out"
+          : ""
       )}
       style={{ height: state.height }}
       ref={heightRef}
     >
-      <div className="w-full h-[calc(100%-24px)] absolute overflow-hidden">
-        <div className="paper-filter w-full h-full top-0 left-0"></div>
-      </div>
+      <div className="w-full h-full overflow-hidden">
+        <div className="w-full h-[calc(100%-24px)] absolute overflow-hidden rounded-t-lg">
+          <div className="paper-filter w-full h-full top-0 left-0"></div>
+        </div>
 
-      <div className="relative w-full p-6 pb-2 overflow-hidden">
-        <Content />
+        <div
+          className="relative w-full p-6 pb-2 overflow-hidden"
+          //   pencil texture is WAY slow on safari
+          // style={{ filter: "url(#pencil-texture)"}}
+        >
+          <Content />
+        </div>
       </div>
 
       {/* filter under scroll */}
-      <div className="w-full h-8 top-[calc(100%-24px)] absolute overflow-hidden">
+      <div className="w-full h-6 top-[calc(100%-24px)] absolute overflow-hidden">
         <div className="paper-filter w-full h-full top-0 left-0"></div>
       </div>
 
