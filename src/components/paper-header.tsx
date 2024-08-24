@@ -165,7 +165,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
                 </a>
                 . Check out{" "}
                 <a href="https://www.youtube.com/@veritasium">Veritasium</a> too
-                for simply the best science content on the Internet.
+                for some of the best science content on the Internet.
               </p>
 
               <p

@@ -1,14 +1,22 @@
 "use client";
 
-import "./test.css";
 import { drag as d3Drag } from "d3-drag";
 import { select as d3Select } from "d3-selection";
 import { get, set } from "lodash";
+import { Caveat as Handwritten } from "next/font/google";
 import { useEffect, useReducer, useRef, useState } from "react";
+import "./test.css";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+
+const handwritten = Handwritten({
+  subsets: ["latin"],
+  //   weight: "700",
+  display: "swap",
+  fallback: ["sans-serif"],
+});
 
 interface State {
   // the height to render
@@ -54,7 +62,7 @@ function reducer(state: State, action: Action) {
 }
 
 const rolledHeight = 160;
-const unrolledHeight = 550;
+const unrolledHeight = 1300;
 
 const initialState = {
   height: `${rolledHeight}px`,
@@ -112,6 +120,7 @@ export default function RollupTest() {
     <div
       className={cn(
         "relative pb-6 w-[350px] md:w-[750px]",
+        handwritten.className,
         state.shouldTransition
           ? "transition-[height] duration-500 ease-in-out"
           : ""
@@ -183,9 +192,7 @@ function Content() {
     <>
       <div className="flex flex-col gap-6 items-center mt-6">
         <div className="flex flex-col gap-2 items-center mb-8">
-          <div className="underline underline-offset-4 text-xl">
-            The personal website of
-          </div>
+          <div className="text-xl">The personal website of</div>
           <span className="font-bold text-4xl">Zak King</span>
         </div>
       </div>
@@ -219,7 +226,7 @@ function Content() {
         </div>
         <Card>
           <CardHeader>
-            <CardTitle>About me</CardTitle>
+            <CardTitle className="no-underline">About me</CardTitle>
           </CardHeader>
           <CardContent>
             <p
@@ -260,7 +267,7 @@ function Content() {
               </a>
               . Check out{" "}
               <a href="https://www.youtube.com/@veritasium">Veritasium</a> too
-              for simply the best science content on the Internet.
+              for some of the best science content on the Internet.
             </p>
 
             <p
