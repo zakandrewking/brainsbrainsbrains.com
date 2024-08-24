@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import Footer from "@/components/footer";
 import PaperHeader from "@/components/paper-header";
 import { H3 } from "@/components/ui/typography";
@@ -13,6 +15,7 @@ export default function Home() {
       <main className="flex flex-col items-center w-full mt-48 px-8">
         <H3>:anticipation grows:</H3>
       </main>
+      <Link href="/rollup-test">RollupTest</Link>
       <Footer />
     </>
   );
