@@ -91,7 +91,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
   return (
     <header
       className={cn(
-        "relative pb-6 w-[350px] md:w-[750px]",
+        "relative pb-6 w-[350px] md:w-[750px] handwritten",
         handwritten.className,
         state.shouldTransition
           ? "transition-[height] duration-500 ease-in-out"
@@ -101,30 +101,33 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
       ref={heightRef}
     >
       <div className="w-full h-full overflow-hidden">
-        <div className="w-full h-[calc(100%-24px)] absolute overflow-hidden rounded-t-lg">
+        <div className="w-full h-[calc(100%-24px)] absolute overflow-hidden rounded-t-md shadow-lg">
           <div className="paper-filter w-full h-full top-0 left-0"></div>
         </div>
 
-        <div className="relative w-full p-6 pb-2 overflow-hidden">
-          <Button variant="link" asChild>
-            <Link
-              href={rollUrl}
-              onClick={(event) => {
-                event.preventDefault();
-                handleRoll();
-              }}
-            >
-              {rollText}
-            </Link>
-          </Button>
+        <div className="relative w-full p-1 pt-2 md:pt-0 overflow-hidden">
+          <div className="md:px-4 md:pt-4">
+            <Button variant="paperLink" asChild size="lg">
+              <Link
+                href={rollUrl}
+                onClick={(event) => {
+                  event.preventDefault();
+                  handleRoll();
+                }}
+              >
+                {rollText}
+              </Link>
+            </Button>
 
-          <div className="flex flex-col gap-6 items-center">
-            <div className="flex flex-col gap-2 items-center mb-8">
-              <div className="text-xl">The personal website of</div>
-              <span className="font-bold text-4xl">Zak King</span>
+            <div className="flex flex-col gap-6 items-center pt-2 md:pt-0">
+              <div className="flex flex-col gap-2 items-center mb-8">
+                <div className="text-xl">The personal website of</div>
+                <span className="font-bold text-4xl">Zak King</span>
+              </div>
             </div>
           </div>
-          <div className="flex flex-col gap-6 items-center">
+
+          <div className="flex flex-col gap-6 items-center px-4">
             <img
               src="/zak.jpeg"
               alt="Pic of Zak"
@@ -134,19 +137,21 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
               <span className="text-xl">Find me here:</span>
               <Card>
                 <div className="flex flex-row flex-wrap gap-3 mx-3 justify-center text-xl">
-                  <Button variant="link" asChild>
-                    <a href="https://github.com/zakandrewking">GitHub</a>
+                  <Button variant="paperLink" asChild>
+                    <Link href="https://github.com/zakandrewking">GitHub</Link>
                   </Button>
-                  <Button variant="link" asChild>
-                    <a href="https://twitter.com/brainsbrainsbr">Twitter</a>
+                  <Button variant="paperLink" asChild>
+                    <Link href="https://twitter.com/brainsbrainsbr">
+                      Twitter
+                    </Link>
                   </Button>
-                  <Button variant="link" asChild>
-                    <a href="https://www.linkedin.com/in/zakandrewking/">
+                  <Button variant="paperLink" asChild>
+                    <Link href="https://www.linkedin.com/in/zakandrewking/">
                       LinkedIn
-                    </a>
+                    </Link>
                   </Button>
-                  <Button variant="link" asChild>
-                    <a href="mailto:zaking17@gmail.com">Email</a>
+                  <Button variant="paperLink" asChild>
+                    <Link href="mailto:zaking17@gmail.com">Email</Link>
                   </Button>
                 </div>
               </Card>
@@ -164,19 +169,19 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
                 >
                   <span className="mr-2 text-2xl">📱</span> I am VP of
                   Engineering at{" "}
-                  <a href="https://delfina.com" className="fg-primary">
+                  <Link href="https://delfina.com" className="fg-primary">
                     Delfina
-                  </a>
+                  </Link>
                   . Previously I led DevOps at{" "}
-                  <a href="https://www.amyris.com">Amyris</a>, and before that
-                  you might have found me{" "}
-                  <a href="https://scholar.google.com/citations?user=ESLgsdUAAAAJ&hl=en">
+                  <Link href="https://www.amyris.com">Amyris</Link>, and before
+                  that you might have found me{" "}
+                  <Link href="https://scholar.google.com/citations?user=ESLgsdUAAAAJ&hl=en">
                     modeling microorganisms
-                  </a>{" "}
+                  </Link>{" "}
                   at UC San Diego or haunting{" "}
-                  <a href="https://www.google.com/maps/@42.2783983,-83.7414089,3a,25.4y,88.35h,92.52t/data=!3m8!1e1!3m6!1sAF1QipPP8EKHRsoQYKOEzgkySqXr3YwlnjYMGCXC1nAX!2e10!3e11!6shttps:%2F%2Flh5.googleusercontent.com%2Fp%2FAF1QipPP8EKHRsoQYKOEzgkySqXr3YwlnjYMGCXC1nAX%3Dw203-h100-k-no-pi-0-ya315.63397-ro-0-fo100!7i8704!8i4352?entry=ttu">
+                  <Link href="https://www.google.com/maps/@42.2783983,-83.7414089,3a,25.4y,88.35h,92.52t/data=!3m8!1e1!3m6!1sAF1QipPP8EKHRsoQYKOEzgkySqXr3YwlnjYMGCXC1nAX!2e10!3e11!6shttps:%2F%2Flh5.googleusercontent.com%2Fp%2FAF1QipPP8EKHRsoQYKOEzgkySqXr3YwlnjYMGCXC1nAX%3Dw203-h100-k-no-pi-0-ya315.63397-ro-0-fo100!7i8704!8i4352?entry=ttu">
                     Comet Coffee
-                  </a>{" "}
+                  </Link>{" "}
                   between classes at UofM (Go Blue!).
                 </p>
 
@@ -188,12 +193,15 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
                 >
                   <span className="mr-2 text-2xl">❤️</span> Occasional fan of
                   skeuomorphism; real fan of{" "}
-                  <a href="https://supabase.com/">Supabase</a> and Dan Dennett's{" "}
-                  <a href="https://en.wikipedia.org/wiki/Consciousness_Explained">
+                  <Link href="https://supabase.com/">Supabase</Link> and Dan
+                  Dennett's{" "}
+                  <Link href="https://en.wikipedia.org/wiki/Consciousness_Explained">
                     "Consciousness Explained"
-                  </a>
+                  </Link>
                   . Check out{" "}
-                  <a href="https://www.youtube.com/@veritasium">Veritasium</a>{" "}
+                  <Link href="https://www.youtube.com/@veritasium">
+                    Veritasium
+                  </Link>{" "}
                   too for some of the best science content on the Internet.
                 </p>
 

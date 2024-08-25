@@ -34,3 +34,28 @@
     );
   }
 }
+
+.pencil {
+  stroke: hsl(var(--foreground));
+  fill: none;
+  stroke-width: 0.2;
+}
+
+.handwritten .text-sm {
+  font-size: 1.3125rem;
+}
+.handwritten .text-md {
+  font-size: 1.5rem;
+}
+.handwritten .text-lg {
+  font-size: 1.40625rem;
+}
+.handwritten .text-xl {
+  font-size: 1.5625rem;
+}
+.handwritten .text-2xl {
+  font-size: 1.875rem;
+}
+.handwritten .text-4xl {
+  font-size: 2.8125rem;
+}

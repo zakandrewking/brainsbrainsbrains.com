@@ -3,28 +3,20 @@
 @tailwind utilities;
 
 @layer base {
-  a {
-    /* text-decoration: underline; */
-    /* text-underline-offset: 4px; */
-    color: rgb(162 28 175);
-  }
-  a:hover {
-    opacity: 0.7;
-  }
-
-  p {
-    &:not(:last-child) {
-      margin-bottom: 15px;
-    }
-  }
-
-  .pencil {
-    stroke: hsl(var(--foreground));
-    fill: none;
-    stroke-width: 0.2;
-  }
-
   :root {
+    a {
+      color: hsl(var(--primary));
+    }
+    a:hover {
+      opacity: 0.7;
+    }
+
+    p {
+      &:not(:last-child) {
+        margin-bottom: 15px;
+      }
+    }
+
     --background: 0 0% 99%;
     --foreground: 0 0% 15%;
 
@@ -34,7 +26,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 294 47.4% 11.2%;
+    --primary: 295 72% 40%;
     --primary-foreground: 294 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -57,10 +49,6 @@
   }
 
   @media (prefers-color-scheme: dark) {
-    a {
-      color: rgb(240 171 252);
-    }
-
     :root {
       --background: 216 6% 15%;
       --foreground: 0 0% 99%;
@@ -71,7 +59,7 @@
       --popover: 222.2 84% 4.9%;
       --popover-foreground: 0 0% 99%;
 
-      --primary: 210 40% 98%;
+      --primary: 291 93% 83%;
       --primary-foreground: 222.2 47.4% 11.2%;
 
       --secondary: 217.2 32.6% 17.5%;
