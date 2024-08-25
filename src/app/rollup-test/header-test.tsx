@@ -4,12 +4,19 @@ import "./test.css";
 import { drag as d3Drag } from "d3-drag";
 import { select as d3Select } from "d3-selection";
 import { Caveat as Handwritten } from "next/font/google";
-import { useEffect, useReducer, useRef, useState } from "react";
+import { use, useContext, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+
+import {
+  rolledHeight,
+  StoreContext,
+  unrolledHeight,
+} from "./test-header-store";
 
 const handwritten = Handwritten({
   subsets: ["latin"],
@@ -18,98 +25,51 @@ const handwritten = Handwritten({
   fallback: ["sans-serif"],
 });
 
-interface State {
-  // the height to render
-  height?: string;
-  // whether to activate CSS transition effects
-  shouldTransition: boolean;
-  // whether the last state (before this drage) was rolled up
-  wasRolledUp?: boolean;
-}
-
-type Action =
-  | ({ type: "update" } & Partial<State>)
-  | {
-      type: "drag_height";
-      dy: number;
-    }
-  | { type: "go_to_stop_point"; unrolledHeight: string; rolledHeight: string };
-
-function reducer(state: State, action: Action) {
-  if (action.type === "drag_height") {
-    if (!state.height) return state;
-    const newState = {
-      ...state,
-      height: `${Math.max(parseInt(state.height) + action.dy, 40)}px`,
-    };
-    return newState;
-  } else if (action.type === "go_to_stop_point") {
-    const newState = {
-      ...state,
-      height: state.wasRolledUp ? action.unrolledHeight : action.rolledHeight,
-      wasRolledUp: !state.wasRolledUp,
-    };
-    return newState;
-  } else if (action.type === "update") {
-    const newState = {
-      ...state,
-      ...action,
-    };
-    return newState;
-  } else {
-    throw Error("Invalid action type");
-  }
-}
-
-const rolledHeight = 180;
-const unrolledHeight = 1300;
-
-const initialState = {
-  height: `${rolledHeight}px`,
-  shouldTransition: true,
-  wasRolledUp: true,
-};
-
 export default function RollupTest({ isRolledUp }: { isRolledUp: boolean }) {
+  const { state, dispatch } = useContext(StoreContext);
+  const dragRef = useRef<HTMLDivElement>(null);
+  const heightRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  const rollUrl = isRolledUp ? "/rollup-test/about-me" : "/rollup-test";
+  const rollText = isRolledUp ? "☺ About Me" : "← Home";
+
+  const handleRollup = async () => {
+    router.push(rollUrl, { scroll: false });
+  };
+
   const getHeight = (isRolledUp: boolean) => {
     return isRolledUp ? `${rolledHeight}px` : `${unrolledHeight}px`;
   };
 
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const dragRef = useRef<HTMLDivElement>(null);
-  const heightRef = useRef<HTMLDivElement>(null);
-  const handleRollup = () => {
-    dispatch({
-      type: "update",
-      height: getHeight(!state.wasRolledUp),
-      wasRolledUp: !state.wasRolledUp,
-    });
-  };
+  useEffect(() => {
+    dispatch({ height: getHeight(isRolledUp) });
+  }, []);
 
   useEffect(() => {
     if (!dragRef.current) return;
     const selection = d3Select(dragRef.current);
+    const getDraggedHeight = (dy: number) => {
+      return `${Math.max(
+        parseInt(heightRef.current?.style.height ?? "0") + dy,
+        40
+      )}px`;
+    };
     const drag: any = d3Drag()
       .on("start", () => {
-        dispatch({ type: "update", shouldTransition: false });
+        dispatch({ shouldTransition: false });
       })
       .on("drag", (event) => {
         if (!heightRef.current) return;
-        d3Select(heightRef.current).style(
-          "height",
-          `${Math.max(
-            parseInt(heightRef.current?.style.height ?? "0") + event.dy,
-            40
-          )}px`
-        );
+        const newHeight = getDraggedHeight(event.dy);
+        d3Select(heightRef.current).style("height", newHeight);
       })
       .on("end", () => {
-        dispatch({ type: "update", shouldTransition: true });
         dispatch({
-          type: "go_to_stop_point",
-          unrolledHeight: `${unrolledHeight}px`,
-          rolledHeight: `${rolledHeight}px`,
+          shouldTransition: true,
+          height: getDraggedHeight(0),
         });
+        handleRollup();
       });
     selection.call(drag);
     return () => {
@@ -136,8 +96,14 @@ export default function RollupTest({ isRolledUp }: { isRolledUp: boolean }) {
 
         <div className="relative w-full p-6 pb-2 overflow-hidden">
           <Button variant="link" asChild>
-            <Link href={isRolledUp ? "/rollup-test/about-me" : "/rollup-test"}>
-              {isRolledUp ? "☺ About Me" : "← Home"}
+            <Link
+              href={rollUrl}
+              onClick={(event) => {
+                event.preventDefault();
+                handleRollup();
+              }}
+            >
+              {rollText}
             </Link>
           </Button>
 
@@ -156,7 +122,6 @@ export default function RollupTest({ isRolledUp }: { isRolledUp: boolean }) {
             <div className="flex flex-col gap-2">
               <span className="text-xl">Find me here:</span>
               <Card>
-                {/* TODO wrap */}
                 <div className="flex flex-row flex-wrap gap-3 mx-3 justify-center text-xl">
                   <Button variant="link" asChild>
                     <a href="https://github.com/zakandrewking">GitHub</a>
@@ -259,10 +224,16 @@ export default function RollupTest({ isRolledUp }: { isRolledUp: boolean }) {
         <div className="paper-filter w-full h-full top-0 left-0"></div>
       </div>
 
-      <div
-        className="absolute scroll w-full bottom-0 left-0 h-6 cursor-ns-resize"
-        ref={dragRef}
-      />
+      <div className="absolute scroll w-full bottom-0 left-0 h-6" ref={dragRef}>
+        <Link
+          href={rollUrl}
+          className="w-full h-full block cursor-ns-resize"
+          onClick={(event) => {
+            // click is handled by drag-end
+            event.preventDefault();
+          }}
+        />
+      </div>
 
       <svg className="w-0 h-0">
         <filter id="rough-paper">
