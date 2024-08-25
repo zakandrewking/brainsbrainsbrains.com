@@ -2,9 +2,6 @@
 
 import { createContext, ReactNode, useReducer } from "react";
 
-export const rolledHeight = 180;
-export const unrolledHeight = 1300;
-
 interface PaperState {
   // the height to render
   height?: string;

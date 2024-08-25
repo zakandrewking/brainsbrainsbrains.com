@@ -1,5 +1,5 @@
-export const rolledHeight = "170px";
+export const rolledHeight = 180;
 
-export function getUnrolledHeight(screenWidth: number) {
-  return screenWidth < 768 ? "1320px" : "950px";
+export function getUnrolledHeight(screenWidth: number): number {
+  return screenWidth < 768 ? 1230 : 930;
 }

@@ -8,21 +8,16 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useRef } from "react";
 
+import useWindowDimensions from "@/hooks/useWindowDimensions";
 import { cn } from "@/lib/utils";
-// import useWindowDimensions from "@/hooks/useWindowDimensions";
-import {
-  PaperStoreContext,
-  rolledHeight,
-  unrolledHeight,
-} from "@/stores/paper-store";
+import { PaperStoreContext } from "@/stores/paper-store";
+import { getUnrolledHeight, rolledHeight } from "@/util/paper-util";
 
-// import { getUnrolledHeight, rolledHeight } from "@/util/paper-util";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 const handwritten = Handwritten({
   subsets: ["latin"],
-  //   weight: "700",
   display: "swap",
   fallback: ["sans-serif"],
 });
@@ -40,18 +35,27 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
     router.push(rollUrl, { scroll: false });
   };
 
-  // TODO dynamic height
-  // const { width: screenWidth } = useWindowDimensions(handleResize);
-  // const unrolledHeight = getUnrolledHeight(screenWidth || 0);
-  const getHeight = (isRolledUp: boolean) => {
-    return isRolledUp ? `${rolledHeight}px` : `${unrolledHeight}px`;
+  const handleResize = ({ width }: { width: number | null }) => {
+    if (isRolledUp) return;
+    const unrolledHeight = getUnrolledHeight(width || 0);
+    dispatch({ height: `${unrolledHeight}px` });
+  };
+
+  const { width: screenWidth } = useWindowDimensions(handleResize);
+  const getServerHeight = () => {
+    return isRolledUp ? `${rolledHeight}px` : `${getUnrolledHeight(0)}px`;
+  };
+  const getHeight = () => {
+    return isRolledUp
+      ? `${rolledHeight}px`
+      : `${getUnrolledHeight(screenWidth || 0)}px`;
   };
 
   useEffect(() => {
-    dispatch({ height: getHeight(isRolledUp) });
+    dispatch({ height: getHeight() });
   }, []);
 
-  const height = state.height ?? getHeight(isRolledUp);
+  const height = state.height ?? getServerHeight();
 
   useEffect(() => {
     if (!dragRef.current) return;
