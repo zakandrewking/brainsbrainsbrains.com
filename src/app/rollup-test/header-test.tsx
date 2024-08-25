@@ -46,6 +46,8 @@ export default function RollupTest({ isRolledUp }: { isRolledUp: boolean }) {
     dispatch({ height: getHeight(isRolledUp) });
   }, []);
 
+  const height = state.height ?? getHeight(isRolledUp);
+
   useEffect(() => {
     if (!dragRef.current) return;
     const selection = d3Select(dragRef.current);
@@ -86,7 +88,7 @@ export default function RollupTest({ isRolledUp }: { isRolledUp: boolean }) {
           ? "transition-[height] duration-500 ease-in-out"
           : ""
       )}
-      style={{ height: state.height }}
+      style={{ height }}
       ref={heightRef}
     >
       <div className="w-full h-full overflow-hidden">

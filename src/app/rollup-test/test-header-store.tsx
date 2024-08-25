@@ -20,7 +20,7 @@ function reducer(state: State, action: Partial<State>) {
 }
 
 const initialState = {
-  height: `${rolledHeight}px`,
+  height: undefined,
   shouldTransition: true,
 };
 
