@@ -103,7 +103,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
       ref={heightRef}
     >
       <div className="w-full h-full overflow-hidden">
-        <div className="w-full h-[calc(100%-24px)] absolute overflow-hidden rounded-t-md shadow-lg">
+        <div className="w-full h-[calc(100%-24px)] absolute overflow-hidden rounded-t-md shadow-xl">
           <div className="paper-filter w-full h-full top-0 left-0"></div>
         </div>
 
@@ -286,7 +286,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
             lightingColor="#f9f5f0"
             surfaceScale="2"
           >
-            <feDistantLight azimuth="90" elevation="65" />
+            <feDistantLight azimuth="90" elevation="75" />
           </feDiffuseLighting>
         </filter>
       </svg>
@@ -299,8 +299,8 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
             result="noise"
             numOctaves="3"
           />
-          <feDiffuseLighting in="noise" lightingColor="#666" surfaceScale="1">
-            <feDistantLight azimuth="45" elevation="20" />
+          <feDiffuseLighting in="noise" lightingColor="#444" surfaceScale="2.5">
+            <feDistantLight azimuth="45" elevation="50" />
           </feDiffuseLighting>
         </filter>
       </svg>
