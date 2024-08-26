@@ -33,7 +33,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
   const isDarkQuery = useMediaQuery("(prefers-color-scheme: dark)");
 
   const rollUrl = isRolledUp ? "/about-me" : "/";
-  const rollText = isRolledUp ? "About Me" : "← Home";
+  const rollText = isRolledUp ? "About Me" : "Home";
 
   const handleRoll = async () => {
     router.push(rollUrl, { scroll: false });
@@ -116,7 +116,17 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
       >
         😁 🙂 🙃 📱 📍 ❤️ 🌞 🫥 🤓 🥸 👨🏻‍💻
       </div> */}
-
+      {/* <div
+        className="p-8"
+        style={{
+          filter: "url(#pencil-texture)",
+          fontSize: "45px",
+          color: "hsl(var(--primary))",
+        }}
+      >
+        ☺ ←
+      </div>
+ */}
       <div className="w-full h-full overflow-hidden">
         <div className="w-full h-[calc(100%-24px)] absolute overflow-hidden rounded-t-md shadow-xl">
           <div className="paper-filter w-full h-full top-0 left-0"></div>
@@ -132,9 +142,15 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
                   handleRoll();
                 }}
               >
-                {rollUrl === "/about-me" && (
+                {rollUrl === "/about-me" ? (
                   <img
                     src={isDark ? "/smile-dark.png" : "smile-light.png"}
+                    alt="Smile"
+                    className="h-6 pr-1"
+                  />
+                ) : (
+                  <img
+                    src={isDark ? "/arrow-dark.png" : "arrow-light.png"}
                     alt="Smile"
                     className="h-6 pr-1"
                   />
@@ -389,7 +405,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
             <feBlend mode="multiply" in="f4" in2="f6" result="out2"></feBlend>
           </filter>
         </defs>
-      </svg>*/}
+      </svg> */}
     </header>
   );
 }
