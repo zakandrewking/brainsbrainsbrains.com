@@ -110,23 +110,6 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
       style={{ height }}
       ref={heightRef}
     >
-      {/* <div
-        className="p-8"
-        style={{ filter: "url(#pencil-texture)", fontSize: "37px" }}
-      >
-        😁 🙂 🙃 📱 📍 ❤️ 🌞 🫥 🤓 🥸 👨🏻‍💻
-      </div> */}
-      {/* <div
-        className="p-8"
-        style={{
-          filter: "url(#pencil-texture)",
-          fontSize: "45px",
-          color: "hsl(var(--primary))",
-        }}
-      >
-        ☺ ←
-      </div>
- */}
       <div className="w-full h-full overflow-hidden">
         <div className="w-full h-[calc(100%-24px)] absolute overflow-hidden rounded-t-md shadow-xl">
           <div className="paper-filter w-full h-full top-0 left-0"></div>
@@ -224,8 +207,12 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
                       "rotate(-0.6deg) translate(0.2rem, -0.3rem) skewX(-2deg)",
                   }}
                 >
-                  <span className="mr-2 text-2xl">📱</span> I am VP of
-                  Engineering at{" "}
+                  <img
+                    src="/phone.png"
+                    alt="Phone"
+                    className="h-10 inline align-bottom pr-2"
+                  />
+                  I am VP of Engineering at{" "}
                   <Link href="https://delfina.com" className="fg-primary">
                     Delfina
                   </Link>
@@ -248,8 +235,12 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
                       "rotate(-0.2deg) translate(0.6rem, -0.3rem) skewX(-3deg)",
                   }}
                 >
-                  <span className="mr-2 text-2xl">❤️</span> Occasional fan of
-                  skeuomorphism; real fan of{" "}
+                  <img
+                    src="/heart.png"
+                    alt="Heart"
+                    className="h-8 inline align-bottom pr-1"
+                  />
+                  Occasional fan of skeuomorphism; real fan of{" "}
                   <Link href="https://supabase.com/">Supabase</Link> and Dan
                   Dennett's{" "}
                   <Link href="https://en.wikipedia.org/wiki/Consciousness_Explained">
@@ -268,8 +259,13 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
                       "rotate(-0.5deg) translate(0.5rem, -0.3rem) skewX(-2deg)",
                   }}
                 >
-                  <span className="mr-2 text-2xl">📍</span> I live in San Diego
-                  with my wife Gaby and two kids Elise (8) and Julian (5).
+                  <img
+                    src="/pin.png"
+                    alt="Pin"
+                    className="h-10 inline align-bottom pr-1"
+                  />
+                  I live in San Diego with my wife Gaby and two kids Elise (8)
+                  and Julian (5).
                 </p>
               </CardContent>
             </MaybeRoughCard>
