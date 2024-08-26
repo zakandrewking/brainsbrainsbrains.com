@@ -8,7 +8,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useRef, useState } from "react";
 
-import { useMediaQuery } from "@/hooks/useMediaQuery";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
 import { cn } from "@/lib/utils";
 import { PaperStoreContext } from "@/stores/paper-store";
@@ -29,8 +28,6 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
   const dragRef = useRef<HTMLDivElement>(null);
   const heightRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const [isDark, setIsDark] = useState(false);
-  const isDarkQuery = useMediaQuery("(prefers-color-scheme: dark)");
 
   const rollUrl = isRolledUp ? "/about-me" : "/";
   const rollText = isRolledUp ? "About Me" : "Home";
@@ -58,11 +55,6 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
   useEffect(() => {
     dispatch({ height: getHeight() });
   }, []);
-
-  useEffect(() => {
-    // default to false to match the server, and then set here
-    setIsDark(isDarkQuery);
-  }, [isDarkQuery]);
 
   const height = state.height ?? getServerHeight();
   const generatorSize = screenWidth && screenWidth < 768 ? "sm" : "md";
@@ -126,17 +118,31 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
                 }}
               >
                 {rollUrl === "/about-me" ? (
-                  <img
-                    src={isDark ? "/smile-dark.png" : "smile-light.png"}
-                    alt="Smile"
-                    className="h-6 pr-1"
-                  />
+                  <>
+                    <img
+                      src="/smile-dark.png"
+                      alt="Smile (dark)"
+                      className="h-6 pr-1 hidden dark:inline"
+                    />
+                    <img
+                      src="smile-light.png"
+                      alt="Smile (light)"
+                      className="h-6 pr-1 inline dark:hidden"
+                    />
+                  </>
                 ) : (
-                  <img
-                    src={isDark ? "/arrow-dark.png" : "arrow-light.png"}
-                    alt="Arrow back"
-                    className="h-6 pr-1"
-                  />
+                  <>
+                    <img
+                      src="/arrow-dark.png"
+                      alt="Arrow back (dark)"
+                      className="h-6 pr-1 hidden dark:inline"
+                    />
+                    <img
+                      src="arrow-light.png"
+                      alt="Arrow back (light)"
+                      className="h-6 pr-1 inline dark:hidden"
+                    />
+                  </>
                 )}
                 {rollText}
               </Link>
