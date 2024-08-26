@@ -15,6 +15,7 @@ import { getUnrolledHeight, rolledHeight } from "@/util/paper-util";
 
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { MaybeRoughCard } from "./ui/rough-card";
 
 const handwritten = Handwritten({
   subsets: ["latin"],
@@ -128,15 +129,25 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
           </div>
 
           <div className="flex flex-col gap-6 items-center px-4">
-            <img
-              src="/zak.jpeg"
-              alt="Pic of Zak"
-              className="rounded-lg h-40 my-3 border-2"
-            />
+            <MaybeRoughCard
+              height={168}
+              width={221.33}
+              generatorKey="imgGenerator"
+            >
+              <img
+                src="/zak.jpeg"
+                alt="Pic of Zak"
+                className="rounded-sm h-40 m-1 shadow-md"
+              />
+            </MaybeRoughCard>
             <div className="flex flex-col gap-2">
               <span className="text-xl">Find me here:</span>
-              <Card>
-                <div className="flex flex-row flex-wrap gap-3 mx-3 justify-center text-xl">
+              <MaybeRoughCard
+                height={116}
+                width={310}
+                generatorKey="linkGenerator"
+              >
+                <div className="flex flex-row flex-wrap gap-3 m-3 justify-center text-xl">
                   <Button variant="paperLink" asChild>
                     <Link href="https://github.com/zakandrewking">GitHub</Link>
                   </Button>
@@ -154,7 +165,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
                     <Link href="mailto:zaking17@gmail.com">Email</Link>
                   </Button>
                 </div>
-              </Card>
+              </MaybeRoughCard>
             </div>
             <Card>
               <CardHeader>

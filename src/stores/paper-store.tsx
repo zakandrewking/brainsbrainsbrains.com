@@ -1,17 +1,20 @@
 "use client";
 
 import { createContext, ReactNode, useReducer } from "react";
+import rough from "roughjs";
 
 interface PaperState {
   // the height to render
   height?: string;
   // whether to activate CSS transition effects
   shouldTransition: boolean;
+  generators: Record<string, any>;
 }
 
 export const paperStoreInitialState = {
   height: undefined,
   shouldTransition: true,
+  generators: {},
 };
 
 function reducer(state: PaperState, action: Partial<PaperState>) {
