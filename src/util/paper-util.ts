@@ -20,7 +20,7 @@ export const roughSizes: RoughSizes = {
     md: { width: 421.61, height: 64 },
   },
   bio: {
-    sm: { width: 310, height: 651 },
-    md: { width: 710, height: 371 },
+    sm: { width: 310, height: 635 },
+    md: { width: 710, height: 355 },
   },
 };

@@ -151,7 +151,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
                 ) : (
                   <img
                     src={isDark ? "/arrow-dark.png" : "arrow-light.png"}
-                    alt="Smile"
+                    alt="Arrow back"
                     className="h-6 pr-1"
                   />
                 )}
@@ -217,7 +217,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
               <CardHeader>
                 <CardTitle className="no-underline">About me</CardTitle>
               </CardHeader>
-              <CardContent className="p-6">
+              <CardContent className="p-6 pt-2">
                 <p
                   style={{
                     transform:
