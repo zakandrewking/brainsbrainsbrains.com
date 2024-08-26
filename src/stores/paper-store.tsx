@@ -1,7 +1,6 @@
 "use client";
 
 import { createContext, ReactNode, useReducer } from "react";
-import rough from "roughjs";
 
 interface PaperState {
   // the height to render

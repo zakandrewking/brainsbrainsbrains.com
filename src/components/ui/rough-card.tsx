@@ -11,11 +11,13 @@ import { Card } from "./card";
 export function MaybeRoughCard({
   height,
   width,
+  size,
   generatorKey,
   children,
 }: {
   height: number;
   width: number;
+  size: "sm" | "md";
   generatorKey: string;
   children: ReactNode;
 }) {
@@ -23,27 +25,27 @@ export function MaybeRoughCard({
   return isSSR ? (
     <Card>{children}</Card>
   ) : (
-    <RoughCard height={height} width={width} generatorKey={generatorKey}>
+    <RoughCard
+      height={height}
+      width={width}
+      size={size}
+      generatorKey={generatorKey}
+    >
       {children}
     </RoughCard>
   );
 }
 
-function isKeyOf<O extends Record<string, unknown>>(
-  object: O,
-  key: string | number | symbol
-): key is keyof O {
-  return key in object;
-}
-
 export function RoughCard({
   height,
   width,
+  size,
   generatorKey,
   children,
 }: {
   height: number;
   width: number;
+  size: "sm" | "md";
   generatorKey: string;
   children: ReactNode;
 }) {
@@ -51,9 +53,9 @@ export function RoughCard({
   const { state, dispatch } = useContext(PaperStoreContext);
 
   const drawRect = (el: SVGSVGElement) => {
-    if (state.generators[generatorKey]) {
+    if (state.generators[generatorKey]?.[size]) {
       const rc = rough.svg(el);
-      const rect = state.generators[generatorKey];
+      const rect = state.generators[generatorKey][size];
       const node = rc.draw(rect);
       el.appendChild(node);
     } else {
@@ -61,11 +63,19 @@ export function RoughCard({
       const generator = rc.generator;
       let rect = generator.rectangle(5, 5, width - 10, height - 10, {
         roughness: 1.5,
-        strokeWidth: 2,
+        strokeWidth: 1.5,
         bowing: 1.2,
         stroke: "hsl(var(--card-foreground))",
       });
-      dispatch({ generators: { ...state.generators, [generatorKey]: rect } });
+      dispatch({
+        generators: {
+          ...state.generators,
+          [generatorKey]: {
+            ...state.generators[generatorKey],
+            [size]: rect,
+          },
+        },
+      });
       const node = rc.draw(rect);
       el.appendChild(node);
     }
@@ -83,7 +93,7 @@ export function RoughCard({
       if (!ref.current) return;
       removeRect(ref.current);
     };
-  }, [ref]);
+  }, [ref, size]);
 
   return (
     <div className="text-card-foreground relative">

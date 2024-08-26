@@ -11,10 +11,10 @@ import { useContext, useEffect, useRef } from "react";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
 import { cn } from "@/lib/utils";
 import { PaperStoreContext } from "@/stores/paper-store";
-import { getUnrolledHeight, rolledHeight } from "@/util/paper-util";
+import { getUnrolledHeight, rolledHeight, roughSizes } from "@/util/paper-util";
 
 import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { CardContent, CardHeader, CardTitle } from "./ui/card";
 import { MaybeRoughCard } from "./ui/rough-card";
 
 const handwritten = Handwritten({
@@ -57,6 +57,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
   }, []);
 
   const height = state.height ?? getServerHeight();
+  const generatorSize = screenWidth && screenWidth < 768 ? "sm" : "md";
 
   useEffect(() => {
     if (!dragRef.current) return;
@@ -130,9 +131,10 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
 
           <div className="flex flex-col gap-6 items-center px-4">
             <MaybeRoughCard
-              height={168}
-              width={221.33}
-              generatorKey="imgGenerator"
+              height={roughSizes.img[generatorSize].height}
+              width={roughSizes.img[generatorSize].width}
+              size={generatorSize}
+              generatorKey="img"
             >
               <img
                 src="/zak.jpeg"
@@ -143,9 +145,10 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
             <div className="flex flex-col gap-2">
               <span className="text-xl">Find me here:</span>
               <MaybeRoughCard
-                height={116}
-                width={310}
-                generatorKey="linkGenerator"
+                height={roughSizes.links[generatorSize].height}
+                width={roughSizes.links[generatorSize].width}
+                size={generatorSize}
+                generatorKey="bioGenerator"
               >
                 <div className="flex flex-row flex-wrap gap-3 m-3 justify-center text-xl">
                   <Button variant="paperLink" asChild>
@@ -167,11 +170,16 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
                 </div>
               </MaybeRoughCard>
             </div>
-            <Card>
+            <MaybeRoughCard
+              height={roughSizes.bio[generatorSize].height}
+              width={roughSizes.bio[generatorSize].width}
+              size={generatorSize}
+              generatorKey="linkGenerator"
+            >
               <CardHeader>
                 <CardTitle className="no-underline">About me</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-6">
                 <p
                   style={{
                     transform:
@@ -226,7 +234,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
                   with my wife Gaby and two kids Elise (8) and Julian (5).
                 </p>
               </CardContent>
-            </Card>
+            </MaybeRoughCard>
             <div className="mt-2">
               <svg height="100" width="100" xmlns="http://www.w3.org/2000/svg">
                 <polygon
