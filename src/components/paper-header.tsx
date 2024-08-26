@@ -6,8 +6,9 @@ import { drag as d3Drag } from "d3-drag";
 import { select as d3Select } from "d3-selection";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
 import { cn } from "@/lib/utils";
 import { PaperStoreContext } from "@/stores/paper-store";
@@ -28,9 +29,11 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
   const dragRef = useRef<HTMLDivElement>(null);
   const heightRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const [isDark, setIsDark] = useState(false);
+  const isDarkQuery = useMediaQuery("(prefers-color-scheme: dark)");
 
   const rollUrl = isRolledUp ? "/about-me" : "/";
-  const rollText = isRolledUp ? "☺ About Me" : "← Home";
+  const rollText = isRolledUp ? "About Me" : "← Home";
 
   const handleRoll = async () => {
     router.push(rollUrl, { scroll: false });
@@ -55,6 +58,11 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
   useEffect(() => {
     dispatch({ height: getHeight() });
   }, []);
+
+  useEffect(() => {
+    // default to false to match the server, and then set here
+    setIsDark(isDarkQuery);
+  }, [isDarkQuery]);
 
   const height = state.height ?? getServerHeight();
   const generatorSize = screenWidth && screenWidth < 768 ? "sm" : "md";
@@ -102,6 +110,13 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
       style={{ height }}
       ref={heightRef}
     >
+      {/* <div
+        className="p-8"
+        style={{ filter: "url(#pencil-texture)", fontSize: "37px" }}
+      >
+        😁 🙂 🙃 📱 📍 ❤️ 🌞 🫥 🤓 🥸 👨🏻‍💻
+      </div> */}
+
       <div className="w-full h-full overflow-hidden">
         <div className="w-full h-[calc(100%-24px)] absolute overflow-hidden rounded-t-md shadow-xl">
           <div className="paper-filter w-full h-full top-0 left-0"></div>
@@ -117,6 +132,13 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
                   handleRoll();
                 }}
               >
+                {rollUrl === "/about-me" && (
+                  <img
+                    src={isDark ? "/smile-dark.png" : "smile-light.png"}
+                    alt="Smile"
+                    className="h-6 pr-1"
+                  />
+                )}
                 {rollText}
               </Link>
             </Button>
@@ -304,6 +326,70 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
           </feDiffuseLighting>
         </filter>
       </svg>
+
+      {/* Too slow for live use, but we can apply it and capture PNGs */}
+      {/* <svg id="svg" width="0" height="0" viewBox="-500 -500 1000 1000">
+        <defs>
+          <filter
+            x="-20%"
+            y="-20%"
+            width="140%"
+            height="140%"
+            filterUnits="objectBoundingBox"
+            id="pencil-texture"
+          >
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="2"
+              numOctaves="4"
+              stitchTiles="stitch"
+              result="t1"
+            ></feTurbulence>
+            <feColorMatrix
+              type="matrix"
+              values="0 0 0 0 0, 0 0 0 0 0, 0 0 0 0 0, 0 0 0 -1.5 1.5"
+              result="t2"
+            ></feColorMatrix>
+            <feComposite
+              operator="in"
+              in2="t2"
+              in="SourceGraphic"
+              result="SourceTextured"
+            ></feComposite>
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.05"
+              numOctaves="3"
+              seed="1"
+              result="f1"
+            ></feTurbulence>
+            <feDisplacementMap
+              xChannelSelector="R"
+              yChannelSelector="G"
+              scale="4"
+              in="SourceTextured"
+              in2="f1"
+              result="f4"
+            ></feDisplacementMap>
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.4"
+              numOctaves="4"
+              seed="100"
+              result="f3"
+            ></feTurbulence>
+            <feDisplacementMap
+              xChannelSelector="R"
+              yChannelSelector="G"
+              scale="2"
+              in="SourceTextured"
+              in2="f3"
+              result="f6"
+            ></feDisplacementMap>
+            <feBlend mode="multiply" in="f4" in2="f6" result="out2"></feBlend>
+          </filter>
+        </defs>
+      </svg>*/}
     </header>
   );
 }
