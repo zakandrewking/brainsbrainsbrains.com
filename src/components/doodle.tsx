@@ -61,13 +61,10 @@ export default function Doodle() {
         generator.path("M 20 80 Q 50 90 80 80", opts),
       ];
       dispatch({
-        generators: {
-          ...state.generators,
-          [generatorKey]: {
-            ...state.generators[generatorKey],
-            [size]: shapes,
-          },
-        },
+        type: "update_generator",
+        generatorKey,
+        size,
+        generator: shapes,
       });
       for (const shape of shapes) {
         const node = rc.draw(shape);

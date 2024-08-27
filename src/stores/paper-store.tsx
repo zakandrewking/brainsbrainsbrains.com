@@ -16,16 +16,43 @@ export const paperStoreInitialState = {
   generators: {},
 };
 
-function reducer(state: PaperState, action: Partial<PaperState>) {
-  return {
-    ...state,
-    ...action,
-  };
+type PaperStoreAction =
+  | ({
+      type: "update";
+    } & Partial<PaperState>)
+  | {
+      type: "update_generator";
+      generatorKey: string;
+      size: "sm" | "md";
+      generator: any;
+    };
+
+function reducer(state: PaperState, action: PaperStoreAction) {
+  if (action.type === "update_generator") {
+    const { generatorKey, size, generator } = action;
+    return {
+      ...state,
+      generators: {
+        ...state.generators,
+        [generatorKey]: {
+          ...state.generators[generatorKey],
+          [size]: generator,
+        },
+      },
+    };
+  } else if (action.type === "update") {
+    return {
+      ...state,
+      ...action,
+    };
+  } else {
+    throw Error("unknown action type");
+  }
 }
 
 export const PaperStoreContext = createContext<{
   state: PaperState;
-  dispatch: React.Dispatch<Partial<PaperState>>;
+  dispatch: React.Dispatch<PaperStoreAction>;
 }>({
   state: paperStoreInitialState,
   dispatch: () => {

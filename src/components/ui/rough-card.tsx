@@ -37,13 +37,10 @@ export function RoughCard({
         stroke: "hsl(var(--card-foreground))",
       });
       dispatch({
-        generators: {
-          ...state.generators,
-          [generatorKey]: {
-            ...state.generators[generatorKey],
-            [size]: rect,
-          },
-        },
+        type: "update_generator",
+        generatorKey,
+        size,
+        generator: rect,
       });
       const node = rc.draw(rect);
       el.appendChild(node);

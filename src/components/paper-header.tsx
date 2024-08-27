@@ -9,12 +9,11 @@ import { useRouter } from "next/navigation";
 import { useContext, useEffect, useRef } from "react";
 
 import useWindowDimensions from "@/hooks/useWindowDimensions";
-import { cn } from "@/lib/utils";
 import { PaperStoreContext } from "@/stores/paper-store";
 import { getUnrolledHeight, rolledHeight, roughSizes } from "@/util/paper-util";
+import { cn } from "@/util/ui-util";
 
 import Doodle from "./doodle";
-import { Button } from "./ui/button";
 import { CardContent, CardHeader, CardTitle } from "./ui/card";
 import { PaperButton, PaperLink } from "./ui/paper-button";
 import { RoughCard } from "./ui/rough-card";
@@ -41,7 +40,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
   const handleResize = ({ width }: { width: number | null }) => {
     if (isRolledUp) return;
     const unrolledHeight = getUnrolledHeight(width || 0);
-    dispatch({ height: `${unrolledHeight}px` });
+    dispatch({ type: "update", height: `${unrolledHeight}px` });
   };
 
   const { width: screenWidth } = useWindowDimensions(handleResize);
@@ -55,7 +54,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
   };
 
   useEffect(() => {
-    dispatch({ height: getHeight() });
+    dispatch({ type: "update", height: getHeight() });
   }, []);
 
   const height = state.height ?? getServerHeight();
@@ -72,7 +71,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
     };
     const drag: any = d3Drag()
       .on("start", () => {
-        dispatch({ shouldTransition: false });
+        dispatch({ type: "update", shouldTransition: false });
       })
       .on("drag", (event) => {
         if (!heightRef.current) return;
@@ -81,6 +80,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
       })
       .on("end", () => {
         dispatch({
+          type: "update",
           shouldTransition: true,
           height: getDraggedHeight(0),
         });

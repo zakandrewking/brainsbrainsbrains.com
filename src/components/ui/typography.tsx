@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/util/ui-util";
 
 export function H1({
   gutterBottom = true,
@@ -38,16 +38,19 @@ export function H2({
 
 export function H3({
   gutterBottom = true,
+  className,
   children,
 }: {
   gutterBottom?: boolean;
+  className?: string;
   children: ReactNode;
 }) {
-  let classes = "scroll-m-20 text-2xl font-semibold tracking-tight";
+  let classes =
+    "scroll-m-20 text-2xl font-semibold tracking-tight underline underline-offset-4 ";
   if (gutterBottom) {
     classes += " mb-4";
   }
-  return <h3 className={classes}>{children}</h3>;
+  return <h3 className={cn(classes, className)}>{children}</h3>;
 }
 
 export function H4({

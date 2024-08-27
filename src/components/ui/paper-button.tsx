@@ -2,7 +2,7 @@ import Link from "next/link";
 import { MouseEvent, ReactNode } from "react";
 import { RoughNotation } from "react-rough-notation";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/util/ui-util";
 
 import HoverBuilder from "../hover-builder";
 import { Button } from "./button";
