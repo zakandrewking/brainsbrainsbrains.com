@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { PaperStoreContext } from "@/stores/paper-store";
 import { getUnrolledHeight, rolledHeight, roughSizes } from "@/util/paper-util";
 
+import Doodle from "./doodle";
 import { Button } from "./ui/button";
 import { CardContent, CardHeader, CardTitle } from "./ui/card";
 import { PaperButton, PaperLink } from "./ui/paper-button";
@@ -271,8 +272,8 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
               </CardContent>
             </MaybeRoughCard>
             <div className="mt-2">
-              {/* <Doodle /> */}
-              <svg height="100" width="100" xmlns="http://www.w3.org/2000/svg">
+              <Doodle />
+              {/* <svg height="100" width="100" xmlns="http://www.w3.org/2000/svg">
                 <polygon
                   points="20,80 50,30 80,80"
                   className="pencil"
@@ -287,7 +288,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
                   className="pencil"
                   style={{ strokeWidth: 0.3 }}
                 ></path>
-              </svg>
+              </svg> */}
             </div>
           </div>
         </div>

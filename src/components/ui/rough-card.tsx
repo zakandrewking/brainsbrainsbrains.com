@@ -61,7 +61,7 @@ export function RoughCard({
     } else {
       const rc = rough.svg(el);
       const generator = rc.generator;
-      let rect = generator.rectangle(5, 5, width - 10, height - 10, {
+      const rect = generator.rectangle(5, 5, width - 10, height - 10, {
         roughness: 1.5,
         strokeWidth: 1.5,
         bowing: 1.2,
