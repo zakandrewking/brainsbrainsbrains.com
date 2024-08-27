@@ -17,7 +17,7 @@ import Doodle from "./doodle";
 import { Button } from "./ui/button";
 import { CardContent, CardHeader, CardTitle } from "./ui/card";
 import { PaperButton, PaperLink } from "./ui/paper-button";
-import { MaybeRoughCard } from "./ui/rough-card";
+import { RoughCard } from "./ui/rough-card";
 
 const handwritten = Handwritten({
   subsets: ["latin"],
@@ -157,7 +157,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
           </div>
 
           <div className="flex flex-col gap-6 items-center px-4">
-            <MaybeRoughCard
+            <RoughCard
               height={roughSizes.img[generatorSize].height}
               width={roughSizes.img[generatorSize].width}
               size={generatorSize}
@@ -168,10 +168,10 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
                 alt="Pic of Zak"
                 className="rounded-sm h-40 m-1 shadow-md"
               />
-            </MaybeRoughCard>
+            </RoughCard>
             <div className="flex flex-col gap-2">
               <span className="text-xl">Find me here:</span>
-              <MaybeRoughCard
+              <RoughCard
                 height={roughSizes.links[generatorSize].height}
                 width={roughSizes.links[generatorSize].width}
                 size={generatorSize}
@@ -191,9 +191,9 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
                     Email
                   </PaperButton>
                 </div>
-              </MaybeRoughCard>
+              </RoughCard>
             </div>
-            <MaybeRoughCard
+            <RoughCard
               height={roughSizes.bio[generatorSize].height}
               width={roughSizes.bio[generatorSize].width}
               size={generatorSize}
@@ -270,25 +270,9 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
                   and Julian (5).
                 </p>
               </CardContent>
-            </MaybeRoughCard>
+            </RoughCard>
             <div className="mt-2">
               <Doodle />
-              {/* <svg height="100" width="100" xmlns="http://www.w3.org/2000/svg">
-                <polygon
-                  points="20,80 50,30 80,80"
-                  className="pencil"
-                  style={{ strokeWidth: 0.3 }}
-                />
-                <circle cx="50" cy="30" r="30" className="pencil" />
-                <circle cx="50" cy="30" r="19" className="pencil" />
-                <circle cx="50" cy="30" r="10" className="pencil" />
-                <circle cx="50" cy="30" r="5" className="pencil" />
-                <path
-                  d="M 20 80 Q 50 90 80 80"
-                  className="pencil"
-                  style={{ strokeWidth: 0.3 }}
-                ></path>
-              </svg> */}
             </div>
           </div>
         </div>

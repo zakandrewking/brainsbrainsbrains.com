@@ -3,38 +3,7 @@
 import { ReactNode, useContext, useEffect, useRef } from "react";
 import rough from "roughjs";
 
-import useIsSSR from "@/hooks/useIsSSR";
 import { PaperStoreContext } from "@/stores/paper-store";
-
-import { Card } from "./card";
-
-export function MaybeRoughCard({
-  height,
-  width,
-  size,
-  generatorKey,
-  children,
-}: {
-  height: number;
-  width: number;
-  size: "sm" | "md";
-  generatorKey: string;
-  children: ReactNode;
-}) {
-  const isSSR = useIsSSR();
-  return isSSR ? (
-    <Card>{children}</Card>
-  ) : (
-    <RoughCard
-      height={height}
-      width={width}
-      size={size}
-      generatorKey={generatorKey}
-    >
-      {children}
-    </RoughCard>
-  );
-}
 
 export function RoughCard({
   height,
