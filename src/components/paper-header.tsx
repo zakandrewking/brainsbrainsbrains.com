@@ -6,7 +6,7 @@ import { drag as d3Drag } from "d3-drag";
 import { select as d3Select } from "d3-selection";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef } from "react";
 
 import useWindowDimensions from "@/hooks/useWindowDimensions";
 import { cn } from "@/lib/utils";
@@ -15,6 +15,7 @@ import { getUnrolledHeight, rolledHeight, roughSizes } from "@/util/paper-util";
 
 import { Button } from "./ui/button";
 import { CardContent, CardHeader, CardTitle } from "./ui/card";
+import { PaperButton, PaperLink } from "./ui/paper-button";
 import { MaybeRoughCard } from "./ui/rough-card";
 
 const handwritten = Handwritten({
@@ -109,44 +110,42 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
 
         <div className="relative w-full p-1 pt-2 md:pt-0 overflow-hidden">
           <div className="md:px-4 md:pt-4">
-            <Button variant="paperLink" asChild size="lg">
-              <Link
-                href={rollUrl}
-                onClick={(event) => {
-                  event.preventDefault();
-                  handleRoll();
-                }}
-              >
-                {rollUrl === "/about-me" ? (
-                  <>
-                    <img
-                      src="/smile-dark.png"
-                      alt="Smile (dark)"
-                      className="h-6 pr-1 hidden dark:inline"
-                    />
-                    <img
-                      src="smile-light.png"
-                      alt="Smile (light)"
-                      className="h-6 pr-1 inline dark:hidden"
-                    />
-                  </>
-                ) : (
-                  <>
-                    <img
-                      src="/arrow-dark.png"
-                      alt="Arrow back (dark)"
-                      className="h-6 pr-1 hidden dark:inline"
-                    />
-                    <img
-                      src="arrow-light.png"
-                      alt="Arrow back (light)"
-                      className="h-6 pr-1 inline dark:hidden"
-                    />
-                  </>
-                )}
-                {rollText}
-              </Link>
-            </Button>
+            <PaperButton
+              href={rollUrl}
+              onClick={(event) => {
+                event.preventDefault();
+                handleRoll();
+              }}
+            >
+              {rollUrl === "/about-me" ? (
+                <>
+                  <img
+                    src="/smile-dark.png"
+                    alt="Smile (dark)"
+                    className="h-6 pr-1 hidden dark:inline"
+                  />
+                  <img
+                    src="smile-light.png"
+                    alt="Smile (light)"
+                    className="h-6 pr-1 inline dark:hidden"
+                  />
+                </>
+              ) : (
+                <>
+                  <img
+                    src="/arrow-dark.png"
+                    alt="Arrow back (dark)"
+                    className="h-6 pr-1 hidden dark:inline"
+                  />
+                  <img
+                    src="arrow-light.png"
+                    alt="Arrow back (light)"
+                    className="h-6 pr-1 inline dark:hidden"
+                  />
+                </>
+              )}
+              {rollText}
+            </PaperButton>
 
             <div className="flex flex-col gap-6 items-center pt-2 md:pt-0">
               <div className="flex flex-col gap-2 items-center mb-8">
@@ -178,22 +177,18 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
                 generatorKey="bioGenerator"
               >
                 <div className="flex flex-row flex-wrap gap-3 m-3 justify-center text-xl">
-                  <Button variant="paperLink" asChild>
-                    <Link href="https://github.com/zakandrewking">GitHub</Link>
-                  </Button>
-                  <Button variant="paperLink" asChild>
-                    <Link href="https://twitter.com/brainsbrainsbr">
-                      Twitter
-                    </Link>
-                  </Button>
-                  <Button variant="paperLink" asChild>
-                    <Link href="https://www.linkedin.com/in/zakandrewking/">
-                      LinkedIn
-                    </Link>
-                  </Button>
-                  <Button variant="paperLink" asChild>
-                    <Link href="mailto:zaking17@gmail.com">Email</Link>
-                  </Button>
+                  <PaperButton href="https://github.com/zakandrewking">
+                    GitHub
+                  </PaperButton>
+                  <PaperButton href="https://twitter.com/brainsbrainsbr">
+                    Twitter
+                  </PaperButton>
+                  <PaperButton href="https://www.linkedin.com/in/zakandrewking/">
+                    LinkedIn
+                  </PaperButton>
+                  <PaperButton href="mailto:zaking17@gmail.com">
+                    Email
+                  </PaperButton>
                 </div>
               </MaybeRoughCard>
             </div>
@@ -219,19 +214,19 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
                     className="h-10 inline align-bottom pr-2"
                   />
                   I am VP of Engineering at{" "}
-                  <Link href="https://delfina.com" className="fg-primary">
+                  <PaperLink href="https://delfina.com" className="fg-primary">
                     Delfina
-                  </Link>
+                  </PaperLink>
                   . Previously I led DevOps at{" "}
-                  <Link href="https://www.amyris.com">Amyris</Link>, and before
-                  that you might have found me{" "}
-                  <Link href="https://scholar.google.com/citations?user=ESLgsdUAAAAJ&hl=en">
+                  <PaperLink href="https://www.amyris.com">Amyris</PaperLink>,
+                  and before that you might have found me{" "}
+                  <PaperLink href="https://scholar.google.com/citations?user=ESLgsdUAAAAJ&hl=en">
                     modeling microorganisms
-                  </Link>{" "}
+                  </PaperLink>{" "}
                   at UC San Diego or haunting{" "}
-                  <Link href="https://www.google.com/maps/@42.2783983,-83.7414089,3a,25.4y,88.35h,92.52t/data=!3m8!1e1!3m6!1sAF1QipPP8EKHRsoQYKOEzgkySqXr3YwlnjYMGCXC1nAX!2e10!3e11!6shttps:%2F%2Flh5.googleusercontent.com%2Fp%2FAF1QipPP8EKHRsoQYKOEzgkySqXr3YwlnjYMGCXC1nAX%3Dw203-h100-k-no-pi-0-ya315.63397-ro-0-fo100!7i8704!8i4352?entry=ttu">
+                  <PaperLink href="https://www.google.com/maps/@42.2783983,-83.7414089,3a,25.4y,88.35h,92.52t/data=!3m8!1e1!3m6!1sAF1QipPP8EKHRsoQYKOEzgkySqXr3YwlnjYMGCXC1nAX!2e10!3e11!6shttps:%2F%2Flh5.googleusercontent.com%2Fp%2FAF1QipPP8EKHRsoQYKOEzgkySqXr3YwlnjYMGCXC1nAX%3Dw203-h100-k-no-pi-0-ya315.63397-ro-0-fo100!7i8704!8i4352?entry=ttu">
                     Comet Coffee
-                  </Link>{" "}
+                  </PaperLink>{" "}
                   between classes at UofM (Go Blue!).
                 </p>
 
@@ -247,15 +242,15 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
                     className="h-8 inline align-bottom pr-1"
                   />
                   Occasional fan of skeuomorphism; real fan of{" "}
-                  <Link href="https://supabase.com/">Supabase</Link> and Dan
-                  Dennett's{" "}
-                  <Link href="https://en.wikipedia.org/wiki/Consciousness_Explained">
+                  <PaperLink href="https://supabase.com/">Supabase</PaperLink>{" "}
+                  and Dan Dennett's{" "}
+                  <PaperLink href="https://en.wikipedia.org/wiki/Consciousness_Explained">
                     "Consciousness Explained"
-                  </Link>
+                  </PaperLink>
                   . Check out{" "}
-                  <Link href="https://www.youtube.com/@veritasium">
+                  <PaperLink href="https://www.youtube.com/@veritasium">
                     Veritasium
-                  </Link>{" "}
+                  </PaperLink>{" "}
                   too for some of the best science content on the Internet.
                 </p>
 
@@ -276,6 +271,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
               </CardContent>
             </MaybeRoughCard>
             <div className="mt-2">
+              {/* <Doodle /> */}
               <svg height="100" width="100" xmlns="http://www.w3.org/2000/svg">
                 <polygon
                   points="20,80 50,30 80,80"
