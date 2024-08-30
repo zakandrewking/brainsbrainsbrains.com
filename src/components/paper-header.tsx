@@ -291,6 +291,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
             // click is handled by drag-end
             event.preventDefault();
           }}
+          aria-label={"Go to " + rollText}
         />
       </div>
 
