@@ -1,0 +1,175 @@
+---
+title: The making of this site
+subtitle: brainsbrainsbrains.com
+date: 2024-09-29
+tags:
+  - next.js
+  - rough.js
+  - skeuomorphism
+---
+
+import Image from "next/image";
+import image from "./assets/image.png";
+import image2 from "./assets/image2.png";
+import image4 from "./assets/image4.png";
+import image5 from "./assets/image5.png";
+
+It's been a long time since I had a personal website. Once upon a time I
+procured `http://zak.ucsd.edu`, before UCSD stopped giving out whatever top-level
+subdomain any student happened to want. It was about the simplest combination
+of HTML + CSS you could imagine:
+
+<Image src={image} style={{ width: "100%", maxWidth: "350px" }} />
+
+Alas, I could not procure lifetime access to that domain, so for a while I was
+without a personal website.
+
+I got the itch again to make a personal website, and I bought
+([brainsbrainsbrains.com](https://brainsbrainsbrains.com)) because it's a cool
+domain, and everything I do inevitably connects to a bunch of brains.
+
+Around the same time, I ran across this delightful simulated Ink on Paper
+drawing by [orbitanaut](https://www.fxhash.xyz/u/orbitanaut) that I wanted to
+try to recreate using only widely-supported web technologies. The image is an
+NFT, so I guess it's nicer to direct you to the listing (is that what people do
+with NFTs?):
+
+[https://www.fxhash.xyz/generative/12059](https://www.fxhash.xyz/generative/12059)
+
+I couldn't quite capture that effect in the end, but I did come up with a fun
+"scroll" effect — try dragging the bottom of the scroll on the
+[homepage](https://www.brainsbrainsbrains.com/) to see it in action! And I
+learned a few things about building websites along the way.
+
+## 1. We live in a skeuomorphic world
+
+The classic touchpoint for skeuomorphism in modern software is [early Apple
+iOS](https://appleinsider.com/articles/22/08/23/what-apple-learned-from-skeuomorphism-and-why-it-still-matters),
+from the release of the first iPhone to iOS 6. I remember getting an iPhone 4 in
+college, and before that playing with GarageBand, with all its physically
+inspired details: those skeuomorphic apps _felt_ a certain way. Of course, the
+feelings of using those early iOS apps were skewed and colored by the hype and
+stagecraft that Steve Jobs brought to the era. If you tried GarageBand after
+watching the Apple product announcement, it felt like the future; it felt
+special.
+
+Fast-forward to 2024 and software doesn't feel like much to me. Most apps and
+websites are flat and straightforward; everything feels like Slack. (The
+software that makes you really _feel_ it today is AI — but that's a topic for
+another time).
+
+I mean, just soak in the old Notes app for a minute:
+
+<Image src={image2} style={{ width: "100%", maxWidth: "450px" }} />
+From: [Why I'll miss skeuomorphism in iOS](https://www.macworld.com/article/221261/why-ill-miss-skeuomorphism-in-ios.html)
+
+## 2. Putting pencil to paper
+
+So I was in a nostalgic mood, and I wanted to bring back some skeuomorphism for
+my website. I was going for a "handwritten with an ink pen on thick textured
+paper" thing, but I also wanted this to serve as a functional blog that loads
+quickly and requires minimal maintenance.
+
+You can see the result on the [BrainsBrainsBrains
+homepage](https://www.brainsbrainsbrains.com/) and on the [About
+Me](https://www.brainsbrainsbrains.com/about-me) page.
+
+<Image src={image5} style={{ width: "100%", maxWidth: "550px" }} />
+
+
+Here's the approach I settled on for maximum feels:
+
+- For paper texture, I’m using a simple SVG filter inspired by [Chokcoco on
+  codepen](https://codepen.io/Chokcoco/full/OJWLXPY). It turns out you can
+  [apply SVG filters to any HTML
+  element](https://www.noupe.com/design/svg-filters-how-to-apply-them-to-html-elements-96298.html)!
+
+```html
+      <svg className="w-0 h-0">
+        <filter id="rough-paper">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.12"
+            result="noise"
+            numOctaves="3"
+          />
+          <feDiffuseLighting
+            in="noise"
+            lightingColor="#f9f5f0"
+            surfaceScale="2"
+          >
+            <feDistantLight azimuth="90" elevation="75" />
+          </feDiffuseLighting>
+        </filter>
+      </svg>
+```
+
+- For pencil effects, I originally set up a SVG filter on text elements inspired
+  by the [wonderful site, Here Dragons
+  Abound](https://heredragonsabound.blogspot.com/2020/02/creating-pencil-effect-in-svg.html),
+  but the performance on mobile Safari was terrible, and I wanted everything to
+  render dynamically, especially text and links. I want a website, not a giant
+  PNG. So instead, text is a handwriting font called
+  [Caveat](https://fonts.google.com/specimen/Caveat).
+- To add a bit more to the effect, I applied that slow pencil-effect filter from
+  Here Dragons Abound to some Emojis & unicode characters, captured screen grabs
+  of them, removed the backgrounds, and included them as images.
+- Finally, I wanted to set up simulate some hand-drawn decorations, so I turned
+  to [Rough.js](https://roughjs.com/). You can see the effect in the rectangles
+  around the Link and Bio sections, and also the little doodle at the bottom of
+  the scroll. To keep decorations from recalculating when you navigate, I put some
+  [Rough.js Generators](https://github.com/rough-stuff/rough/wiki/RoughGenerator)
+  in a store that persists across navigation events. Here's the doodle:
+
+<Image src={image4} style={{ width: "100%", maxWidth: "160px" }} />
+
+- There's another library called [RoughNotation](https://roughnotation.com/)
+  that I used to add little underline animations when you hover a cursor over a
+  link on Desktop.
+- All this has to work in dark-mode of course, because that's what we do now, we
+  web devs. It respects [OS
+  settings](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme),
+  but maybe I'll add a selector later.
+
+## 3. The scroll
+
+At some point, I decided that the virtual paper should roll up like a scroll.
+This was the funnest part; and tricky, because the "rolled up" scroll would
+appear on the home page, the "unrolled scroll" would appear the About Me page
+(with a photo and a bio), and the whole thing would need work whether you are
+using a touch screen to unroll the scroll or clicking a good-old-fashioned
+hyperlink to navigate between pages.
+
+Behind the scenes, this site runs on Next.js with server-side-generation (SSG),
+deployed on GitHub pages, because that was an easy option and performs great —
+it generates a bunch of HTML and CSS up-front; it even works with javascript
+disabled!
+
+A couple tricks were required to make the scroll work as a [progressive
+enhancement](https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement),
+i.e. something that works when javascript is ready, but doesn't interfere with
+the good old-fashioned HTML & CSS that we ship on first load.
+
+For the drag effect, I turned to [d3-drag](https://d3js.org/d3-drag). Browser
+drag effects are surprisingly annoying out-of-the-box, and d3-drag standardizes
+a few things across different interaction types (mouse vs. touch especially).
+When you drag, the site disables the CSS scroll animation temporarily and turns
+to d3 for updating the DOM. When you finish dragging, d3 turns off, and the CSS
+animation turns back on, and we update the height of the scroll to whatever
+stop-point we need, depending on whether you're navigating from Home to About
+Me, or the other way around.
+
+To make it all feel a little more like paper, we only render two possible widths
+(`350px` and `750px`); no dynamic changes unless you cross the breakpoint.
+
+## 4. Everything else
+
+The rest of this site is the simplest Next.js + markdown blog template
+imaginable. I added [Tailwind](https://tailwindcss.com/) and some
+[shadcn](https://ui.shadcn.com/) components because they're convenient, but you
+won't find many other tricks in the codebase. It's all [open source Apache 2.0
+code](https://github.com/zakandrewking/brainsbrainsbrains.com) if you'd like
+peruse.
+
+Hopefully you've enjoyed visiting a webpage that looks like a bumpy sheet of
+paper on which someone has scribbled his name.

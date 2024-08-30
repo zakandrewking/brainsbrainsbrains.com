@@ -12,14 +12,14 @@ export default function Home() {
   return (
     <>
       <PaperHeader isRolledUp={true} />
-      {/* <main className="flex flex-col w-[350px] md:w-[750px] pt-8 px-2">
+      <main className="flex flex-col w-[350px] md:w-[750px] pt-8 px-2">
         <H1>Posts</H1>
         <PostList />
         <H3 className="mt-8">Tags</H3>
         {allPostsData.tags.map((tag: string) => (
           <Link href={`/tag/${tag}`}>{tag}</Link>
         ))}
-      </main> */}
+      </main>
       <Footer />
     </>
   );
