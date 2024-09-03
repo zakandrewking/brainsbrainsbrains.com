@@ -40,10 +40,16 @@ export default function Doodle() {
       const rc = rough.svg(el);
       const generator = rc.generator;
       const opts = {
-        roughness: 0.6,
+        roughness: 0.2,
         strokeWidth: 0.15,
-        bowing: 1,
+        bowing: 15,
         stroke: "hsl(var(--card-foreground))",
+      };
+      const fillOpts = {
+        ...opts,
+        fill: "hsl(var(--card-foreground))",
+        hachureAngle: -60,
+        hachureGap: 4,
       };
       const shapes = [
         generator.polygon(
@@ -54,11 +60,11 @@ export default function Doodle() {
           ],
           opts
         ),
-        generator.circle(50, 30, 60, opts),
+        generator.circle(50, 30, 60, fillOpts),
         generator.circle(50, 30, 38, opts),
         generator.circle(50, 30, 20, opts),
         generator.circle(50, 30, 10, opts),
-        generator.path("M 20 80 Q 50 90 80 80", opts),
+        generator.path("M 20 80 Q 50 90 80 80", fillOpts),
       ];
       dispatch({
         type: "update_generator",
