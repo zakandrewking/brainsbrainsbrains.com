@@ -31,6 +31,7 @@ interface PostData {
 export async function getSortedPostsData() {
   // Get file names under /posts
   const fileNames = fs.readdirSync(postsDirectory);
+
   const allPostsData = (
     await Promise.all(
       fileNames.map(async (fileName) => {
@@ -43,17 +44,15 @@ export async function getSortedPostsData() {
         // Use gray-matter to parse the post metadata section
         const matterResult = matter(fileContents);
         // preview
-        const preview = await mdxToJavascript(
-          fileContents.slice(
-            matterResult.data.previewStart,
-            matterResult.data.previewEnd
-          )
-        );
+        const previewPath = path.join(postsDirectory, fileName, "preview.mdx");
+        const previewContents = fs.readFileSync(previewPath, "utf8");
+        const preview = await mdxToJavascript(previewContents);
         // Combine the data with the id
         return {
           ...matterResult.data,
-          id,
           preview,
+          id,
+          // preview,
         } as PostData;
       })
     )

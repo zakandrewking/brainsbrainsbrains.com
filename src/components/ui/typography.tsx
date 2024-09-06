@@ -11,8 +11,7 @@ export function H1({
   className?: string;
   children: ReactNode;
 }) {
-  let classes =
-    "scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-5xl";
+  let classes = "mt-4 scroll-m-20 text-3xl font-extrabold tracking-tight";
   if (gutterBottom) {
     classes += " mb-6";
   }
@@ -29,7 +28,7 @@ export function H2({
   children: ReactNode;
 }) {
   let classes =
-    "mt-10 scroll-m-20 pb-2 text-xl font-semibold tracking-tight transition-colors first:mt-0";
+    "mt-4 scroll-m-20 pb-2 text-2xl font-semibold tracking-tight transition-colors";
   if (gutterBottom) {
     classes += " mb-5";
   }
@@ -47,7 +46,7 @@ export function H3({
   underline?: boolean;
   children: ReactNode;
 }) {
-  let classes = "scroll-m-20 text-2xl font-semibold tracking-tight";
+  let classes = "scroll-m-20 text-xl font-semibold tracking-tight";
   if (gutterBottom) {
     classes += " mb-4";
   }
@@ -73,7 +72,7 @@ export function H4({
   className?: string;
   children: ReactNode;
 }) {
-  let classes = "scroll-m-20 text-xl font-semibold tracking-tight";
+  let classes = "scroll-m-20 text-lg font-semibold tracking-tight";
   if (gutterBottom) {
     classes += " mb-3";
   }

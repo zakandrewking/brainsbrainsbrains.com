@@ -36,7 +36,7 @@ export default async function PostList({ tag }: { tag?: string }) {
           {title}
         </H3>
       </Link>
-      {/* <MDXContent components={useMDXComponents({})} /> */}
+      <MDXContent components={useMDXComponents({})} />
       <Link href={`/blog/${id}`}>[ Keep reading ]</Link>
       {/* <div>
         Tags:{" "}

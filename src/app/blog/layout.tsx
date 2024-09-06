@@ -12,11 +12,11 @@ import { Button } from "@/components/ui/button";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <div className="p-10">
-      <Button variant="link" asChild>
+    <div className="w-[355px] md:w-[750px]">
+      <Button variant="link" asChild className="mb-4">
         <Link href="/">← Home</Link>
       </Button>
-      {children}
+      <div>{children}</div>
     </div>
   );
 }

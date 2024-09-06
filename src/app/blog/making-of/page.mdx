@@ -5,9 +5,12 @@ tags:
   - next.js
   - rough.js
   - skeuomorphism
-previewStart: 156
-previewEnd: 784
 ---
+
+import Tags from "@/components/tags"
+
+
+{(new Date(frontmatter.date)).toDateString()}
 
 # {frontmatter.title}
 
@@ -179,3 +182,8 @@ peruse.
 
 Hopefully you've enjoyed visiting a webpage that looks like a bumpy sheet of
 paper on which someone has scribbled his name.
+
+<br/>
+<br/>
+
+<Tags tags={frontmatter.tags} label />
