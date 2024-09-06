@@ -1,49 +1,56 @@
 ---
-title: The making of this site
-subtitle: brainsbrainsbrains.com
+title: Making this site
 date: 2024-09-29
 tags:
   - next.js
   - rough.js
   - skeuomorphism
+previewStart: 156
+previewEnd: 784
 ---
 
-import Image from "next/image";
-import image from "./assets/image.png";
-import image2 from "./assets/image2.png";
-import image4 from "./assets/image4.png";
-import image5 from "./assets/image5.png";
+# {frontmatter.title}
 
 It's been a long time since I had a personal website. Once upon a time I
-procured `http://zak.ucsd.edu`, before UCSD stopped giving out whatever top-level
-subdomain any student happened to want. It was about the simplest combination
-of HTML + CSS you could imagine:
+procured `http://zak.ucsd.edu`, before UCSD stopped giving out whatever
+top-level subdomain any student happened to want. My website was about the
+simplest combination of HTML + CSS you could imagine:
 
-<Image src={image} style={{ width: "100%", maxWidth: "350px" }} />
+<img src="/making-of/image.png" style={{ width: "100%", maxWidth: "350px" }} />
 
-Alas, I could not procure lifetime access to that domain, so for a while I was
-without a personal website.
+Alas, I could not procure lifetime access to this domain, so for quite a while I
+was without a personal website.
 
-I got the itch again to make a personal website, and I bought
-([brainsbrainsbrains.com](https://brainsbrainsbrains.com)) because it's a cool
-domain, and everything I do inevitably connects to a bunch of brains.
+This year I got the itch again to make a new site, and I bought
+[brainsbrainsbrains.com](https://brainsbrainsbrains.com) because it's a cool
+domain, and because I find myself dealing with brains all the time.
 
-Around the same time, I ran across this delightful simulated Ink on Paper
-drawing by [orbitanaut](https://www.fxhash.xyz/u/orbitanaut) that I wanted to
-try to recreate using only widely-supported web technologies. The image is an
-NFT, so I guess it's nicer to direct you to the listing (is that what people do
-with NFTs?):
+Needing to put something fun at that domain, I ran across this delightful
+simulated Ink on Paper drawing by
+[orbitanaut](https://www.fxhash.xyz/u/orbitanaut) that I wanted to try to
+recreate using only widely-supported web technologies. The image is an NFT, so I
+guess it's nicer to direct you to the listing (is that what people do with
+NFTs?):
 
 [https://www.fxhash.xyz/generative/12059](https://www.fxhash.xyz/generative/12059)
 
 I couldn't quite capture that effect in the end, but I did come up with a fun
 "scroll" effect — try dragging the bottom of the scroll on the
-[homepage](https://www.brainsbrainsbrains.com/) to see it in action! And I
+[homepage](/) to see it in action! And I
 learned a few things about building websites along the way.
 
 ## 1. We live in a skeuomorphic world
 
-The classic touchpoint for skeuomorphism in modern software is [early Apple
+**Skeuomorphism**: the ancient practice of making digital interfaces that look
+like physical objects.
+
+Interfaces like this have a long history. Buttons in the classic adventure game
+Myst, for example, could look like they were scrawled in a book:
+
+<img src="/making-of/myst.png" style={{ width: "100%", maxWidth: "350px" }} />
+From [Myst - Amiga](https://www.lemonamiga.com/games/details.php?id=2146)
+
+The classic touchpoint for skeuomorphism outside games is [early Apple
 iOS](https://appleinsider.com/articles/22/08/23/what-apple-learned-from-skeuomorphism-and-why-it-still-matters),
 from the release of the first iPhone to iOS 6. I remember getting an iPhone 4 in
 college, and before that playing with GarageBand, with all its physically
@@ -60,7 +67,7 @@ another time).
 
 I mean, just soak in the old Notes app for a minute:
 
-<Image src={image2} style={{ width: "100%", maxWidth: "450px" }} />
+<img src="/making-of/image2.png" style={{ width: "100%", maxWidth: "450px" }} />
 From: [Why I'll miss skeuomorphism in iOS](https://www.macworld.com/article/221261/why-ill-miss-skeuomorphism-in-ios.html)
 
 ## 2. Putting pencil to paper
@@ -74,8 +81,7 @@ You can see the result on the [BrainsBrainsBrains
 homepage](https://www.brainsbrainsbrains.com/) and on the [About
 Me](https://www.brainsbrainsbrains.com/about-me) page.
 
-<Image src={image5} style={{ width: "100%", maxWidth: "550px" }} />
-
+<img src="/making-of/image5.png" style={{ width: "100%", maxWidth: "550px" }} />
 
 Here's the approach I settled on for maximum feels:
 
@@ -121,7 +127,7 @@ Here's the approach I settled on for maximum feels:
   [Rough.js Generators](https://github.com/rough-stuff/rough/wiki/RoughGenerator)
   in a store that persists across navigation events. Here's the doodle:
 
-<Image src={image4} style={{ width: "100%", maxWidth: "160px" }} />
+<img src="/making-of/image4.png" style={{ width: "100%", maxWidth: "160px" }} />
 
 - There's another library called [RoughNotation](https://roughnotation.com/)
   that I used to add little underline animations when you hover a cursor over a

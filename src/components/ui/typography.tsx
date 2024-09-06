@@ -12,7 +12,7 @@ export function H1({
   children: ReactNode;
 }) {
   let classes =
-    "scroll-m-20 text-2xl underline underline-offset-4 font-extrabold tracking-tight lg:text-5xl";
+    "scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-5xl";
   if (gutterBottom) {
     classes += " mb-6";
   }
@@ -39,32 +39,45 @@ export function H2({
 export function H3({
   gutterBottom = true,
   className,
+  underline = false,
+  children,
+}: {
+  gutterBottom?: boolean;
+  className?: string;
+  underline?: boolean;
+  children: ReactNode;
+}) {
+  let classes = "scroll-m-20 text-2xl font-semibold tracking-tight";
+  if (gutterBottom) {
+    classes += " mb-4";
+  }
+  return (
+    <h3
+      className={cn(
+        classes,
+        className,
+        underline ? "underline underline-offset-4" : ""
+      )}
+    >
+      {children}
+    </h3>
+  );
+}
+
+export function H4({
+  gutterBottom = true,
+  className,
   children,
 }: {
   gutterBottom?: boolean;
   className?: string;
   children: ReactNode;
 }) {
-  let classes =
-    "scroll-m-20 text-2xl font-semibold tracking-tight underline underline-offset-4 ";
-  if (gutterBottom) {
-    classes += " mb-4";
-  }
-  return <h3 className={cn(classes, className)}>{children}</h3>;
-}
-
-export function H4({
-  gutterBottom = true,
-  children,
-}: {
-  gutterBottom?: boolean;
-  children: ReactNode;
-}) {
   let classes = "scroll-m-20 text-xl font-semibold tracking-tight";
   if (gutterBottom) {
     classes += " mb-3";
   }
-  return <h4 className={classes}>{children}</h4>;
+  return <h4 className={cn(classes, className)}>{children}</h4>;
 }
 
 export function UL({ children }: { children: ReactNode }) {

@@ -4,19 +4,18 @@ import Footer from "@/components/footer";
 import PaperHeader from "@/components/paper-header";
 import PostList from "@/components/post-list";
 import { Button } from "@/components/ui/button";
-import { H1, H3 } from "@/components/ui/typography";
+import { H4 } from "@/components/ui/typography";
 import { getSortedPostsData } from "@/util/blog-util";
 
-export default function Home() {
-  const allPostsData = getSortedPostsData();
+export default async function Home() {
+  const allPostsData = await getSortedPostsData();
 
   return (
     <>
       <PaperHeader isRolledUp={true} />
       <main className="flex flex-col w-[350px] md:w-[750px] pt-8 px-2">
-        <H1>Posts</H1>
         <PostList />
-        <H3 className="mt-8">Tags</H3>
+        <H4 className="mt-12">Tags</H4>
         <div className="flex flex-wrap gap-2">
           {allPostsData.tags.map((tag: string) => (
             <Button
