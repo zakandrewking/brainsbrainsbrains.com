@@ -13,7 +13,7 @@ export default async function Home() {
   return (
     <>
       <PaperHeader isRolledUp={true} />
-      <main className="flex flex-col w-[350px] md:w-[750px] pt-8 px-2">
+      <main className="flex flex-col w-[355px] md:w-[750px] pt-8 px-2">
         <PostList />
         <H4 className="mt-12">Tags</H4>
         <div className="flex flex-wrap gap-2">

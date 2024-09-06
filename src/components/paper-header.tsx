@@ -8,9 +8,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useRef } from "react";
 
-import useWindowDimensions from "@/hooks/useWindowDimensions";
 import { PaperStoreContext } from "@/stores/paper-store";
-import { getUnrolledHeight, rolledHeight, roughSizes } from "@/util/paper-util";
+import { rolledHeight, roughSizes, unrolledHeight } from "@/util/paper-util";
 import { cn } from "@/util/ui-util";
 
 import Doodle from "./doodle";
@@ -37,28 +36,15 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
     router.push(rollUrl, { scroll: false });
   };
 
-  const handleResize = ({ width }: { width: number | null }) => {
-    if (isRolledUp) return;
-    const unrolledHeight = getUnrolledHeight(width || 0);
-    dispatch({ type: "update", height: `${unrolledHeight}px` });
-  };
-
-  const { width: screenWidth } = useWindowDimensions(handleResize);
-  const getServerHeight = () => {
-    return isRolledUp ? `${rolledHeight}px` : `${getUnrolledHeight(0)}px`;
-  };
   const getHeight = () => {
-    return isRolledUp
-      ? `${rolledHeight}px`
-      : `${getUnrolledHeight(screenWidth || 0)}px`;
+    return isRolledUp ? `${rolledHeight}px` : `${unrolledHeight}px`;
   };
 
   useEffect(() => {
     dispatch({ type: "update", height: getHeight() });
   }, []);
 
-  const height = state.height ?? getServerHeight();
-  const generatorSize = screenWidth && screenWidth < 768 ? "sm" : "md";
+  const height = state.height ?? getHeight();
 
   useEffect(() => {
     if (!dragRef.current) return;
@@ -95,7 +81,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
   return (
     <header
       className={cn(
-        "relative pb-6 w-[350px] md:w-[750px] handwritten",
+        "relative pb-6 w-[355px] handwritten",
         handwritten.className,
         state.shouldTransition
           ? "transition-[height] duration-500 ease-in-out"
@@ -109,14 +95,22 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
           <div className="paper-filter w-full h-full top-0 left-0"></div>
         </div>
 
-        <div className="relative w-full p-1 pt-2 md:pt-0 overflow-hidden">
-          <div className="md:px-4 md:pt-4">
+        <div className="relative w-full p-1 pt-2 overflow-hidden">
+          <div className="flex flex-col items-center">
+            <div className="flex flex-col gap-6 items-center pt-2">
+              <div className="flex flex-col gap-2 items-center">
+                <div className="text-xl">The personal website of</div>
+                <span className="font-bold text-4xl">Zak King</span>
+              </div>
+            </div>
+
             <PaperButton
               href={rollUrl}
               onClick={(event) => {
                 event.preventDefault();
                 handleRoll();
               }}
+              className="my-3"
             >
               {rollUrl === "/about-me" ? (
                 <>
@@ -147,20 +141,12 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
               )}
               {rollText}
             </PaperButton>
-
-            <div className="flex flex-col gap-6 items-center pt-2 md:pt-0">
-              <div className="flex flex-col gap-2 items-center mb-8">
-                <div className="text-xl">The personal website of</div>
-                <span className="font-bold text-4xl">Zak King</span>
-              </div>
-            </div>
           </div>
 
           <div className="flex flex-col gap-6 items-center px-4">
             <RoughCard
-              height={roughSizes.img[generatorSize].height}
-              width={roughSizes.img[generatorSize].width}
-              size={generatorSize}
+              height={roughSizes.img.height}
+              width={roughSizes.img.width}
               generatorKey="img"
             >
               <img
@@ -172,9 +158,8 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
             <div className="flex flex-col gap-2">
               <span className="text-xl">Find me here:</span>
               <RoughCard
-                height={roughSizes.links[generatorSize].height}
-                width={roughSizes.links[generatorSize].width}
-                size={generatorSize}
+                height={roughSizes.links.height}
+                width={roughSizes.links.width}
                 generatorKey="bioGenerator"
               >
                 <div className="flex flex-row flex-wrap gap-3 m-3 justify-center text-xl">
@@ -194,9 +179,8 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
               </RoughCard>
             </div>
             <RoughCard
-              height={roughSizes.bio[generatorSize].height}
-              width={roughSizes.bio[generatorSize].width}
-              size={generatorSize}
+              height={roughSizes.bio.height}
+              width={roughSizes.bio.width}
               generatorKey="linkGenerator"
             >
               <CardHeader>
@@ -222,9 +206,9 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
                   <PaperLink href="https://www.amyris.com">Amyris</PaperLink>,
                   and before that you might have found me{" "}
                   <PaperLink href="https://scholar.google.com/citations?user=ESLgsdUAAAAJ&hl=en">
-                    modeling microorganisms
+                    modeling
                   </PaperLink>{" "}
-                  at UC San Diego or haunting{" "}
+                  microorganisms at UC San Diego or haunting{" "}
                   <PaperLink href="https://www.google.com/maps/@42.2783983,-83.7414089,3a,25.4y,88.35h,92.52t/data=!3m8!1e1!3m6!1sAF1QipPP8EKHRsoQYKOEzgkySqXr3YwlnjYMGCXC1nAX!2e10!3e11!6shttps:%2F%2Flh5.googleusercontent.com%2Fp%2FAF1QipPP8EKHRsoQYKOEzgkySqXr3YwlnjYMGCXC1nAX%3Dw203-h100-k-no-pi-0-ya315.63397-ro-0-fo100!7i8704!8i4352?entry=ttu">
                     Comet Coffee
                   </PaperLink>{" "}
