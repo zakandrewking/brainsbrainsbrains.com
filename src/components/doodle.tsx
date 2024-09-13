@@ -69,7 +69,6 @@ export default function Doodle() {
       dispatch({
         type: "update_generator",
         generatorKey,
-        size,
         generator: shapes,
       });
       for (const shape of shapes) {
