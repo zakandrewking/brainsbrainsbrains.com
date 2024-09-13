@@ -26,6 +26,7 @@ interface PostData {
   date: Date;
   tags: string[];
   preview: string;
+  anchor: string;
 }
 
 export async function getSortedPostsData() {

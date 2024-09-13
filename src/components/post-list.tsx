@@ -26,7 +26,7 @@ export default async function PostList({ tag }: { tag?: string }) {
       })
     : allPostsData.posts;
 
-  return filteredPosts.map(({ id, date, title }) => (
+  return filteredPosts.map(({ id, date, title, anchor }) => (
     <div>
       <div className="text-gray-600 dark:text-gray-400 mb-2">
         {date.toDateString()}
@@ -37,7 +37,7 @@ export default async function PostList({ tag }: { tag?: string }) {
         </H3>
       </Link>
       <MDXContent components={useMDXComponents({})} />
-      <Link href={`/blog/${id}`}>[ Keep reading ]</Link>
+      <Link href={`/blog/${id}#${anchor}`}>[ Keep reading ]</Link>
       {/* <div>
         Tags:{" "}
         {tags

@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { cn } from "@/util/ui-util";
+
 import { Button } from "./ui/button";
 
 export default function Tags({
@@ -10,7 +12,7 @@ export default function Tags({
   label?: boolean;
 }) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className={cn("flex flex-wrap gap-2", label ? "mt-12" : "")}>
       {label && <span>Tags:</span>}
       {tags.map((tag: string) => (
         <Button variant="outline" size="chip" key={tag} asChild>

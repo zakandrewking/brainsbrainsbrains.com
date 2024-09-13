@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 
+import { getAnchor } from "@/util/string-util";
 import { cn } from "@/util/ui-util";
 
 export function H1({
@@ -28,11 +29,37 @@ export function H2({
   children: ReactNode;
 }) {
   let classes =
-    "mt-4 scroll-m-20 pb-2 text-2xl font-semibold tracking-tight transition-colors";
+    "mt-6 scroll-m-20 text-2xl font-semibold tracking-tight transition-colors";
   if (gutterBottom) {
     classes += " mb-5";
   }
   return <h2 className={cn(classes, className)}>{children}</h2>;
+}
+
+// based on https://tomekdev.com/posts/anchors-for-headings-in-mdx
+export function H2Anchor({
+  gutterBottom = true,
+  className,
+  children,
+}: {
+  gutterBottom?: boolean;
+  className?: string;
+  children: string;
+}) {
+  const anchor = getAnchor(children);
+  const link = `#${anchor}`;
+  let classes =
+    "mt-6 scroll-m-20 text-2xl font-semibold tracking-tight transition-colors";
+  if (gutterBottom) {
+    classes += " mb-5";
+  }
+  return (
+    <h2 className={cn(classes, className)} id={anchor}>
+      <a href={link} className="anchor-link">
+        {children}
+      </a>
+    </h2>
+  );
 }
 
 export function H3({
