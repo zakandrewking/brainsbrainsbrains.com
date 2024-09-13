@@ -32,6 +32,12 @@ export default function RootLayout({
               name="viewport"
               content="width=device-width, initial-scale=1.0"
             />
+            <link
+              rel="alternate"
+              type="application/atom+xml"
+              title="ATOM Feed for Zak King's Blog"
+              href="/feed"
+            />
           </head>
           <body
             className={cn(
