@@ -44,9 +44,14 @@ export async function getSortedPostsData() {
         const fileContents = fs.readFileSync(fullPath, "utf8");
         // Use gray-matter to parse the post metadata section
         const matterResult = matter(fileContents);
-        // preview
-        const previewPath = path.join(postsDirectory, fileName, "preview.mdx");
-        const previewContents = fs.readFileSync(previewPath, "utf8");
+        // Extract preview content based on start and end lines
+        const lines = fileContents.split("\n");
+        const previewContents = lines
+          .slice(
+            matterResult.data.preview_start_line - 1,
+            matterResult.data.preview_end_line
+          )
+          .join("\n");
         const preview = await mdxToJavascript(previewContents);
         // Combine the data with the id
         return {
