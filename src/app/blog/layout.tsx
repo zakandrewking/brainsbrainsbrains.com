@@ -17,6 +17,9 @@ export default function Layout({ children }: { children: ReactNode }) {
         <Link href="/">← Home</Link>
       </Button>
       <div>{children}</div>
+      <div className="flex justify-center mt-8">
+        <Link href="/">← Home</Link>
+      </div>
     </div>
   );
 }
