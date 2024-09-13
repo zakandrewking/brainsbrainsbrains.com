@@ -3,6 +3,7 @@ import { Exo_2 as FontSans } from "next/font/google";
 import { ReactNode } from "react";
 
 import AmplitudeConfig from "@/components/amplitude";
+import Footer from "@/components/footer";
 import { PaperStoreProvider } from "@/stores/paper-store";
 import { cn } from "@/util/ui-util";
 
@@ -36,7 +37,7 @@ export default function RootLayout({
               rel="alternate"
               type="application/atom+xml"
               title="ATOM Feed for Zak King's Blog"
-              href="/feed"
+              href="atom.xml"
             />
           </head>
           <body
@@ -47,6 +48,7 @@ export default function RootLayout({
           >
             <div className="flex flex-col min-h-screen p-8 items-center">
               {children}
+              <Footer />
             </div>
           </body>
         </html>

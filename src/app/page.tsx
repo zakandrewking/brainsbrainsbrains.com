@@ -1,10 +1,6 @@
-import Link from "next/link";
-
-import Footer from "@/components/footer";
 import PaperHeader from "@/components/paper-header";
 import PostList from "@/components/post-list";
 import Tags from "@/components/tags";
-import { Button } from "@/components/ui/button";
 import { H4 } from "@/components/ui/typography";
 import { getSortedPostsData } from "@/util/blog-util";
 
@@ -19,7 +15,6 @@ export default async function Home() {
         <H4 className="mt-12">Tags</H4>
         <Tags tags={allPostsData.tags} />
       </main>
-      <Footer />
     </>
   );
 }

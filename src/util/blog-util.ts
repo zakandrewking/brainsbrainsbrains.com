@@ -1,6 +1,9 @@
+// server-only because we `eval`
+import "server-only";
 import fs from "fs";
 import matter from "gray-matter";
-import path from "path";
+import path, { join } from "path";
+import * as runtime from "react/jsx-runtime";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 
@@ -18,6 +21,26 @@ async function mdxToJavascript(content: string) {
   return String(await make(content));
 }
 
+export async function renderMdxToHtml(content: string) {
+  const code = await compile(content, {
+    outputFormat: "function-body",
+    development: false,
+    baseUrl: join(import.meta.url, "..", "..", ".."),
+  });
+
+  const { default: MDXContent } = await eval(
+    `(async () => {
+      const runtime = ${JSON.stringify(runtime)};
+      const {jsx} = runtime;
+      ${code}
+      return { default: MDXContent };
+    })()`
+  );
+
+  const ReactDOMServer = await import("react-dom/server");
+  return ReactDOMServer.renderToString(MDXContent({}));
+}
+
 const postsDirectory = path.join(process.cwd(), "src", "app", "blog");
 
 interface PostData {
@@ -27,6 +50,7 @@ interface PostData {
   tags: string[];
   preview: string;
   anchor: string;
+  content: string; // Add this to include the content property
 }
 
 export async function getSortedPostsData() {
@@ -48,27 +72,36 @@ export async function getSortedPostsData() {
         const previewPath = path.join(postsDirectory, fileName, "preview.mdx");
         const previewContents = fs.readFileSync(previewPath, "utf8");
         const preview = await mdxToJavascript(previewContents);
+
+        // Extract the full content for the feed
+        const content = fileContents;
+
         // Combine the data with the id
         return {
-          ...matterResult.data,
-          preview,
           id,
-          // preview,
+          title: matterResult.data.title,
+          date: new Date(matterResult.data.date),
+          tags: matterResult.data.tags || [],
+          preview,
+          anchor: matterResult.data.anchor || "",
+          content,
         } as PostData;
       })
     )
   ).filter((post) => post !== null) as PostData[];
 
   // Sort posts by date
+  const sortedPosts = allPostsData.sort((a, b) => {
+    if (a.date < b.date) {
+      return 1;
+    } else {
+      return -1;
+    }
+  });
+
   return {
-    posts: allPostsData.sort((a, b) => {
-      if (a.date < b.date) {
-        return 1;
-      } else {
-        return -1;
-      }
-    }),
-    tags: allPostsData
+    posts: sortedPosts,
+    tags: sortedPosts
       .flatMap((post) => post.tags)
       .reduce((acc, tag) => {
         if (!acc.includes(tag)) {
