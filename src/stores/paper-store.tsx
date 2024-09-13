@@ -23,21 +23,17 @@ type PaperStoreAction =
   | {
       type: "update_generator";
       generatorKey: string;
-      size: "sm" | "md";
       generator: any;
     };
 
 function reducer(state: PaperState, action: PaperStoreAction) {
   if (action.type === "update_generator") {
-    const { generatorKey, size, generator } = action;
+    const { generatorKey, generator } = action;
     return {
       ...state,
       generators: {
         ...state.generators,
-        [generatorKey]: {
-          ...state.generators[generatorKey],
-          [size]: generator,
-        },
+        [generatorKey]: generator,
       },
     };
   } else if (action.type === "update") {

@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 
+import { getAnchor } from "@/util/string-util";
 import { cn } from "@/util/ui-util";
 
 export function H1({
@@ -11,8 +12,7 @@ export function H1({
   className?: string;
   children: ReactNode;
 }) {
-  let classes =
-    "scroll-m-20 text-2xl underline underline-offset-4 font-extrabold tracking-tight lg:text-5xl";
+  let classes = "mt-4 scroll-m-20 text-3xl font-extrabold tracking-tight";
   if (gutterBottom) {
     classes += " mb-6";
   }
@@ -29,14 +29,68 @@ export function H2({
   children: ReactNode;
 }) {
   let classes =
-    "mt-10 scroll-m-20 pb-2 text-xl font-semibold tracking-tight transition-colors first:mt-0";
+    "mt-6 scroll-m-20 text-2xl font-semibold tracking-tight transition-colors";
   if (gutterBottom) {
     classes += " mb-5";
   }
   return <h2 className={cn(classes, className)}>{children}</h2>;
 }
 
+// based on https://tomekdev.com/posts/anchors-for-headings-in-mdx
+export function H2Anchor({
+  gutterBottom = true,
+  className,
+  children,
+}: {
+  gutterBottom?: boolean;
+  className?: string;
+  children: string;
+}) {
+  const anchor = getAnchor(children);
+  const link = `#${anchor}`;
+  let classes =
+    "mt-6 scroll-m-20 text-2xl font-semibold tracking-tight transition-colors";
+  if (gutterBottom) {
+    classes += " mb-5";
+  }
+  return (
+    <h2 className={cn(classes, className)} id={anchor}>
+      <a href={link} className="anchor-link">
+        {children}
+      </a>
+    </h2>
+  );
+}
+
 export function H3({
+  gutterBottom = true,
+  className,
+  underline = false,
+  children,
+}: {
+  gutterBottom?: boolean;
+  className?: string;
+  underline?: boolean;
+  children: ReactNode;
+}) {
+  let classes = "scroll-m-20 text-xl font-semibold tracking-tight";
+  if (gutterBottom) {
+    classes += " mb-4";
+  }
+  return (
+    <h3
+      className={cn(
+        classes,
+        className,
+        underline ? "underline underline-offset-4" : ""
+      )}
+    >
+      {children}
+    </h3>
+  );
+}
+
+export function H4({
   gutterBottom = true,
   className,
   children,
@@ -45,26 +99,11 @@ export function H3({
   className?: string;
   children: ReactNode;
 }) {
-  let classes =
-    "scroll-m-20 text-2xl font-semibold tracking-tight underline underline-offset-4 ";
-  if (gutterBottom) {
-    classes += " mb-4";
-  }
-  return <h3 className={cn(classes, className)}>{children}</h3>;
-}
-
-export function H4({
-  gutterBottom = true,
-  children,
-}: {
-  gutterBottom?: boolean;
-  children: ReactNode;
-}) {
-  let classes = "scroll-m-20 text-xl font-semibold tracking-tight";
+  let classes = "scroll-m-20 text-lg font-semibold tracking-tight";
   if (gutterBottom) {
     classes += " mb-3";
   }
-  return <h4 className={classes}>{children}</h4>;
+  return <h4 className={cn(classes, className)}>{children}</h4>;
 }
 
 export function UL({ children }: { children: ReactNode }) {

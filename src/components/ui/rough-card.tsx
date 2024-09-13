@@ -8,13 +8,11 @@ import { PaperStoreContext } from "@/stores/paper-store";
 export function RoughCard({
   height,
   width,
-  size,
   generatorKey,
   children,
 }: {
   height: number;
   width: number;
-  size: "sm" | "md";
   generatorKey: string;
   children: ReactNode;
 }) {
@@ -22,9 +20,9 @@ export function RoughCard({
   const { state, dispatch } = useContext(PaperStoreContext);
 
   const drawRect = (el: SVGSVGElement) => {
-    if (state.generators[generatorKey]?.[size]) {
+    if (state.generators[generatorKey]) {
       const rc = rough.svg(el);
-      const rect = state.generators[generatorKey][size];
+      const rect = state.generators[generatorKey];
       const node = rc.draw(rect);
       el.appendChild(node);
     } else {
@@ -39,7 +37,6 @@ export function RoughCard({
       dispatch({
         type: "update_generator",
         generatorKey,
-        size,
         generator: rect,
       });
       const node = rc.draw(rect);
@@ -59,7 +56,7 @@ export function RoughCard({
       if (!ref.current) return;
       removeRect(ref.current);
     };
-  }, [ref, size]);
+  }, [ref]);
 
   return (
     <div className="text-card-foreground relative">

@@ -26,6 +26,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-rough-notation": "^1.0.5",
+    "remark-frontmatter": "^5.0.0",
+    "remark-mdx-frontmatter": "^5.0.0",
     "rough-notation": "^0.5.1",
     "roughjs": "^4.6.6",
     "tailwind-merge": "^2.3.0",

@@ -66,7 +66,7 @@ export function PaperLink({
           show={isHovering}
           color="hsl(var(--primary))"
           animationDuration={400}
-          padding={2}
+          padding={1}
         >
           <Link href={href} className={className}>
             {children}
