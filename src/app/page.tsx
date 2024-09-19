@@ -12,7 +12,7 @@ export default async function Home() {
       <PaperHeader isRolledUp={true} />
       <main className="flex flex-col w-[355px] md:w-[750px] pt-8 px-2">
         <PostList />
-        <H4 className="mt-12">Tags</H4>
+        <H4 className="mt-4">Tags</H4>
         <Tags tags={allPostsData.tags} />
       </main>
     </>

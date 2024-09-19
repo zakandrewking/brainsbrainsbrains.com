@@ -26,7 +26,7 @@ export default async function PostList({ tag }: { tag?: string }) {
     : allPostsData.posts;
 
   return filteredPosts.map(({ id, date, title, anchor }) => (
-    <div>
+    <div className="pb-8">
       <div className="text-gray-600 dark:text-gray-400 mb-2">
         {date.toDateString()}
       </div>
