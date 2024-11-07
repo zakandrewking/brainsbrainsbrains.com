@@ -18,11 +18,18 @@ export default async function PostList({ tag }: { tag?: string }) {
       })
     : allPostsData.posts;
 
-  return filteredPosts.map(async ({ id, date, title, anchor, preview }) => {
-    const { default: MDXContent } = await run(preview, {
-      ...(runtime as any),
-      baseUrl: join(import.meta.url, ".."),
-    });
+  const content = await Promise.all(
+    filteredPosts.map(async ({ preview }) => {
+      const { default: MDXContent } = await run(preview, {
+        ...(runtime as any),
+        baseUrl: join(import.meta.url, ".."),
+      });
+      return MDXContent;
+    })
+  );
+
+  return filteredPosts.map(({ id, date, title, anchor }, i) => {
+    const MDXContent = content[i];
     return (
       <div className="pb-8">
         <div className="text-gray-600 dark:text-gray-400 mb-2">
