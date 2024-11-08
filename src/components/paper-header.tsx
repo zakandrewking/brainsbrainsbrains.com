@@ -84,7 +84,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
       ref={heightRef}
     >
       <div className="w-full h-full overflow-hidden">
-        <div className="w-full h-[calc(100%-24px)] absolute overflow-hidden rounded-t-md shadow-xl">
+        <div className="w-full h-[calc(100%-24px)] absolute overflow-hidden rounded-t-md">
           <div className="paper-filter w-full h-full top-0 left-0"></div>
         </div>
 
@@ -145,7 +145,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
               <img
                 src="/zak.jpeg"
                 alt="Pic of Zak"
-                className="rounded-sm h-40 m-1 shadow-md"
+                className="rounded-sm h-40 m-1"
               />
             </RoughCard>
             <div className="flex flex-col gap-2">
@@ -225,11 +225,12 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
                   <PaperLink href="https://en.wikipedia.org/wiki/Consciousness_Explained">
                     "Consciousness Explained"
                   </PaperLink>
-                  . Check out{" "}
-                  <PaperLink href="https://www.youtube.com/@veritasium">
-                    Veritasium
+                  . I'm fascinated by{" "}
+                  <PaperLink href="https://github.com/kolbytn/mindcraft">
+                    Mindcraft 🧠⛏️
                   </PaperLink>{" "}
-                  too for some of the best science content on the Internet.
+                  and the prospect of setting LLMs free in an open digital
+                  world.
                 </p>
 
                 <p
