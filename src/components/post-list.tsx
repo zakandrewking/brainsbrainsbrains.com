@@ -4,12 +4,13 @@ import * as runtime from "react/jsx-runtime";
 
 import { run } from "@mdx-js/mdx";
 
-import { getMDXComponents } from "../../mdx-components";
+import { useMDXComponents } from "../../mdx-components";
 import { getSortedPostsData } from "../util/blog-util";
 import { H3 } from "./ui/typography";
 
 export default async function PostList({ tag }: { tag?: string }) {
   const allPostsData = await getSortedPostsData();
+  const mdxComponents = useMDXComponents({});
 
   const filteredPosts = tag
     ? allPostsData.posts.filter((post) => {
@@ -40,7 +41,7 @@ export default async function PostList({ tag }: { tag?: string }) {
             {title}
           </H3>
         </Link>
-        <MDXContent components={getMDXComponents({})} />
+        <MDXContent components={mdxComponents} />
         <Link href={`/blog/${id}#${anchor}`}>[ Keep reading ]</Link>
       </div>
     );

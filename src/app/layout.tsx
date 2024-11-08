@@ -1,5 +1,5 @@
 import "./globals.css";
-import { Exo_2 as FontSans } from "next/font/google";
+import { Caveat, Exo_2 } from "next/font/google";
 import { ReactNode } from "react";
 
 import AmplitudeConfig from "@/components/amplitude";
@@ -8,10 +8,13 @@ import { PaperStoreProvider } from "@/stores/paper-store";
 import { cn } from "@/util/ui-util";
 
 import type { Metadata } from "next";
-const fontSans = FontSans({
+const exo2 = Exo_2({
   subsets: ["latin"],
   variable: "--font-sans",
-  fallback: ["sans-serif"],
+});
+const caveat = Caveat({
+  subsets: ["latin"],
+  variable: "--font-handwritten",
 });
 
 export const metadata: Metadata = {
@@ -43,7 +46,8 @@ export default function RootLayout({
           <body
             className={cn(
               "min-h-screen bg-background font-sans antialiased overflow-y-scroll",
-              fontSans.variable
+              exo2.variable,
+              caveat.variable
             )}
           >
             <div className="flex flex-col min-h-screen p-8 items-center">

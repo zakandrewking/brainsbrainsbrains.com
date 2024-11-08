@@ -2,7 +2,7 @@ import { H1, H2Anchor, H3, H4, LI, P, UL } from "@/components/ui/typography";
 
 import type { MDXComponents } from "mdx/types";
 
-export function getMDXComponents(components: MDXComponents): MDXComponents {
+export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     h1: ({ children }) => <H1>{children}</H1>,
     h2: ({ children }) => <H2Anchor>{String(children)}</H2Anchor>,

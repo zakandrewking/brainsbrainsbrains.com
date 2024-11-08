@@ -74,6 +74,7 @@ const config = {
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
+        handwritten: ["var(--font-handwritten)", ...fontFamily.sans],
       },
     },
   },

@@ -1,12 +1,12 @@
 "use client";
 
 import "./paper.css";
-import { Caveat as Handwritten } from "next/font/google";
 import { drag as d3Drag } from "d3-drag";
 import { select as d3Select } from "d3-selection";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useRef } from "react";
+import { Ban } from "lucide-react";
 
 import { PaperStoreContext } from "@/stores/paper-store";
 import { rolledHeight, roughSizes, unrolledHeight } from "@/util/paper-util";
@@ -16,12 +16,6 @@ import Doodle from "./doodle";
 import { CardContent, CardHeader, CardTitle } from "./ui/card";
 import { PaperButton, PaperLink } from "./ui/paper-button";
 import { RoughCard } from "./ui/rough-card";
-
-const handwritten = Handwritten({
-  subsets: ["latin"],
-  display: "swap",
-  fallback: ["sans-serif"],
-});
 
 export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
   const { state, dispatch } = useContext(PaperStoreContext);
@@ -81,8 +75,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
   return (
     <header
       className={cn(
-        "relative pb-6 w-[355px] handwritten",
-        handwritten.className,
+        "relative pb-6 w-[355px] handwritten font-handwritten",
         state.shouldTransition
           ? "transition-[height] duration-500 ease-in-out"
           : ""
