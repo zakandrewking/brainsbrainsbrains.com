@@ -29,6 +29,8 @@ import { getSortedPostsData } from "@/util/blog-util";
 //             something</em>; let's try that.</p><a href="/blog/chain-of-thought#lets-make-a-syllabus">[ Keep reading ]</a>
 //             `;
 
+// maybe set up a cloudflare worker that forces the headers to not cache
+
 export async function GET() {
   const { posts } = await getSortedPostsData();
 

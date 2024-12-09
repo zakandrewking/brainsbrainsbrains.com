@@ -245,7 +245,7 @@ export default function PaperHeader({ isRolledUp }: { isRolledUp: boolean }) {
                     className="h-10 inline align-bottom pr-1"
                   />
                   I live in San Diego with my wife Gaby and two kids Elise (8)
-                  and Julian (5).
+                  and Julian (6).
                 </p>
               </CardContent>
             </RoughCard>
