@@ -1,13 +1,17 @@
-import "./globals.css";
-import { Caveat, Exo_2 } from "next/font/google";
-import { ReactNode } from "react";
+import './globals.css';
 
-import AmplitudeConfig from "@/components/amplitude";
-import Footer from "@/components/footer";
-import { PaperStoreProvider } from "@/stores/paper-store";
-import { cn } from "@/util/ui-util";
+import { ReactNode } from 'react';
 
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
+import {
+  Caveat,
+  Exo_2,
+} from 'next/font/google';
+
+import AmplitudeConfig from '@/components/amplitude';
+import { PaperStoreProvider } from '@/stores/paper-store';
+import { cn } from '@/util/ui-util';
+
 const exo2 = Exo_2({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -50,10 +54,7 @@ export default function RootLayout({
               caveat.variable
             )}
           >
-            <div className="flex flex-col min-h-screen p-8 items-center">
-              {children}
-              <Footer />
-            </div>
+            {children}
           </body>
         </html>
       </AmplitudeConfig>
