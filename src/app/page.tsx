@@ -4,7 +4,7 @@ export default async function Home() {
       href="https://github.com/zakandrewking"
       className="flex flex-col items-center justify-center h-screen"
     >
-      <img src="/ghosts.jpg" alt="ghosts" className="w-1/2" />
+      <img src="/ghosts.jpg" alt="ghosts" className="w-1/2 max-w-md" />
     </a>
   );
 }
