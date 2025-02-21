@@ -8,6 +8,7 @@ import {
 } from 'react';
 
 import clsx from 'clsx';
+import Image from 'next/image';
 
 function useGridSize() {
   const [gridSize, setGridSize] = useState(3);
@@ -424,13 +425,13 @@ export default function PuzzleClient() {
   // Render puzzle
   // ------------------------------------------------------
   return (
-    <div style={{ width: 400, margin: "20px auto" }}>
+    <div className="min-h-screen w-screen flex items-center justify-center">
       <div
+        className="border"
         style={{
           position: "relative",
           width: gridSize * tileSize,
           height: gridSize * tileSize,
-          border: "1px solid #999",
         }}
       >
         {/* Bottom layer: NxN facts */}
@@ -453,14 +454,12 @@ export default function PuzzleClient() {
               style={{
                 width: tileSize,
                 height: tileSize,
-                backgroundColor: "#fff",
-                border: "1px solid #444",
                 boxSizing: "border-box",
                 transform: `translate(${baseX}px, ${baseY}px)`,
               }}
             >
               <div
-                className="text-sm text-center [&_a]:cursor-pointer [&_a]:text-primary [&_a]:underline [&_a]:pointer-events-auto hover:[&_a]:opacity-70 px-1"
+                className="text-sm text-center select-none [&_a]:cursor-pointer [&_a]:text-primary [&_a]:underline [&_a]:pointer-events-auto hover:[&_a]:opacity-70 px-1"
                 style={{
                   display: "-webkit-box",
                   WebkitLineClamp: 4,
@@ -494,7 +493,7 @@ export default function PuzzleClient() {
           // If isDraggingTile[i] => no transition
           // else transition 200ms => for click or final snap
           const tileClasses = clsx(
-            "absolute pointer-events-auto draggable",
+            "absolute pointer-events-auto draggable border",
             !isDraggingTile[i] &&
               "transition-transform duration-200 ease-in-out"
           );
@@ -505,16 +504,15 @@ export default function PuzzleClient() {
               className={clsx(
                 tileClasses,
                 isDraggingTile[i]
-                  ? "cursor-grabbing opacity-70"
+                  ? "cursor-grabbing"
                   : canMove
-                  ? "cursor-grab hover:opacity-70"
+                  ? "cursor-grab"
                   : "cursor-default"
               )}
               style={{
                 width: tileSize,
                 height: tileSize,
                 backgroundColor: "#fff",
-                border: "1px solid #444",
                 boxSizing: "border-box",
                 transform: `translate(${baseX + off.x}px, ${baseY + off.y}px)`,
               }}
@@ -522,7 +520,12 @@ export default function PuzzleClient() {
               onPointerMove={(e) => handlePointerMove(e, i)}
               onPointerUp={(e) => handlePointerUp(e, i)}
             >
-              {tile}
+              <Image
+                src={puzzleImages[tile]}
+                alt={`Tile ${tile}`}
+                fill
+                className="object-cover pointer-events-none"
+              />
             </div>
           );
         })}
