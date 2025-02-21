@@ -49,6 +49,61 @@ function useContainerSize() {
   return containerSize;
 }
 
+// --------------------------------------------------------------------------
+// 1) A random "legal moves" scramble function
+// --------------------------------------------------------------------------
+function randomLegalScramble(gridSize: number, steps = 200): (number | null)[] {
+  const total = gridSize * gridSize;
+
+  // Start with a solved arrangement: 0..(total-2), null
+  const puzzle: (number | null)[] = Array.from(
+    { length: total - 1 },
+    (_, i) => i
+  );
+  puzzle.push(null);
+
+  // Helper to get row, col in 0-based from a puzzle index
+  function rc(i: number) {
+    return [Math.floor(i / gridSize), i % gridSize];
+  }
+
+  let blankIndex = puzzle.indexOf(null);
+
+  // Make `steps` random moves
+  for (let step = 0; step < steps; step++) {
+    const [blankRow, blankCol] = rc(blankIndex);
+    const neighbors: number[] = [];
+
+    // up
+    if (blankRow > 0) neighbors.push(blankIndex - gridSize);
+    // down
+    if (blankRow < gridSize - 1) neighbors.push(blankIndex + gridSize);
+    // left
+    if (blankCol > 0) neighbors.push(blankIndex - 1);
+    // right
+    if (blankCol < gridSize - 1) neighbors.push(blankIndex + 1);
+
+    // pick a random neighbor
+    const n = neighbors[Math.floor(Math.random() * neighbors.length)];
+
+    // swap puzzle[n] and puzzle[blankIndex]
+    [puzzle[n], puzzle[blankIndex]] = [puzzle[blankIndex], puzzle[n]];
+
+    blankIndex = n;
+  }
+
+  return puzzle;
+}
+
+/** Helper to detect puzzle completion. */
+function isPuzzleSolved(tiles: (number | null)[]) {
+  // The solution is [0, 1, 2, ..., lastIndex-1, null]
+  for (let i = 0; i < tiles.length - 1; i++) {
+    if (tiles[i] !== i) return false;
+  }
+  return tiles[tiles.length - 1] === null;
+}
+
 const ALL_FACTS = [
   // 1
   `Zak King <a href="mailto:zaking17@gmail.com">zaking17@gmail.com</a>`,
@@ -100,8 +155,7 @@ const ALL_FACTS = [
 ];
 
 function getFactsForGridSize(gridSize: number) {
-  const needed = gridSize * gridSize;
-  return ALL_FACTS.slice(0, needed);
+  return ALL_FACTS.slice(0, gridSize * gridSize);
 }
 
 function getPuzzleImages(gridSize: number) {
@@ -110,36 +164,20 @@ function getPuzzleImages(gridSize: number) {
   for (let row = 0; row < gridSize; row++) {
     for (let col = 0; col < gridSize; col++) {
       const x = col + 1;
-      const y = gridSize - row;
+      const y = row + 1;
       paths.push(`${basePath}/image${x}x${y}.jpeg`);
     }
   }
   return paths;
 }
 
-function shuffleArray<T>(arr: T[]): T[] {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
-/** Helper to detect puzzle completion. */
-function isPuzzleSolved(tiles: (number | null)[]) {
-  // The solution is [0, 1, 2, ..., lastIndex-1, null]
-  // i.e., each tile's index should match its value, except last is null
-  for (let i = 0; i < tiles.length - 1; i++) {
-    if (tiles[i] !== i) return false;
-  }
-  return tiles[tiles.length - 1] === null;
-}
-
 export default function PuzzleClient() {
   const gridSize = useGridSize();
   const containerSize = useContainerSize();
+
   const resumeFacts = useMemo(() => getFactsForGridSize(gridSize), [gridSize]);
   const puzzleImages = useMemo(() => getPuzzleImages(gridSize), [gridSize]);
+
   const [tiles, setTiles] = useState<(number | null)[]>([]);
   const [tileOffsets, setTileOffsets] = useState<{ x: number; y: number }[]>(
     []
@@ -154,38 +192,29 @@ export default function PuzzleClient() {
 
   // "You win!" state
   const [isWon, setIsWon] = useState(false);
-
   const tileSize = containerSize / gridSize;
 
-  // On initial mount or if puzzleImages changes, shuffle puzzle
   useEffect(() => {
-    const total = puzzleImages.length;
-    const arr: (number | null)[] = Array.from(
-      { length: total - 1 },
-      (_, i) => i
-    );
-    arr.push(null);
-    shuffleArray(arr);
+    const arr = randomLegalScramble(gridSize);
     setTiles(arr);
     setTileOffsets(arr.map(() => ({ x: 0, y: 0 })));
     setIsDraggingTile(arr.map(() => false));
-    setIsWon(false); // reset if grid changes
+    setIsWon(false);
   }, [puzzleImages, gridSize]);
 
   // Whenever tiles change, check if puzzle is solved
   useEffect(() => {
     if (!isWon && isPuzzleSolved(tiles)) {
       setIsWon(true);
-      // you could also play a sound, call an API, log an event, etc.
     }
   }, [tiles, isWon]);
 
-  /** Convert puzzle index => [row, col] */
+  // Convert puzzle index => [row, col]
   function getRowCol(i: number) {
     return [Math.floor(i / gridSize), i % gridSize] as const;
   }
 
-  /** True if slots differ by exactly one row or col => adjacency. */
+  // True if slots differ by exactly one row or col => adjacency.
   function isAdjacent(i: number, j: number) {
     const [r1, c1] = getRowCol(i);
     const [r2, c2] = getRowCol(j);
@@ -195,7 +224,7 @@ export default function PuzzleClient() {
     );
   }
 
-  /** Swap puzzle slots i and j, also resetting offsets/drag states. */
+  // Swap puzzle slots i and j, also resetting offsets/drag states
   function swapTiles(i: number, j: number) {
     setTiles((prev) => {
       const copy = [...prev];
@@ -423,7 +452,7 @@ export default function PuzzleClient() {
       {isWon && (
         <>
           <Confetti
-            // just let it fill parent
+            // Just let it fill parent
             style={{
               position: "fixed",
               top: 0,
@@ -433,7 +462,7 @@ export default function PuzzleClient() {
             }}
           />
           <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex flex-col items-center justify-center text-center">
-            <h1 className="text-4xl text-white mb-4">OMG you solved it</h1>
+            <h1 className="text-4xl text-white mb-4">OMG you solved it!</h1>
           </div>
         </>
       )}
@@ -449,8 +478,8 @@ export default function PuzzleClient() {
         {/* Bottom layer: NxN facts */}
         {resumeFacts.map((fact, i) => {
           if (fact === null) return null;
-
-          const [row, col] = getRowCol(i);
+          const row = Math.floor(i / gridSize);
+          const col = i % gridSize;
           const baseX = col * tileSize;
           const baseY = row * tileSize;
 
@@ -480,11 +509,9 @@ export default function PuzzleClient() {
 
         {/* Tiles (images) */}
         {tiles.map((tile, i) => {
-          if (tile === null) {
-            return null;
-          }
+          if (tile === null) return null; // Blank spot
 
-          const [row, col] = getRowCol(i);
+          const [row, col] = [Math.floor(i / gridSize), i % gridSize];
           const baseX = col * tileSize;
           const baseY = row * tileSize;
           const off = tileOffsets[i] || { x: 0, y: 0 };
@@ -524,6 +551,7 @@ export default function PuzzleClient() {
                 fill
                 className="object-cover pointer-events-none"
               />
+              <div className="text-center text-md absolute">{tile}</div>
             </div>
           );
         })}
