@@ -98,13 +98,13 @@ function isPuzzleSolved(tiles: (number | null)[]) {
 
 const ALL_FACTS = [
   // 1
-  `Zak King <a href="mailto:zaking17@gmail.com">zaking17@gmail.com</a>`,
+  `I'm Zak - this is my website <a href="mailto:zaking17@gmail.com" style="font-size: 0.8em;">zaking17@gmail.com</a>`,
   // 2
-  `Reach out on <a href="https://www.linkedin.com/in/zakandrewking/" target="_blank">LinkedIn</a>`,
+  `Find me on <a href="https://www.linkedin.com/in/zakandrewking/" target="_blank">LinkedIn</a>`,
   // 3
-  `VP of Eng @ <a href="https://www.delfina.com" target="_blank">Delfina</a> (2022–present): maternal health, AI, EHR integration`,
+  `VP Engineering @ <a href="https://www.delfina.com" target="_blank">Delfina</a> (2022–present): software for maternal health`,
   // 4
-  `Associate Dir DevOps (2019–2022) @ <a href="https://www.amyris.com" target="_blank">Amyris</a>`,
+  `Asc. Director DevOps (2019–2022) @ <a href="https://www.amyris.com" target="_blank">Amyris</a>`,
   // 5
   `Project Scientist, Principle Investigator (2017–2019) @ <a href="https://ucsd.edu" target="_blank">UC San Diego</a>`,
   // 6
@@ -118,7 +118,7 @@ const ALL_FACTS = [
   // 10
   `Scrum (CSPO 2017) & <a href="https://www.amanet.org/5-day-mba-certificate-program/" target="_blank">AMA 5-Day MBA (2021)</a>`,
   // 11
-  `Experience building & leading teams: GCP, AWS, Postgres, Flutter, Python, Docker, Terraform, REST, GraphQL, Datadog, FastAPI....`,
+  `I've built products with: GCP, AWS, Postgres, Flutter, Python, TypeScript, Docker, Terraform, REST, GraphQL, Datadog, React, Next.js, D3.js, ...`,
   // 12
   `Focus on user-centered products, team autonomy & growth: <a href="https://www.delfina.com/resource/finding-your-users-in-digital-health" target="_blank">Learn more</a>`,
   // 13
@@ -130,9 +130,7 @@ const ALL_FACTS = [
   `<a href="https://www.nsfgrfp.org/" target="_blank">NSF GRFP</a> & <a href="https://jacobsschool.ucsd.edu/idea/admitted-undergraduates/jacobs-scholars" target="_blank">Jacobs Fellowship</a> recipient`,
   // 17
   // 18
-  `big fan of code: Dart, Python, Terraform, TS, OSS, +++ <a href="https://github.com/zakandrewking" target="_blank">My GitHub</a>`,
-  // 19
-  `Delfina App on iOS: <a href="https://apps.apple.com/us/app/delfina-pregnancy-tracker/id6478985864" target="_blank">Delfina iOS link</a> | Android: <a href="https://play.google.com/store/apps/details?id=com.delfina.gaia" target="_blank">Delfina Android link</a>`,
+  `<a href="https://apps.apple.com/us/app/delfina-pregnancy-tracker/id6478985864" target="_blank">Delfina App on iOS</a> | <a href="https://play.google.com/store/apps/details?id=com.delfina.gaia" target="_blank">Delfina App on Android</a>`,
   // 20
   `Driving maternal health crisis solutions with AI: <a href="https://delfina.com" target="_blank">Learn about our mission</a>`,
   // 21
@@ -140,13 +138,13 @@ const ALL_FACTS = [
   // 22
   `Favorite side project: <a href="https://brainshare.io" target="_blank">Brainshare</a> (code on <a href="https://github.com/zakandrewking/brainshare" target="_blank">GitHub</a>)`,
   // 23
-  `Tons of leadership experience: I'm always thinking about how to recruit amazing engineers & give them the chance to do their best work`,
+  `I'm a passionate tech leader — always thinking about how to recruit amazing engineers & empower them to do their best work`,
   // 24
   `Dissertation: <a href="https://escholarship.org/content/qt83d340c7/qt83d340c7.pdf" target="_blank">"Optimization of microbial cell factories..."</a>`,
   `Favorite AI: <a href="https://www.youtube.com/watch?v=syyXdBg9BIc" target="_blank">Ash in Alien</a>`,
-  // 25
   `<a href="/resume.pdf" target="_blank">Resume PDF</a>`,
-  `Last updated Feb 20, 2025`,
+  `Source code for this site on <a href="https://github.com/zakandrewking/brainsbrainsbrains.com" target="_blank">GitHub</a>`,
+  `Last updated February 21, 2025`,
 ];
 
 function getFactsForGridSize(gridSize: number) {
@@ -488,7 +486,7 @@ export default function PuzzleClient() {
             </p>
             <div className="flex gap-4 justify-center">
               <button
-                className="px-4 py-2 bg-primary text-white rounded hover:opacity-90"
+                className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
                 onClick={() => {
                   setEasyMode(true);
                   setShowEasyModePrompt(false);
