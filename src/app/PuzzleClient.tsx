@@ -1,14 +1,14 @@
 "use client";
 
-import {
+import React, {
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from 'react';
 
 import clsx from 'clsx';
 import Image from 'next/image';
+import Confetti from 'react-confetti';
 
 function useGridSize() {
   const [gridSize, setGridSize] = useState(3);
@@ -108,37 +108,39 @@ function shuffleArray<T>(arr: T[]): T[] {
   return arr;
 }
 
+/** Helper to detect puzzle completion. */
+function isPuzzleSolved(tiles: (number | null)[]) {
+  // The solution is [0, 1, 2, ..., lastIndex-1, null]
+  // i.e., each tile's index should match its value, except last is null
+  for (let i = 0; i < tiles.length - 1; i++) {
+    if (tiles[i] !== i) return false;
+  }
+  return tiles[tiles.length - 1] === null;
+}
+
 export default function PuzzleClient() {
   const gridSize = useGridSize();
   const resumeFacts = useMemo(() => getFactsForGridSize(gridSize), [gridSize]);
   const puzzleImages = useMemo(() => getPuzzleImages(gridSize), [gridSize]);
   const [tiles, setTiles] = useState<(number | null)[]>([]);
   const [containerSize, setContainerSize] = useState(0);
-  const touchStartRef = useRef<{ x: number; y: number; index: number } | null>(
-    null
-  );
-  const tileSize = containerSize / gridSize;
-
-  // tileOffsets[i] => { x, y } offset in px for partial drag or animation
   const [tileOffsets, setTileOffsets] = useState<{ x: number; y: number }[]>(
     []
   );
-
-  // For turning off transitions during drag
-  // isDraggingTile[i] = true => the tile has no transition (immediate movement)
   const [isDraggingTile, setIsDraggingTile] = useState<boolean[]>([]);
-
-  /**
-   * We store pointerDown info to decide whether the user is "clicking" or "dragging".
-   * If they move > 5px, we treat it as a drag and set pointerCapture.
-   */
   const [pointerDown, setPointerDown] = useState<{
     tileIndex: number;
     startX: number;
     startY: number;
-    captured: boolean; // did we exceed threshold & start a real drag?
+    captured: boolean;
   } | null>(null);
 
+  // "You win!" state
+  const [isWon, setIsWon] = useState(false);
+
+  const tileSize = containerSize / gridSize;
+
+  // On initial mount or if puzzleImages changes, shuffle puzzle
   useEffect(() => {
     const total = puzzleImages.length;
     const arr: (number | null)[] = Array.from(
@@ -150,6 +152,7 @@ export default function PuzzleClient() {
     setTiles(arr);
     setTileOffsets(arr.map(() => ({ x: 0, y: 0 })));
     setIsDraggingTile(arr.map(() => false));
+    setIsWon(false); // reset if grid changes
   }, [puzzleImages, gridSize]);
 
   useEffect(() => {
@@ -163,12 +166,20 @@ export default function PuzzleClient() {
     return () => window.removeEventListener("resize", updateSize);
   }, []);
 
+  // Whenever tiles change, check if puzzle is solved
+  useEffect(() => {
+    if (!isWon && isPuzzleSolved(tiles)) {
+      setIsWon(true);
+      // you could also play a sound, call an API, log an event, etc.
+    }
+  }, [tiles, isWon]);
+
   /** Convert puzzle index => [row, col] */
   function getRowCol(i: number) {
-    return [Math.floor(i / gridSize), i % gridSize];
+    return [Math.floor(i / gridSize), i % gridSize] as const;
   }
 
-  /** True if slots differ by exactly one row or column => adjacency. */
+  /** True if slots differ by exactly one row or col => adjacency. */
   function isAdjacent(i: number, j: number) {
     const [r1, c1] = getRowCol(i);
     const [r2, c2] = getRowCol(j);
@@ -200,25 +211,23 @@ export default function PuzzleClient() {
   }
 
   // ------------------------------------------------------
-  // Click-to-slide logic (used if pointer movement < 5px)
+  // Click-to-slide logic (for pointer movement < 5px)
   // ------------------------------------------------------
   function clickToSlide(tileIndex: number) {
-    // Must be adjacent to blank
     const blankIndex = tiles.indexOf(null);
     if (blankIndex < 0) return;
     if (!isAdjacent(tileIndex, blankIndex)) return;
 
-    // figure out how far we must move
     const [tileRow, tileCol] = getRowCol(tileIndex);
     const [blankRow, blankCol] = getRowCol(blankIndex);
 
     const offsetX = (blankCol - tileCol) * tileSize;
     const offsetY = (blankRow - tileRow) * tileSize;
 
-    // ensure tile has transition enabled
+    // ensure tile has transition
     setIsDraggingTile((prev) => {
       const copy = [...prev];
-      copy[tileIndex] = false; // so it animates
+      copy[tileIndex] = false;
       return copy;
     });
 
@@ -229,7 +238,7 @@ export default function PuzzleClient() {
       return copy;
     });
 
-    // after 200ms (the transition duration), swap
+    // after 200ms (transition), swap
     setTimeout(() => {
       swapTiles(tileIndex, blankIndex);
     }, 200);
@@ -242,12 +251,10 @@ export default function PuzzleClient() {
     e: React.PointerEvent<HTMLDivElement>,
     tileIndex: number
   ) {
-    // check adjacency
     const blankIndex = tiles.indexOf(null);
     if (blankIndex < 0) return;
     if (!isAdjacent(tileIndex, blankIndex)) return;
 
-    // store pointerDown, but do NOT setPointerCapture yet
     setPointerDown({
       tileIndex,
       startX: e.clientX,
@@ -261,23 +268,19 @@ export default function PuzzleClient() {
     tileIndex: number
   ) {
     if (!pointerDown) return;
-    // if the user is dragging a different tile than pointerDown, ignore
     if (pointerDown.tileIndex !== tileIndex) return;
 
     const distX = e.clientX - pointerDown.startX;
     const distY = e.clientY - pointerDown.startY;
     const dist = Math.sqrt(distX * distX + distY * distY);
 
-    // threshold for switching to "real drag"
+    // threshold for "real drag"
     if (!pointerDown.captured && dist > 5) {
-      // now we do a real drag
       e.currentTarget.setPointerCapture(e.pointerId);
       setPointerDown({ ...pointerDown, captured: true });
-
-      // remove transition from this tile
       setIsDraggingTile((prev) => {
         const copy = [...prev];
-        copy[tileIndex] = true; // "true" => no transition
+        copy[tileIndex] = true; // no transition
         return copy;
       });
     }
@@ -287,7 +290,6 @@ export default function PuzzleClient() {
       return;
     }
 
-    // We are actively dragging => move tile 1:1 with pointer
     e.preventDefault();
     doDragUpdate(e, tileIndex);
   }
@@ -297,13 +299,10 @@ export default function PuzzleClient() {
     tileIndex: number
   ) {
     if (!pointerDown) return;
-
-    // release capture if we set it
     e.currentTarget.releasePointerCapture(e.pointerId);
 
-    // If we never captured => treat as a "click"
+    // If we never captured => treat as "click"
     if (!pointerDown.captured) {
-      // The tile didn't move => we do the clickToSlide approach
       clickToSlide(tileIndex);
       setPointerDown(null);
       return;
@@ -314,20 +313,16 @@ export default function PuzzleClient() {
     setPointerDown(null);
   }
 
-  /** Actually move the tile in response to pointer. */
   function doDragUpdate(
     e: React.PointerEvent<HTMLDivElement>,
     tileIndex: number
   ) {
-    // find blank
     const blankIndex = tiles.indexOf(null);
     if (blankIndex < 0) return;
 
-    // figure out row/col
     const [tileRow, tileCol] = getRowCol(tileIndex);
     const [blankRow, blankCol] = getRowCol(blankIndex);
 
-    // which axis
     let axis: "x" | "y";
     let direction: 1 | -1;
     if (tileRow === blankRow) {
@@ -338,11 +333,9 @@ export default function PuzzleClient() {
       direction = blankRow > tileRow ? 1 : -1;
     }
 
-    // base (no offset) position
     const baseX = tileCol * tileSize;
     const baseY = tileRow * tileSize;
 
-    // For simplicity, we don’t factor “offsetWithinTile,” but you could if needed
     let newLeft = baseX + (e.clientX - (pointerDown?.startX ?? 0));
     let newTop = baseY + (e.clientY - (pointerDown?.startY ?? 0));
 
@@ -382,24 +375,19 @@ export default function PuzzleClient() {
     });
   }
 
-  /** On pointerUp after a real drag, decide if we swap or revert. */
   function finalizeDrag(tileIndex: number) {
-    // measure how far the tile moved along the relevant axis
     const blankIndex = tiles.indexOf(null);
     if (blankIndex < 0) return;
 
-    // determine axis again
     const [tileRow, tileCol] = getRowCol(tileIndex);
     const [blankRow, blankCol] = getRowCol(blankIndex);
     const axis = tileRow === blankRow ? "x" : "y";
-
     const dist = Math.abs(
       axis === "x" ? tileOffsets[tileIndex].x : tileOffsets[tileIndex].y
     );
 
-    // if dist > half tile => swap
+    // if dist > some threshold => swap
     if (dist > tileSize / 4) {
-      // re-enable transition for final snap
       setIsDraggingTile((prev) => {
         const copy = [...prev];
         copy[tileIndex] = false;
@@ -410,7 +398,7 @@ export default function PuzzleClient() {
       // revert
       setIsDraggingTile((prev) => {
         const copy = [...prev];
-        copy[tileIndex] = false; // so we see a short revert snap
+        copy[tileIndex] = false;
         return copy;
       });
       setTileOffsets((prev) => {
@@ -425,7 +413,25 @@ export default function PuzzleClient() {
   // Render puzzle
   // ------------------------------------------------------
   return (
-    <div className="min-h-screen w-screen flex items-center justify-center">
+    <div className="min-h-screen w-screen flex items-center justify-center relative">
+      {isWon && (
+        <>
+          <Confetti
+            // just let it fill parent
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100vw",
+              height: "100vh",
+            }}
+          />
+          <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex flex-col items-center justify-center text-center">
+            <h1 className="text-4xl text-white mb-4">OMG you solved it</h1>
+          </div>
+        </>
+      )}
+
       <div
         className="border"
         style={{
@@ -441,11 +447,6 @@ export default function PuzzleClient() {
           const [row, col] = getRowCol(i);
           const baseX = col * tileSize;
           const baseY = row * tileSize;
-          const off = tileOffsets[i];
-
-          if (off === undefined) {
-            return null;
-          }
 
           return (
             <div
@@ -454,7 +455,6 @@ export default function PuzzleClient() {
               style={{
                 width: tileSize,
                 height: tileSize,
-                boxSizing: "border-box",
                 transform: `translate(${baseX}px, ${baseY}px)`,
               }}
             >
@@ -472,26 +472,19 @@ export default function PuzzleClient() {
           );
         })}
 
+        {/* Tiles (images) */}
         {tiles.map((tile, i) => {
           if (tile === null) {
-            // blank space
             return null;
           }
 
           const [row, col] = getRowCol(i);
           const baseX = col * tileSize;
           const baseY = row * tileSize;
-          const off = tileOffsets[i];
-
-          if (off === undefined) {
-            return null;
-          }
-
+          const off = tileOffsets[i] || { x: 0, y: 0 };
           const blankIndex = tiles.indexOf(null);
           const canMove = isAdjacent(i, blankIndex);
 
-          // If isDraggingTile[i] => no transition
-          // else transition 200ms => for click or final snap
           const tileClasses = clsx(
             "absolute pointer-events-auto draggable border",
             !isDraggingTile[i] &&
@@ -513,7 +506,6 @@ export default function PuzzleClient() {
                 width: tileSize,
                 height: tileSize,
                 backgroundColor: "#fff",
-                boxSizing: "border-box",
                 transform: `translate(${baseX + off.x}px, ${baseY + off.y}px)`,
               }}
               onPointerDown={(e) => handlePointerDown(e, i)}
