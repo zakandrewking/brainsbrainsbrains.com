@@ -10,44 +10,26 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Confetti from 'react-confetti';
 
-function useGridSize() {
-  const [gridSize, setGridSize] = useState(3);
-
-  useEffect(() => {
-    function handleResize() {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      if (width < 640 || height < 640) {
-        setGridSize(3);
-      } else if (width < 1024 || height < 1024) {
-        setGridSize(4);
-      } else {
-        setGridSize(5);
-      }
-    }
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  return gridSize;
+function useContainerSize() {
+  const [containerSize, setContainerSize] = useState(() => {
+    const maxWidth = window.innerWidth - 32;
+    const maxHeight = window.innerHeight - 64;
+    return Math.min(maxWidth, maxHeight);
+  });
+  return containerSize;
 }
 
-function useContainerSize() {
-  const [containerSize, setContainerSize] = useState(0);
-
-  useEffect(() => {
-    function updateSize() {
-      const maxWidth = window.innerWidth - 32;
-      const maxHeight = window.innerHeight - 64;
-      setContainerSize(Math.min(maxWidth, maxHeight));
+function useGridSize() {
+  const containerSize = useContainerSize();
+  const [gridSize, setGridSize] = useState(() => {
+    if (containerSize < 640) {
+      return 3;
+    } else if (containerSize < 900) {
+      return 4;
     }
-    updateSize();
-    window.addEventListener("resize", updateSize);
-    return () => window.removeEventListener("resize", updateSize);
-  }, []);
-
-  return containerSize;
+    return 5;
+  });
+  return gridSize;
 }
 
 // --------------------------------------------------------------------------
@@ -204,7 +186,7 @@ export default function PuzzleClient() {
   const [showEasyModePrompt, setShowEasyModePrompt] = useState(false);
 
   useEffect(() => {
-    const arr = randomLegalScramble(gridSize);
+    const arr = randomLegalScramble(gridSize, 200);
     setTiles(arr);
     setTileOffsets(arr.map(() => ({ x: 0, y: 0 })));
     setIsDraggingTile(arr.map(() => false));
@@ -469,7 +451,7 @@ export default function PuzzleClient() {
   // Render puzzle
   // ------------------------------------------------------
   return (
-    <div className="w-screen min-h-[100dvh] flex items-center justify-center relative p-4 md:p-8">
+    <div className="flex items-center justify-center relative p-4 md:p-8">
       {isWon && (
         <>
           <Confetti
