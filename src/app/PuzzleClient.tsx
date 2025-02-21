@@ -3,6 +3,7 @@
 import {
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 
@@ -81,15 +82,11 @@ const ALL_FACTS = [
   `Last updated Feb 20, 2025`,
 ];
 
-// Slice out exactly N*N facts
 function getFactsForGridSize(gridSize: number) {
   const needed = gridSize * gridSize;
-  // Because we removed lines 17, 22, and 23 above, the array has only 22 lines in practice.
-  // If the user picks a gridSize that wants more facts than exist, we'll just get all available.
   return ALL_FACTS.slice(0, needed);
 }
 
-// Generate NxN puzzle image paths in row-major order
 function getPuzzleImages(gridSize: number) {
   const basePath = `/puzzle-${gridSize}x${gridSize}`;
   const paths: string[] = [];
@@ -103,7 +100,6 @@ function getPuzzleImages(gridSize: number) {
   return paths;
 }
 
-// Fisher-Yates shuffle
 function shuffleArray<T>(arr: T[]): T[] {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -114,15 +110,13 @@ function shuffleArray<T>(arr: T[]): T[] {
 
 export default function PuzzleClient() {
   const gridSize = useGridSize();
-
-  // Bottom facts
   const resumeFacts = useMemo(() => getFactsForGridSize(gridSize), [gridSize]);
-
-  // Puzzle images
   const puzzleImages = useMemo(() => getPuzzleImages(gridSize), [gridSize]);
-
-  // The tile arrangement: [0..(N*N-2), null]
   const [tiles, setTiles] = useState<(number | null)[]>([]);
+  const [containerSize, setContainerSize] = useState(0);
+  const touchStartRef = useRef<{ x: number; y: number; index: number } | null>(
+    null
+  );
 
   useEffect(() => {
     const total = puzzleImages.length;
@@ -135,37 +129,6 @@ export default function PuzzleClient() {
     setTiles(arr);
   }, [puzzleImages, gridSize]);
 
-  // Slide puzzle adjacency logic
-  function getRowCol(idx: number) {
-    const row = Math.floor(idx / gridSize);
-    const col = idx % gridSize;
-    return [row, col];
-  }
-  function isAdjacent(idx1: number, idx2: number) {
-    const [r1, c1] = getRowCol(idx1);
-    const [r2, c2] = getRowCol(idx2);
-    return (
-      (r1 === r2 && Math.abs(c1 - c2) === 1) ||
-      (c1 === c2 && Math.abs(r1 - r2) === 1)
-    );
-  }
-  function moveTile(from: number, to: number) {
-    const newTiles = [...tiles];
-    [newTiles[from], newTiles[to]] = [newTiles[to], newTiles[from]];
-    setTiles(newTiles);
-  }
-  function handleTileClick(idx: number) {
-    const blankIndex = tiles.indexOf(null);
-    if (isAdjacent(idx, blankIndex)) {
-      moveTile(idx, blankIndex);
-    }
-  }
-
-  // (Optional) You can keep or remove drag & drop logic
-  // For simplicity, the puzzle works via clicks
-
-  // Container sizing
-  const [containerSize, setContainerSize] = useState(0);
   useEffect(() => {
     function updateSize() {
       const maxWidth = window.innerWidth - 8;
@@ -177,20 +140,101 @@ export default function PuzzleClient() {
     return () => window.removeEventListener("resize", updateSize);
   }, []);
 
+  function getRowCol(idx: number) {
+    return [Math.floor(idx / gridSize), idx % gridSize];
+  }
+
+  function isAdjacent(idx1: number, idx2: number) {
+    const [r1, c1] = getRowCol(idx1);
+    const [r2, c2] = getRowCol(idx2);
+    return (
+      (r1 === r2 && Math.abs(c1 - c2) === 1) ||
+      (c1 === c2 && Math.abs(r1 - r2) === 1)
+    );
+  }
+
+  function moveTile(from: number, to: number) {
+    setTiles((prev) => {
+      const newTiles = [...prev];
+      [newTiles[from], newTiles[to]] = [newTiles[to], newTiles[from]];
+      return newTiles;
+    });
+  }
+
+  function handleTileClick(idx: number) {
+    const blankIndex = tiles.indexOf(null);
+    if (isAdjacent(idx, blankIndex)) {
+      moveTile(idx, blankIndex);
+    }
+  }
+
+  const handleTouchStart = (e: React.TouchEvent, index: number) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    touchStartRef.current = { x: touch.clientX, y: touch.clientY, index };
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const touchStart = touchStartRef.current;
+    if (!touchStart) return;
+
+    const touch = e.changedTouches[0];
+    const deltaX = touch.clientX - touchStart.x;
+    const deltaY = touch.clientY - touchStart.y;
+    const absDeltaX = Math.abs(deltaX);
+    const absDeltaY = Math.abs(deltaY);
+
+    if (Math.max(absDeltaX, absDeltaY) < 10) {
+      handleTileClick(touchStart.index);
+      touchStartRef.current = null;
+      return;
+    }
+
+    let direction: "left" | "right" | "up" | "down" | null = null;
+    if (absDeltaX > absDeltaY) {
+      direction = deltaX > 0 ? "right" : "left";
+    } else {
+      direction = deltaY > 0 ? "down" : "up";
+    }
+
+    const currentIndex = touchStart.index;
+    const [row, col] = getRowCol(currentIndex);
+    let adjacentIndex: number | null = null;
+
+    switch (direction) {
+      case "left":
+        adjacentIndex = col > 0 ? currentIndex - 1 : null;
+        break;
+      case "right":
+        adjacentIndex = col < gridSize - 1 ? currentIndex + 1 : null;
+        break;
+      case "up":
+        adjacentIndex = row > 0 ? currentIndex - gridSize : null;
+        break;
+      case "down":
+        adjacentIndex = row < gridSize - 1 ? currentIndex + gridSize : null;
+        break;
+    }
+
+    if (adjacentIndex !== null && tiles[adjacentIndex] === null) {
+      moveTile(currentIndex, adjacentIndex);
+    }
+
+    touchStartRef.current = null;
+  };
+
+  const tileSize = containerSize / gridSize;
+
   return (
     <div className="min-h-screen w-screen flex items-center justify-center">
       <div
         className="relative mx-1 overflow-hidden"
-        style={{
-          width: containerSize,
-          height: containerSize,
-        }}
+        style={{ width: containerSize, height: containerSize }}
       >
         {/* Bottom layer: NxN facts */}
         <div
           className="absolute inset-0 grid"
           style={{
-            zIndex: 0,
             gridTemplateRows: `repeat(${gridSize}, 1fr)`,
             gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
           }}
@@ -216,40 +260,45 @@ export default function PuzzleClient() {
 
         {/* Top layer: NxN puzzle */}
         <div
-          className="absolute inset-0 grid pointer-events-none"
-          style={{
-            zIndex: 1,
-            gridTemplateRows: `repeat(${gridSize}, 1fr)`,
-            gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
-          }}
+          className="absolute inset-0 pointer-events-none"
+          style={{ zIndex: 1 }}
         >
-          {tiles.map((tile, idx) => {
-            if (tile === null) {
-              // Blank square => pass clicks through
-              return <div key={idx} className="relative pointer-events-none" />;
-            } else {
-              // Image tile => re-enable pointer events
-              const blankIndex = tiles.indexOf(null);
-              const canMove = isAdjacent(idx, blankIndex);
+          {tiles.map((tile, index) => {
+            if (tile === null) return null;
 
-              return (
-                <div
-                  key={idx}
-                  className={clsx(
-                    "relative flex items-center justify-center border pointer-events-auto",
-                    canMove ? "cursor-pointer" : "cursor-default"
-                  )}
-                  onClick={() => handleTileClick(idx)}
-                >
-                  <Image
-                    src={puzzleImages[tile]!}
-                    alt={`Tile ${tile}`}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              );
-            }
+            const [row, col] = getRowCol(index);
+            const x = col * tileSize;
+            const y = row * tileSize;
+            const blankIndex = tiles.indexOf(null);
+            const canMove = isAdjacent(index, blankIndex);
+
+            return (
+              <div
+                key={tile}
+                className={clsx(
+                  "absolute flex items-center justify-center border pointer-events-auto",
+                  canMove
+                    ? "cursor-pointer hover:opacity-90"
+                    : "cursor-default",
+                  "transition-transform duration-300 ease-in-out"
+                )}
+                style={{
+                  width: tileSize,
+                  height: tileSize,
+                  transform: `translate(${x}px, ${y}px)`,
+                }}
+                onClick={() => canMove && handleTileClick(index)}
+                onTouchStart={(e) => canMove && handleTouchStart(e, index)}
+                onTouchEnd={(e) => canMove && handleTouchEnd(e)}
+              >
+                <Image
+                  src={puzzleImages[tile]}
+                  alt={`Tile ${tile}`}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            );
           })}
         </div>
 
