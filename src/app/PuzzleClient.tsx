@@ -194,12 +194,20 @@ export default function PuzzleClient() {
   const [isWon, setIsWon] = useState(false);
   const tileSize = containerSize / gridSize;
 
+  // Add these new state variables near the other useState declarations
+  const [moveCount, setMoveCount] = useState(0);
+  const [easyMode, setEasyMode] = useState(false);
+  const [showEasyModePrompt, setShowEasyModePrompt] = useState(false);
+
   useEffect(() => {
     const arr = randomLegalScramble(gridSize);
     setTiles(arr);
     setTileOffsets(arr.map(() => ({ x: 0, y: 0 })));
     setIsDraggingTile(arr.map(() => false));
     setIsWon(false);
+    setMoveCount(0);
+    setEasyMode(false);
+    setShowEasyModePrompt(false);
   }, [puzzleImages, gridSize]);
 
   // Whenever tiles change, check if puzzle is solved
@@ -242,6 +250,15 @@ export default function PuzzleClient() {
       copy[i] = false;
       copy[j] = false;
       return copy;
+    });
+
+    // Increment move count and check if we should show easy mode prompt
+    setMoveCount((prev) => {
+      const newCount = prev + 1;
+      if (newCount === 40) {
+        setShowEasyModePrompt(true);
+      }
+      return newCount;
     });
   }
 
@@ -467,6 +484,35 @@ export default function PuzzleClient() {
         </>
       )}
 
+      {showEasyModePrompt && !isWon && (
+        <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex flex-col items-center justify-center text-center">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-sm mx-4">
+            <h2 className="text-2xl mb-4">Need a hint?</h2>
+            <p className="mb-4">
+              Would you like to enable easy mode? This will show the tile
+              numbers.
+            </p>
+            <div className="flex gap-4 justify-center">
+              <button
+                className="px-4 py-2 bg-primary text-white rounded hover:opacity-90"
+                onClick={() => {
+                  setEasyMode(true);
+                  setShowEasyModePrompt(false);
+                }}
+              >
+                Yes, please
+              </button>
+              <button
+                className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+                onClick={() => setShowEasyModePrompt(false)}
+              >
+                No, thanks
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div
         className="border"
         style={{
@@ -551,7 +597,13 @@ export default function PuzzleClient() {
                 fill
                 className="object-cover pointer-events-none"
               />
-              <div className="text-center text-md absolute">{tile}</div>
+              {easyMode && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="bg-white bg-opacity-75 dark:bg-black dark:bg-opacity-75 px-2 py-1 rounded text-lg font-bold">
+                    {tile + 1}
+                  </span>
+                </div>
+              )}
             </div>
           );
         })}
