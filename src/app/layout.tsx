@@ -3,10 +3,7 @@ import './globals.css';
 import { ReactNode } from 'react';
 
 import type { Metadata } from 'next';
-import {
-  Caveat,
-  Exo_2,
-} from 'next/font/google';
+import { Caveat, Exo_2 } from 'next/font/google';
 
 import AmplitudeConfig from '@/components/amplitude';
 import { PaperStoreProvider } from '@/stores/paper-store';
@@ -49,7 +46,7 @@ export default function RootLayout({
           </head>
           <body
             className={cn(
-              "min-h-screen bg-background font-sans antialiased overflow-y-scroll",
+              "bg-background font-sans antialiased",
               exo2.variable,
               caveat.variable
             )}

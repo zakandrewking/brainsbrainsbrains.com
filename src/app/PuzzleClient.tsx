@@ -16,9 +16,10 @@ function useGridSize() {
   useEffect(() => {
     function handleResize() {
       const width = window.innerWidth;
-      if (width < 640) {
+      const height = window.innerHeight;
+      if (width < 640 || height < 640) {
         setGridSize(3);
-      } else if (width < 1024) {
+      } else if (width < 1024 || height < 1024) {
         setGridSize(4);
       } else {
         setGridSize(5);
@@ -120,13 +121,13 @@ const ALL_FACTS = [
   // 7
   `<a href="https://scholar.google.com/citations?user=ESLgsdUAAAAJ" target="_blank">30+ publications, 5000+ citations</a>`,
   // 8
-  `BSE (Biomedical Eng) @ <a href="https://umich.edu" target="_blank">UMich</a> (2011)`,
+  `BSE (Biomedical Eng) @ <a href="https://umich.edu" target="_blank">UMich</a> (2011) - Go blue!`,
   // 9
-  `Primary dev of <a href="https://escher.github.io" target="_blank">Escher</a> & <a href="http://bigg.ucsd.edu" target="_blank">BiGG Models</a>`,
+  `Primary/early dev of <a href="https://escher.github.io" target="_blank">Escher</a> & <a href="http://bigg.ucsd.edu" target="_blank">BiGG Models</a>`,
   // 10
   `Scrum (CSPO 2017) & <a href="https://www.amanet.org/5-day-mba-certificate-program/" target="_blank">AMA 5-Day MBA (2021)</a>`,
   // 11
-  `Expert in Docker, Terraform, HPC, GraphQL, Observability (<a href="https://datadog.com" target="_blank">Datadog</a>)`,
+  `Experience building & leading teams: GCP, AWS, Postgres, Flutter, Python, Docker, Terraform, REST, GraphQL, Datadog, FastAPI....`,
   // 12
   `Focus on user-centered products, team autonomy & growth: <a href="https://www.delfina.com/resource/finding-your-users-in-digital-health" target="_blank">Learn more</a>`,
   // 13
@@ -138,17 +139,20 @@ const ALL_FACTS = [
   `<a href="https://www.nsfgrfp.org/" target="_blank">NSF GRFP</a> & <a href="https://jacobsschool.ucsd.edu/idea/admitted-undergraduates/jacobs-scholars" target="_blank">Jacobs Fellowship</a> recipient`,
   // 17
   // 18
-  `I love coding: Dart, Python, Terraform, TS: <a href="https://github.com/zakandrewking" target="_blank">My GitHub</a>`,
+  `big fan of code: Dart, Python, Terraform, TS, OSS, +++ <a href="https://github.com/zakandrewking" target="_blank">My GitHub</a>`,
   // 19
-  `App on iOS: <a href="https://apps.apple.com/us/app/delfina-pregnancy-tracker/id6478985864" target="_blank">Delfina iOS link</a> | Android: <a href="https://play.google.com/store/apps/details?id=com.delfina.gaia" target="_blank">Delfina Android link</a>`,
+  `Delfina App on iOS: <a href="https://apps.apple.com/us/app/delfina-pregnancy-tracker/id6478985864" target="_blank">Delfina iOS link</a> | Android: <a href="https://play.google.com/store/apps/details?id=com.delfina.gaia" target="_blank">Delfina Android link</a>`,
   // 20
-  `Driving maternal health crisis solutions w/ AI: <a href="https://delfina.com" target="_blank">Learn about mission</a>`,
+  `Driving maternal health crisis solutions with AI: <a href="https://delfina.com" target="_blank">Learn about our mission</a>`,
   // 21
-  `Strain engineering: <a href="https://www.biorxiv.org/content/10.1101/2023.01.03.521657v1" target="_blank">DARPA & 400+ production strains</a>`,
+  `Strain engineering: <a href="https://www.biorxiv.org/content/10.1101/2023.01.03.521657v1" target="_blank">DARPA-funded project to develop microbial strains with an AI scientist</a>`,
   // 22
+  `Favorite side project: <a href="https://brainshare.io" target="_blank">Brainshare</a> (code on <a href="https://github.com/zakandrewking/brainshare" target="_blank">GitHub</a>)`,
   // 23
+  `Tons of leadership experience: I'm always thinking about how to recruit amazing engineers & give them the chance to do their best work`,
   // 24
   `Dissertation: <a href="https://escholarship.org/content/qt83d340c7/qt83d340c7.pdf" target="_blank">"Optimization of microbial cell factories..."</a>`,
+  `Favorite AI: <a href="https://www.youtube.com/watch?v=syyXdBg9BIc" target="_blank">Ash in Alien</a>`,
   // 25
   `<a href="/resume.pdf" target="_blank">Resume PDF</a>`,
   `Last updated Feb 20, 2025`,
@@ -539,16 +543,12 @@ export default function PuzzleClient() {
                 transform: `translate(${baseX}px, ${baseY}px)`,
               }}
             >
-              <div
-                className="text-sm text-center select-none [&_a]:cursor-pointer [&_a]:text-primary [&_a]:underline [&_a]:pointer-events-auto hover:[&_a]:opacity-70 px-1"
-                style={{
-                  display: "-webkit-box",
-                  WebkitLineClamp: 4,
-                  WebkitBoxOrient: "vertical",
-                  overflow: "hidden",
-                }}
-                dangerouslySetInnerHTML={{ __html: fact }}
-              />
+              <div className="text-sm text-center h-full overflow-hidden flex flex-col justify-center select-none [&_a]:cursor-pointer [&_a]:text-primary [&_a]:underline [&_a]:pointer-events-auto hover:[&_a]:opacity-70 px-1">
+                <div
+                  className="block"
+                  dangerouslySetInnerHTML={{ __html: fact }}
+                />
+              </div>
             </div>
           );
         })}
@@ -616,6 +616,7 @@ export default function PuzzleClient() {
         html {
           color-scheme: light dark;
           height: 100%;
+          overscroll-behavior: none; /* Prevent bounce on iOS */
         }
         body {
           margin: 0;
@@ -623,7 +624,6 @@ export default function PuzzleClient() {
           color: #333;
           padding: 0;
           min-height: 100%;
-          overscroll-behavior: none; /* Prevent bounce on iOS */
         }
         @media (prefers-color-scheme: dark) {
           body {

@@ -1,7 +1,7 @@
 // app/page.tsx
-import { Metadata } from "next";
+import { Metadata } from 'next';
 
-import PuzzleClient from "./PuzzleClient";
+import PuzzleClient from './PuzzleClient';
 
 // For SEO (optional)
 export const metadata: Metadata = {
@@ -15,8 +15,7 @@ export const revalidate = 3600;
 
 export default function HomePage() {
   return (
-    <main className="h-screen w-screen overflow-hidden">
-      {/* A single puzzle filling the screen */}
+    <main>
       <PuzzleClient />
     </main>
   );
