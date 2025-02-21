@@ -98,7 +98,7 @@ function isPuzzleSolved(tiles: (number | null)[]) {
 
 const ALL_FACTS = [
   // 1
-  `I'm Zak - this is my website <a href="mailto:zaking17@gmail.com" style="font-size: 0.8em;">zaking17@gmail.com</a>`,
+  `I'm Zak - this is my website`,
   // 2
   `Find me on <a href="https://www.linkedin.com/in/zakandrewking/" target="_blank">LinkedIn</a>`,
   // 3
