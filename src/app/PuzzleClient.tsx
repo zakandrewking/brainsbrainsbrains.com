@@ -1,21 +1,128 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import clsx from 'clsx';
 
-export default function PuzzleClickOrDrag() {
-  /** Puzzle layout: 3x3 => 9 slots, with 8 tiles + 1 blank */
-  const gridSize = 3;
-  const tileSize = 100; // px for each tile
+function useGridSize() {
+  const [gridSize, setGridSize] = useState(3);
 
-  // puzzle arrangement: slot i => tile index or null for blank
-  // for a 3x3, we'll have 9 slots. Indices 0..7 for tiles, slot 8 = null
+  useEffect(() => {
+    function handleResize() {
+      const width = window.innerWidth;
+      if (width < 640) {
+        setGridSize(3);
+      } else if (width < 1024) {
+        setGridSize(4);
+      } else {
+        setGridSize(5);
+      }
+    }
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return gridSize;
+}
+
+const ALL_FACTS = [
+  // 1
+  `Zak King <a href="mailto:zaking17@gmail.com">zaking17@gmail.com</a>`,
+  // 2
+  `Reach out on <a href="https://www.linkedin.com/in/zakandrewking/" target="_blank">LinkedIn</a>`,
+  // 3
+  `VP of Eng @ <a href="https://www.delfina.com" target="_blank">Delfina</a> (2022–present): maternal health, AI, EHR integration`,
+  // 4
+  `Associate Dir DevOps (2019–2022) @ <a href="https://www.amyris.com" target="_blank">Amyris</a>`,
+  // 5
+  `Project Scientist, Principle Investigator (2017–2019) @ <a href="https://ucsd.edu" target="_blank">UC San Diego</a>`,
+  // 6
+  `PhD in Bioengineering, UC San Diego, <a href="http://systemsbiology.ucsd.edu" target="_blank">SBRG Lab</a>`,
+  // 7
+  `<a href="https://scholar.google.com/citations?user=ESLgsdUAAAAJ" target="_blank">30+ publications, 5000+ citations</a>`,
+  // 8
+  `BSE (Biomedical Eng) @ <a href="https://umich.edu" target="_blank">UMich</a> (2011)`,
+  // 9
+  `Primary dev of <a href="https://escher.github.io" target="_blank">Escher</a> & <a href="http://bigg.ucsd.edu" target="_blank">BiGG Models</a>`,
+  // 10
+  `Scrum (CSPO 2017) & <a href="https://www.amanet.org/5-day-mba-certificate-program/" target="_blank">AMA 5-Day MBA (2021)</a>`,
+  // 11
+  `Expert in Docker, Terraform, HPC, GraphQL, Observability (<a href="https://datadog.com" target="_blank">Datadog</a>)`,
+  // 12
+  `Focus on user-centered products, team autonomy & growth: <a href="https://www.delfina.com/resource/finding-your-users-in-digital-health" target="_blank">Learn more</a>`,
+  // 13
+  `Synthetic biology & metabolic engineering: <a href="https://doi.org/10.1016/j.copbio.2014.12.016" target="_blank">Research highlights</a>`,
+  // 14
+  `Expertise in compliance: <a href="https://www.delfina.com/security" target="_blank">SOC2 & HIPAA at Delfina</a>`,
+  // 15
+  // 16
+  `<a href="https://www.nsfgrfp.org/" target="_blank">NSF GRFP</a> & <a href="https://jacobsschool.ucsd.edu/idea/admitted-undergraduates/jacobs-scholars" target="_blank">Jacobs Fellowship</a> recipient`,
+  // 17
+  // 18
+  `I love coding: Dart, Python, Terraform, TS: <a href="https://github.com/zakandrewking" target="_blank">My GitHub</a>`,
+  // 19
+  `App on iOS: <a href="https://apps.apple.com/us/app/delfina-pregnancy-tracker/id6478985864" target="_blank">Delfina iOS link</a> | Android: <a href="https://play.google.com/store/apps/details?id=com.delfina.gaia" target="_blank">Delfina Android link</a>`,
+  // 20
+  `Driving maternal health crisis solutions w/ AI: <a href="https://delfina.com" target="_blank">Learn about mission</a>`,
+  // 21
+  `Strain engineering: <a href="https://www.biorxiv.org/content/10.1101/2023.01.03.521657v1" target="_blank">DARPA & 400+ production strains</a>`,
+  // 22
+  // 23
+  // 24
+  `Dissertation: <a href="https://escholarship.org/content/qt83d340c7/qt83d340c7.pdf" target="_blank">"Optimization of microbial cell factories..."</a>`,
+  // 25
+  `<a href="/resume.pdf" target="_blank">Resume PDF</a>`,
+  `Last updated Feb 20, 2025`,
+];
+
+function getFactsForGridSize(gridSize: number) {
+  const needed = gridSize * gridSize;
+  return ALL_FACTS.slice(0, needed);
+}
+
+function getPuzzleImages(gridSize: number) {
+  const basePath = `/puzzle-${gridSize}x${gridSize}`;
+  const paths: string[] = [];
+  for (let row = 0; row < gridSize; row++) {
+    for (let col = 0; col < gridSize; col++) {
+      const x = col + 1;
+      const y = gridSize - row;
+      paths.push(`${basePath}/image${x}x${y}.jpeg`);
+    }
+  }
+  return paths;
+}
+
+function shuffleArray<T>(arr: T[]): T[] {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+export default function PuzzleClient() {
+  const gridSize = useGridSize();
+  const resumeFacts = useMemo(() => getFactsForGridSize(gridSize), [gridSize]);
+  const puzzleImages = useMemo(() => getPuzzleImages(gridSize), [gridSize]);
   const [tiles, setTiles] = useState<(number | null)[]>([]);
+  const [containerSize, setContainerSize] = useState(0);
+  const touchStartRef = useRef<{ x: number; y: number; index: number } | null>(
+    null
+  );
+  const tileSize = containerSize / gridSize;
+
   // tileOffsets[i] => { x, y } offset in px for partial drag or animation
   const [tileOffsets, setTileOffsets] = useState<{ x: number; y: number }[]>(
     []
   );
+
   // For turning off transitions during drag
   // isDraggingTile[i] = true => the tile has no transition (immediate movement)
   const [isDraggingTile, setIsDraggingTile] = useState<boolean[]>([]);
@@ -32,11 +139,27 @@ export default function PuzzleClickOrDrag() {
   } | null>(null);
 
   useEffect(() => {
-    // Initialize a simple puzzle: tiles = 0..7 plus null
-    const arr: (number | null)[] = [0, 1, 2, 3, 4, 5, 6, 7, null];
+    const total = puzzleImages.length;
+    const arr: (number | null)[] = Array.from(
+      { length: total - 1 },
+      (_, i) => i
+    );
+    arr.push(null);
+    shuffleArray(arr);
     setTiles(arr);
     setTileOffsets(arr.map(() => ({ x: 0, y: 0 })));
     setIsDraggingTile(arr.map(() => false));
+  }, [puzzleImages, gridSize]);
+
+  useEffect(() => {
+    function updateSize() {
+      const maxWidth = window.innerWidth - 8;
+      const maxHeight = window.innerHeight - 8;
+      setContainerSize(Math.min(maxWidth, maxHeight));
+    }
+    updateSize();
+    window.addEventListener("resize", updateSize);
+    return () => window.removeEventListener("resize", updateSize);
   }, []);
 
   /** Convert puzzle index => [row, col] */
@@ -302,13 +425,6 @@ export default function PuzzleClickOrDrag() {
   // ------------------------------------------------------
   return (
     <div style={{ width: 400, margin: "20px auto" }}>
-      <h3>Sliding Puzzle (click or drag)</h3>
-      <p>
-        - If you barely move the mouse (&lt; 5px), it counts as a click → tile
-        slides with animation.
-        <br />- If you drag &gt; 5px, you get real-time movement, then snap on
-        release.
-      </p>
       <div
         style={{
           position: "relative",
