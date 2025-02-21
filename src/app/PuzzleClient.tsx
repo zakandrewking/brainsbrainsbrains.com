@@ -11,24 +11,33 @@ import Image from 'next/image';
 import Confetti from 'react-confetti';
 
 function useContainerSize() {
-  const [containerSize, setContainerSize] = useState(() => {
-    const maxWidth = window.innerWidth - 32;
-    const maxHeight = window.innerHeight - 64;
-    return Math.min(maxWidth, maxHeight);
-  });
+  const [containerSize, setContainerSize] = useState(0);
+  useEffect(() => {
+    function updateSize() {
+      const maxWidth = window.innerWidth - 32;
+      const maxHeight = window.innerHeight - 64;
+      setContainerSize(Math.min(maxWidth, maxHeight));
+    }
+    updateSize();
+  }, []);
   return containerSize;
 }
 
 function useGridSize() {
   const containerSize = useContainerSize();
-  const [gridSize, setGridSize] = useState(() => {
-    if (containerSize < 640) {
-      return 3;
-    } else if (containerSize < 900) {
-      return 4;
+  const [gridSize, setGridSize] = useState(0);
+  useEffect(() => {
+    function updateSize() {
+      if (containerSize < 640) {
+        setGridSize(3);
+      } else if (containerSize < 900) {
+        setGridSize(4);
+      } else {
+        setGridSize(5);
+      }
     }
-    return 5;
-  });
+    updateSize();
+  }, [containerSize]);
   return gridSize;
 }
 
