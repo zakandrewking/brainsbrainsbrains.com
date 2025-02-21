@@ -1,9 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
-import clsx from "clsx";
-import Image from "next/image";
+import clsx from 'clsx';
+import Image from 'next/image';
 
 function useGridSize() {
   const [gridSize, setGridSize] = useState(3);
@@ -158,11 +162,14 @@ export default function PuzzleClient() {
     setDraggedIndex(null);
   }
 
-  // Fill screen with square container
+  // Update container size calculation to account for margins
   const [containerSize, setContainerSize] = useState(0);
   useEffect(() => {
     function updateSize() {
-      setContainerSize(Math.min(window.innerWidth, window.innerHeight));
+      // Account for 8px total margin (4px on each side)
+      const maxWidth = window.innerWidth - 8;
+      const maxHeight = window.innerHeight - 8;
+      setContainerSize(Math.min(maxWidth, maxHeight));
     }
     updateSize();
     window.addEventListener("resize", updateSize);
@@ -170,114 +177,117 @@ export default function PuzzleClient() {
   }, []);
 
   return (
-    <div
-      className="relative mx-auto overflow-hidden"
-      style={{
-        width: containerSize,
-        height: containerSize,
-      }}
-    >
-      {/* Bottom layer: NxN facts */}
+    // Add flex centering to parent and margins to container
+    <div className="min-h-screen w-screen flex items-center justify-center">
       <div
-        className="absolute inset-0 grid"
+        className="relative mx-1 overflow-hidden"
         style={{
-          zIndex: 0,
-          gridTemplateRows: `repeat(${gridSize}, 1fr)`,
-          gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
+          width: containerSize,
+          height: containerSize,
         }}
       >
-        {resumeFacts.map((fact, i) => (
-          <div
-            key={i}
-            className="relative flex items-center justify-center border overflow-hidden"
-          >
-            {/*
-               We clamp text to avoid expanding each square.
-               This snippet clamps to ~4 lines. Adjust as needed.
-            */}
+        {/* Bottom layer: NxN facts */}
+        <div
+          className="absolute inset-0 grid"
+          style={{
+            zIndex: 0,
+            gridTemplateRows: `repeat(${gridSize}, 1fr)`,
+            gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
+          }}
+        >
+          {resumeFacts.map((fact, i) => (
             <div
-              className="text-sm text-center"
-              style={{
-                display: "-webkit-box",
-                WebkitLineClamp: 4,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
-              }}
-              dangerouslySetInnerHTML={{ __html: fact }}
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* Top layer: NxN puzzle */}
-      <div
-        className="absolute inset-0 grid"
-        style={{
-          zIndex: 1,
-          gridTemplateRows: `repeat(${gridSize}, 1fr)`,
-          gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
-        }}
-      >
-        {tiles.map((tile, idx) => {
-          const isBlank = tile === null;
-          const blankIndex = tiles.indexOf(null);
-          const canMove = !isBlank && isAdjacent(idx, blankIndex);
-
-          if (isBlank) {
-            // Transparent cell => reveals resume text below
-            return (
+              key={i}
+              className="relative flex items-center justify-center border overflow-hidden"
+            >
+              {/*
+                 We clamp text to avoid expanding each square.
+                 This snippet clamps to ~4 lines. Adjust as needed.
+              */}
               <div
-                key={idx}
-                className="relative"
-                onDragOver={(e) => handleDragOver(e, idx)}
-                onDrop={() => handleDrop(idx)}
+                className="text-sm text-center"
+                style={{
+                  display: "-webkit-box",
+                  WebkitLineClamp: 4,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                }}
+                dangerouslySetInnerHTML={{ __html: fact }}
               />
-            );
-          } else {
-            // Image tile
-            return (
-              <div
-                key={idx}
-                className={clsx(
-                  "relative flex items-center justify-center border",
-                  canMove ? "cursor-pointer" : "cursor-default"
-                )}
-                onClick={() => handleTileClick(idx)}
-                draggable={canMove}
-                onDragStart={() => handleDragStart(idx)}
-              >
-                <Image
-                  src={puzzleImages[tile]!}
-                  alt={`Tile ${tile}`}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            );
-          }
-        })}
-      </div>
+            </div>
+          ))}
+        </div>
 
-      <style jsx global>{`
-        * {
-          box-sizing: border-box;
-        }
-        html {
-          color-scheme: light dark;
-        }
-        body {
-          margin: 0;
-          background-color: #fdfdfd;
-          color: #333;
-          padding: 0;
-        }
-        @media (prefers-color-scheme: dark) {
-          body {
-            background-color: #111;
-            color: #eee;
+        {/* Top layer: NxN puzzle */}
+        <div
+          className="absolute inset-0 grid"
+          style={{
+            zIndex: 1,
+            gridTemplateRows: `repeat(${gridSize}, 1fr)`,
+            gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
+          }}
+        >
+          {tiles.map((tile, idx) => {
+            const isBlank = tile === null;
+            const blankIndex = tiles.indexOf(null);
+            const canMove = !isBlank && isAdjacent(idx, blankIndex);
+
+            if (isBlank) {
+              // Transparent cell => reveals resume text below
+              return (
+                <div
+                  key={idx}
+                  className="relative"
+                  onDragOver={(e) => handleDragOver(e, idx)}
+                  onDrop={() => handleDrop(idx)}
+                />
+              );
+            } else {
+              // Image tile
+              return (
+                <div
+                  key={idx}
+                  className={clsx(
+                    "relative flex items-center justify-center border",
+                    canMove ? "cursor-pointer" : "cursor-default"
+                  )}
+                  onClick={() => handleTileClick(idx)}
+                  draggable={canMove}
+                  onDragStart={() => handleDragStart(idx)}
+                >
+                  <Image
+                    src={puzzleImages[tile]!}
+                    alt={`Tile ${tile}`}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              );
+            }
+          })}
+        </div>
+
+        <style jsx global>{`
+          * {
+            box-sizing: border-box;
           }
-        }
-      `}</style>
+          html {
+            color-scheme: light dark;
+          }
+          body {
+            margin: 0;
+            background-color: #fdfdfd;
+            color: #333;
+            padding: 0;
+          }
+          @media (prefers-color-scheme: dark) {
+            body {
+              background-color: #111;
+              color: #eee;
+            }
+          }
+        `}</style>
+      </div>
     </div>
   );
 }
