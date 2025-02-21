@@ -32,6 +32,23 @@ function useGridSize() {
   return gridSize;
 }
 
+function useContainerSize() {
+  const [containerSize, setContainerSize] = useState(0);
+
+  useEffect(() => {
+    function updateSize() {
+      const maxWidth = window.innerWidth - 32;
+      const maxHeight = window.innerHeight - 64;
+      setContainerSize(Math.min(maxWidth, maxHeight));
+    }
+    updateSize();
+    window.addEventListener("resize", updateSize);
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
+
+  return containerSize;
+}
+
 const ALL_FACTS = [
   // 1
   `Zak King <a href="mailto:zaking17@gmail.com">zaking17@gmail.com</a>`,
@@ -120,10 +137,10 @@ function isPuzzleSolved(tiles: (number | null)[]) {
 
 export default function PuzzleClient() {
   const gridSize = useGridSize();
+  const containerSize = useContainerSize();
   const resumeFacts = useMemo(() => getFactsForGridSize(gridSize), [gridSize]);
   const puzzleImages = useMemo(() => getPuzzleImages(gridSize), [gridSize]);
   const [tiles, setTiles] = useState<(number | null)[]>([]);
-  const [containerSize, setContainerSize] = useState(0);
   const [tileOffsets, setTileOffsets] = useState<{ x: number; y: number }[]>(
     []
   );
@@ -154,17 +171,6 @@ export default function PuzzleClient() {
     setIsDraggingTile(arr.map(() => false));
     setIsWon(false); // reset if grid changes
   }, [puzzleImages, gridSize]);
-
-  useEffect(() => {
-    function updateSize() {
-      const maxWidth = window.innerWidth - 8;
-      const maxHeight = window.innerHeight - 8;
-      setContainerSize(Math.min(maxWidth, maxHeight));
-    }
-    updateSize();
-    window.addEventListener("resize", updateSize);
-    return () => window.removeEventListener("resize", updateSize);
-  }, []);
 
   // Whenever tiles change, check if puzzle is solved
   useEffect(() => {
@@ -346,7 +352,7 @@ export default function PuzzleClient() {
       newLeft = baseX;
     }
 
-    // clamp so tile can’t move beyond 1 tile distance
+    // clamp so tile can't move beyond 1 tile distance
     if (axis === "x") {
       if (direction === 1) {
         newLeft = Math.max(newLeft, baseX);
@@ -413,7 +419,7 @@ export default function PuzzleClient() {
   // Render puzzle
   // ------------------------------------------------------
   return (
-    <div className="min-h-screen w-screen flex items-center justify-center relative">
+    <div className="w-screen min-h-[100dvh] flex items-center justify-center relative p-4 md:p-8">
       {isWon && (
         <>
           <Confetti
@@ -436,8 +442,8 @@ export default function PuzzleClient() {
         className="border"
         style={{
           position: "relative",
-          width: gridSize * tileSize,
-          height: gridSize * tileSize,
+          width: containerSize,
+          height: containerSize,
         }}
       >
         {/* Bottom layer: NxN facts */}
@@ -529,12 +535,15 @@ export default function PuzzleClient() {
         }
         html {
           color-scheme: light dark;
+          height: 100%;
         }
         body {
           margin: 0;
           background-color: #fdfdfd;
           color: #333;
           padding: 0;
+          min-height: 100%;
+          overscroll-behavior: none; /* Prevent bounce on iOS */
         }
         @media (prefers-color-scheme: dark) {
           body {
@@ -543,8 +552,8 @@ export default function PuzzleClient() {
           }
         }
         .draggable {
-          touch-action: none; /* prevent scrolling on mobile */
-          user-select: none; /* prevent text highlighting */
+          touch-action: none;
+          user-select: none;
         }
       `}</style>
     </div>
