@@ -31,40 +31,61 @@ function useGridSize() {
   return gridSize;
 }
 
-// Ordered facts from the resume
 const ALL_FACTS = [
-  `Zachary A. King | zaking17@gmail.com | Cell: (517) 320-0932`,
-  `Experienced technology leader: biotech & health, full-stack dev & team lead.`,
-  `Broad technical expertise: software eng, data science, synthetic biology, cloud infra.`,
-  `VP of Eng @ Delfina (2022–present): maternal health, AI, EHR integration, mobile apps.`,
-  `Associate Dir DevOps @ Amyris: built DevOps practice, GCP, data eng, 400+ strains.`,
-  `Project Scientist, PI @ UCSD: big data in biology, new simulations, 5 research articles.`,
-  `10+ yrs: Python, JS/TS, React, D3, Linux, SQL, git.`,
-  `5+ yrs: Mobile dev (Flutter), Docker, Terraform, HPC, GraphQL, SOC2.`,
-  `30+ pubs, 5000+ citations, H-index=25: <a href="https://scholar.google.com/citations?user=ESLgsdUAAAAJ" target="_blank">Google Scholar</a>`,
-  // Next 7 => total 16 for 4×4
-  `PhD in Bioengineering (UCSD, 2016), BSE (UMich, 2011).`,
-  `Developer of <a href="https://escher.github.io" target="_blank">Escher</a> & <a href="http://bigg.ucsd.edu" target="_blank">BiGG Models</a>.`,
-  `Trained in Scrum (CSPO 2017), AMA 5-Day MBA (2021).`,
-  `Focus on user-centered products, team autonomy & growth.`,
-  `NSF GRFP Fellow, Jacobs Fellowship.`,
-  `Managed multi-million $ budgets & cross-functional teams.`,
-  `Hands-on with iOS, Observability, EHR integration.`,
-  // Up to 25 if needed for 5x5
-  `Led data warehouse redesign @ Amyris.`,
-  `Fluent in multiple programming languages & DB systems.`,
-  `Enjoy bridging data science & software engineering.`,
-  `Still love coding: Dart, Python, Terraform, TypeScript.`,
-  `Integrated mobile apps with EHRs for pregnant patients (Delfina).`,
-  `Tackling maternal health crisis with predictive AI & design.`,
-  `>30 publications in metabolic modeling & synthetic biology.`,
-  `Awards: NSF GRFP, Jacobs Fellowship.`,
-  `Last updated July 18, 2024.`,
+  // 1
+  `Zak King <a href="mailto:zaking17@gmail.com">zaking17@gmail.com</a>`,
+  // 2
+  `Reach out on <a href="https://www.linkedin.com/in/zakandrewking/" target="_blank">LinkedIn</a>`,
+  // 3
+  `VP of Eng @ <a href="https://www.delfina.com" target="_blank">Delfina</a> (2022–present): maternal health, AI, EHR integration`,
+  // 4
+  `Associate Dir DevOps (2019–2022) @ <a href="https://www.amyris.com" target="_blank">Amyris</a>`,
+  // 5
+  `Project Scientist, Principle Investigator (2017–2019) @ <a href="https://ucsd.edu" target="_blank">UC San Diego</a>`,
+  // 6
+  `PhD in Bioengineering, UC San Diego, <a href="http://systemsbiology.ucsd.edu" target="_blank">SBRG Lab</a>`,
+  // 7
+  `<a href="https://scholar.google.com/citations?user=ESLgsdUAAAAJ" target="_blank">30+ publications, 5000+ citations</a>`,
+  // 8
+  `BSE (Biomedical Eng) @ <a href="https://umich.edu" target="_blank">UMich</a> (2011)`,
+  // 9
+  `Primary dev of <a href="https://escher.github.io" target="_blank">Escher</a> & <a href="http://bigg.ucsd.edu" target="_blank">BiGG Models</a>`,
+  // 10
+  `Scrum (CSPO 2017) & <a href="https://www.amanet.org/5-day-mba-certificate-program/" target="_blank">AMA 5-Day MBA (2021)</a>`,
+  // 11
+  `Expert in Docker, Terraform, HPC, GraphQL, Observability (<a href="https://datadog.com" target="_blank">Datadog</a>)`,
+  // 12
+  `Focus on user-centered products, team autonomy & growth: <a href="https://www.delfina.com/resource/finding-your-users-in-digital-health" target="_blank">Learn more</a>`,
+  // 13
+  `Synthetic biology & metabolic engineering: <a href="https://doi.org/10.1016/j.copbio.2014.12.016" target="_blank">Research highlights</a>`,
+  // 14
+  `Expertise in compliance: <a href="https://www.delfina.com/security" target="_blank">SOC2 & HIPAA at Delfina</a>`,
+  // 15
+  // 16
+  `<a href="https://www.nsfgrfp.org/" target="_blank">NSF GRFP</a> & <a href="https://jacobsschool.ucsd.edu/idea/admitted-undergraduates/jacobs-scholars" target="_blank">Jacobs Fellowship</a> recipient`,
+  // 17
+  // 18
+  `Still love coding: Dart, Python, Terraform, TS: <a href="https://github.com/zakandrewking" target="_blank">My GitHub</a>`,
+  // 19
+  `App on iOS: <a href="https://apps.apple.com/us/app/delfina-pregnancy-tracker/id6478985864" target="_blank">Delfina iOS link</a> | Android: <a href="https://play.google.com/store/apps/details?id=com.delfina.gaia" target="_blank">Delfina Android link</a>`,
+  // 20
+  `Driving maternal health crisis solutions w/ AI: <a href="https://delfina.com" target="_blank">Learn about mission</a>`,
+  // 21
+  `Strain engineering: <a href="https://www.biorxiv.org/content/10.1101/2023.01.03.521657v1" target="_blank">DARPA & 400+ production strains</a>`,
+  // 22
+  // 23
+  // 24
+  `Dissertation: <a href="https://escholarship.org/content/qt83d340c7/qt83d340c7.pdf" target="_blank">"Optimization of microbial cell factories..."</a>`,
+  // 25
+  `<a href="/resume.pdf" target="_blank">Resume PDF</a>`,
+  `Last updated Feb 20, 2025`,
 ];
 
 // Slice out exactly N*N facts
 function getFactsForGridSize(gridSize: number) {
   const needed = gridSize * gridSize;
+  // Because we removed lines 17, 22, and 23 above, the array has only 22 lines in practice.
+  // If the user picks a gridSize that wants more facts than exist, we'll just get all available.
   return ALL_FACTS.slice(0, needed);
 }
 
@@ -105,7 +126,6 @@ export default function PuzzleClient() {
 
   useEffect(() => {
     const total = puzzleImages.length;
-    // Instead of [...Array(total - 1).keys()], we do:
     const arr: (number | null)[] = Array.from(
       { length: total - 1 },
       (_, i) => i
@@ -141,32 +161,13 @@ export default function PuzzleClient() {
     }
   }
 
-  // Drag-and-drop
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-  function handleDragStart(idx: number) {
-    const blankIndex = tiles.indexOf(null);
-    if (blankIndex !== -1 && isAdjacent(idx, blankIndex)) {
-      setDraggedIndex(idx);
-    }
-  }
-  function handleDragOver(e: React.DragEvent<HTMLDivElement>, idx: number) {
-    if (tiles[idx] === null) {
-      e.preventDefault();
-    }
-  }
-  function handleDrop(idx: number) {
-    const blankIndex = tiles.indexOf(null);
-    if (draggedIndex != null && isAdjacent(draggedIndex, blankIndex)) {
-      moveTile(draggedIndex, blankIndex);
-    }
-    setDraggedIndex(null);
-  }
+  // (Optional) You can keep or remove drag & drop logic
+  // For simplicity, the puzzle works via clicks
 
-  // Update container size calculation to account for margins
+  // Container sizing
   const [containerSize, setContainerSize] = useState(0);
   useEffect(() => {
     function updateSize() {
-      // Account for 8px total margin (4px on each side)
       const maxWidth = window.innerWidth - 8;
       const maxHeight = window.innerHeight - 8;
       setContainerSize(Math.min(maxWidth, maxHeight));
@@ -177,7 +178,6 @@ export default function PuzzleClient() {
   }, []);
 
   return (
-    // Add flex centering to parent and margins to container
     <div className="min-h-screen w-screen flex items-center justify-center">
       <div
         className="relative mx-1 overflow-hidden"
@@ -200,12 +200,8 @@ export default function PuzzleClient() {
               key={i}
               className="relative flex items-center justify-center border overflow-hidden"
             >
-              {/*
-                 We clamp text to avoid expanding each square.
-                 This snippet clamps to ~4 lines. Adjust as needed.
-              */}
               <div
-                className="text-sm text-center"
+                className="text-sm text-center [&_a]:cursor-pointer [&_a]:text-primary [&_a]:underline [&_a]:pointer-events-auto hover:[&_a]:opacity-70 px-1"
                 style={{
                   display: "-webkit-box",
                   WebkitLineClamp: 4,
@@ -220,7 +216,7 @@ export default function PuzzleClient() {
 
         {/* Top layer: NxN puzzle */}
         <div
-          className="absolute inset-0 grid"
+          className="absolute inset-0 grid pointer-events-none"
           style={{
             zIndex: 1,
             gridTemplateRows: `repeat(${gridSize}, 1fr)`,
@@ -228,32 +224,22 @@ export default function PuzzleClient() {
           }}
         >
           {tiles.map((tile, idx) => {
-            const isBlank = tile === null;
-            const blankIndex = tiles.indexOf(null);
-            const canMove = !isBlank && isAdjacent(idx, blankIndex);
-
-            if (isBlank) {
-              // Transparent cell => reveals resume text below
-              return (
-                <div
-                  key={idx}
-                  className="relative"
-                  onDragOver={(e) => handleDragOver(e, idx)}
-                  onDrop={() => handleDrop(idx)}
-                />
-              );
+            if (tile === null) {
+              // Blank square => pass clicks through
+              return <div key={idx} className="relative pointer-events-none" />;
             } else {
-              // Image tile
+              // Image tile => re-enable pointer events
+              const blankIndex = tiles.indexOf(null);
+              const canMove = isAdjacent(idx, blankIndex);
+
               return (
                 <div
                   key={idx}
                   className={clsx(
-                    "relative flex items-center justify-center border",
+                    "relative flex items-center justify-center border pointer-events-auto",
                     canMove ? "cursor-pointer" : "cursor-default"
                   )}
                   onClick={() => handleTileClick(idx)}
-                  draggable={canMove}
-                  onDragStart={() => handleDragStart(idx)}
                 >
                   <Image
                     src={puzzleImages[tile]!}
