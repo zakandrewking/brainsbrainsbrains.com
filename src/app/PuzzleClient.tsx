@@ -397,7 +397,7 @@ export default function PuzzleClient() {
     );
 
     // if dist > half tile => swap
-    if (dist > tileSize / 2) {
+    if (dist > tileSize / 4) {
       // re-enable transition for final snap
       setIsDraggingTile((prev) => {
         const copy = [...prev];
@@ -443,6 +443,8 @@ export default function PuzzleClient() {
           const baseX = col * tileSize;
           const baseY = row * tileSize;
           const off = tileOffsets[i];
+          const blankIndex = tiles.indexOf(null);
+          const canMove = isAdjacent(i, blankIndex);
 
           // If isDraggingTile[i] => no transition
           // else transition 200ms => for click or final snap
@@ -455,7 +457,14 @@ export default function PuzzleClient() {
           return (
             <div
               key={tile}
-              className={tileClasses}
+              className={clsx(
+                tileClasses,
+                isDraggingTile[i]
+                  ? "cursor-grabbing"
+                  : canMove
+                  ? "cursor-grab hover:opacity-70"
+                  : "cursor-default"
+              )}
               style={{
                 width: tileSize,
                 height: tileSize,
@@ -468,15 +477,31 @@ export default function PuzzleClient() {
               onPointerMove={(e) => handlePointerMove(e, i)}
               onPointerUp={(e) => handlePointerUp(e, i)}
             >
-              <div style={{ lineHeight: tileSize + "px", textAlign: "center" }}>
-                Tile {tile}
-              </div>
+              {tile}
             </div>
           );
         })}
       </div>
 
       <style jsx global>{`
+        * {
+          box-sizing: border-box;
+        }
+        html {
+          color-scheme: light dark;
+        }
+        body {
+          margin: 0;
+          background-color: #fdfdfd;
+          color: #333;
+          padding: 0;
+        }
+        @media (prefers-color-scheme: dark) {
+          body {
+            background-color: #111;
+            color: #eee;
+          }
+        }
         .draggable {
           touch-action: none; /* prevent scrolling on mobile */
           user-select: none; /* prevent text highlighting */
