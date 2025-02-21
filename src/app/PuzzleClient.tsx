@@ -455,7 +455,6 @@ export default function PuzzleClient() {
       {isWon && (
         <>
           <Confetti
-            // Just let it fill parent
             style={{
               position: "fixed",
               top: 0,
@@ -464,9 +463,9 @@ export default function PuzzleClient() {
               height: "100vh",
             }}
           />
-          <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex flex-col items-center justify-center text-center">
-            <h1 className="text-4xl text-white mb-4">OMG you solved it!</h1>
-          </div>
+          <h1 className="text-6xl text-white mb-4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 text-stroke-3 text-stroke-black font-handwritten">
+            OMG you solved it!
+          </h1>
         </>
       )}
 
