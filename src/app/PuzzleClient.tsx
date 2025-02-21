@@ -110,15 +110,12 @@ const ALL_FACTS = [
   // 6
   `PhD in Bioengineering, UC San Diego, <a href="http://systemsbiology.ucsd.edu" target="_blank">SBRG Lab</a>`,
   // 7
-  `<a href="https://scholar.google.com/citations?user=ESLgsdUAAAAJ" target="_blank">30+ publications, 5000+ citations</a>`,
   // 8
   `BSE (Biomedical Eng) @ <a href="https://umich.edu" target="_blank">UMich</a> (2011) - Go blue!`,
-  // 9
+  `<a href="https://scholar.google.com/citations?user=ESLgsdUAAAAJ" target="_blank">30+ publications, 5000+ citations</a>`,
+  `Favorite side project: <a href="https://brainshare.io" target="_blank">Brainshare</a> (code on <a href="https://github.com/zakandrewking/brainshare" target="_blank">GitHub</a>)`,
   `Primary/early dev of <a href="https://escher.github.io" target="_blank">Escher</a> & <a href="http://bigg.ucsd.edu" target="_blank">BiGG Models</a>`,
-  // 10
-  `Scrum (CSPO 2017) & <a href="https://www.amanet.org/5-day-mba-certificate-program/" target="_blank">AMA 5-Day MBA (2021)</a>`,
-  // 11
-  `I've built with: GCP, AWS, Postgres, Flutter, Python, Terraform, React/TS, D3.js, ...`,
+  `Software skills: Python, Typescript, Dart, Flutter, React/TS, Terraform, D3.js, ...`,
   // 12
   `Focus on user-centered products, team autonomy & growth: <a href="https://www.delfina.com/resource/finding-your-users-in-digital-health" target="_blank">Learn more</a>`,
   // 13
@@ -126,6 +123,7 @@ const ALL_FACTS = [
   // 14
   `Expertise in compliance: <a href="https://www.delfina.com/security" target="_blank">SOC2 & HIPAA at Delfina</a>`,
   // 15
+  `Scrum (CSPO 2017) & <a href="https://www.amanet.org/5-day-mba-certificate-program/" target="_blank">AMA 5-Day MBA (2021)</a>`,
   // 16
   `<a href="https://www.nsfgrfp.org/" target="_blank">NSF GRFP</a> & <a href="https://jacobsschool.ucsd.edu/idea/admitted-undergraduates/jacobs-scholars" target="_blank">Jacobs Fellowship</a> recipient`,
   // 17
@@ -136,9 +134,8 @@ const ALL_FACTS = [
   // 21
   `Strain engineering: <a href="https://www.biorxiv.org/content/10.1101/2023.01.03.521657v1" target="_blank">DARPA-funded project to develop microbial strains with an AI scientist</a>`,
   // 22
-  `Favorite side project: <a href="https://brainshare.io" target="_blank">Brainshare</a> (code on <a href="https://github.com/zakandrewking/brainshare" target="_blank">GitHub</a>)`,
   // 23
-  `Always thinking about how to recruit amazing engineers & empower them to do their best work`,
+  `Talented at recruiting amazing engineers & empowering them to do their best work`,
   // 24
   `Dissertation: <a href="https://escholarship.org/content/qt83d340c7/qt83d340c7.pdf" target="_blank">"Optimization of microbial cell factories..."</a>`,
   `Favorite AI: <a href="https://www.youtube.com/watch?v=syyXdBg9BIc" target="_blank">Ash in Alien</a>`,
