@@ -433,6 +433,46 @@ export default function PuzzleClient() {
           border: "1px solid #999",
         }}
       >
+        {/* Bottom layer: NxN facts */}
+        {resumeFacts.map((fact, i) => {
+          if (fact === null) return null;
+
+          const [row, col] = getRowCol(i);
+          const baseX = col * tileSize;
+          const baseY = row * tileSize;
+          const off = tileOffsets[i];
+
+          if (off === undefined) {
+            return null;
+          }
+
+          return (
+            <div
+              key={fact}
+              className="absolute"
+              style={{
+                width: tileSize,
+                height: tileSize,
+                backgroundColor: "#fff",
+                border: "1px solid #444",
+                boxSizing: "border-box",
+                transform: `translate(${baseX}px, ${baseY}px)`,
+              }}
+            >
+              <div
+                className="text-sm text-center [&_a]:cursor-pointer [&_a]:text-primary [&_a]:underline [&_a]:pointer-events-auto hover:[&_a]:opacity-70 px-1"
+                style={{
+                  display: "-webkit-box",
+                  WebkitLineClamp: 4,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                }}
+                dangerouslySetInnerHTML={{ __html: fact }}
+              />
+            </div>
+          );
+        })}
+
         {tiles.map((tile, i) => {
           if (tile === null) {
             // blank space
@@ -443,6 +483,11 @@ export default function PuzzleClient() {
           const baseX = col * tileSize;
           const baseY = row * tileSize;
           const off = tileOffsets[i];
+
+          if (off === undefined) {
+            return null;
+          }
+
           const blankIndex = tiles.indexOf(null);
           const canMove = isAdjacent(i, blankIndex);
 
@@ -460,7 +505,7 @@ export default function PuzzleClient() {
               className={clsx(
                 tileClasses,
                 isDraggingTile[i]
-                  ? "cursor-grabbing"
+                  ? "cursor-grabbing opacity-70"
                   : canMove
                   ? "cursor-grab hover:opacity-70"
                   : "cursor-default"
