@@ -28,9 +28,9 @@ function useGridSize() {
   const [gridSize, setGridSize] = useState(0);
   useEffect(() => {
     function updateSize() {
-      if (containerSize < 640) {
+      if (containerSize < 500) {
         setGridSize(3);
-      } else if (containerSize < 900) {
+      } else if (containerSize < 650) {
         setGridSize(4);
       } else {
         setGridSize(5);
@@ -118,7 +118,7 @@ const ALL_FACTS = [
   // 10
   `Scrum (CSPO 2017) & <a href="https://www.amanet.org/5-day-mba-certificate-program/" target="_blank">AMA 5-Day MBA (2021)</a>`,
   // 11
-  `I've built products with: GCP, AWS, Postgres, Flutter, Python, TypeScript, Docker, Terraform, REST, GraphQL, Datadog, React, Next.js, D3.js, ...`,
+  `I've built with: GCP, AWS, Postgres, Flutter, Python, Terraform, React/TS, D3.js, ...`,
   // 12
   `Focus on user-centered products, team autonomy & growth: <a href="https://www.delfina.com/resource/finding-your-users-in-digital-health" target="_blank">Learn more</a>`,
   // 13
@@ -138,7 +138,7 @@ const ALL_FACTS = [
   // 22
   `Favorite side project: <a href="https://brainshare.io" target="_blank">Brainshare</a> (code on <a href="https://github.com/zakandrewking/brainshare" target="_blank">GitHub</a>)`,
   // 23
-  `I'm a passionate tech leader — always thinking about how to recruit amazing engineers & empower them to do their best work`,
+  `Always thinking about how to recruit amazing engineers & empower them to do their best work`,
   // 24
   `Dissertation: <a href="https://escholarship.org/content/qt83d340c7/qt83d340c7.pdf" target="_blank">"Optimization of microbial cell factories..."</a>`,
   `Favorite AI: <a href="https://www.youtube.com/watch?v=syyXdBg9BIc" target="_blank">Ash in Alien</a>`,
@@ -506,7 +506,7 @@ export default function PuzzleClient() {
       )}
 
       <div
-        className="border"
+        className="border-[2px] border-gray-100 box-border flex-none"
         style={{
           position: "relative",
           width: containerSize,
@@ -546,14 +546,14 @@ export default function PuzzleClient() {
           if (tile === null) return null; // Blank spot
 
           const [row, col] = [Math.floor(i / gridSize), i % gridSize];
-          const baseX = col * tileSize;
-          const baseY = row * tileSize;
+          const baseX = col * tileSize - 2;
+          const baseY = row * tileSize - 2;
           const off = tileOffsets[i] || { x: 0, y: 0 };
           const blankIndex = tiles.indexOf(null);
           const canMove = isAdjacent(i, blankIndex);
 
           const tileClasses = clsx(
-            "absolute pointer-events-auto draggable border",
+            "absolute pointer-events-auto draggable border-[2px] border-gray-100 box-border",
             !isDraggingTile[i] &&
               "transition-transform duration-200 ease-in-out"
           );
@@ -598,13 +598,10 @@ export default function PuzzleClient() {
       </div>
 
       <style jsx global>{`
-        * {
-          box-sizing: border-box;
-        }
         html {
           color-scheme: light dark;
           height: 100%;
-          overscroll-behavior: none; /* Prevent bounce on iOS */
+          overscroll-behavior: none;
         }
         body {
           margin: 0;
