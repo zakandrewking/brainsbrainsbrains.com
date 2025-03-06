@@ -533,12 +533,6 @@ export default function PuzzleClient() {
   // ------------------------------------------------------
   return (
     <div className="flex items-center justify-center relative p-4 md:p-8">
-      {/* Timer display */}
-      <div className="absolute top-4 right-4 bg-white dark:bg-gray-800 px-3 py-1 rounded-md shadow-md z-10">
-        <div className="text-lg font-medium">Time: {formatTime()}</div>
-        <div className="text-sm">Moves: {moveCount}</div>
-      </div>
-
       {isWon && (
         <>
           <Confetti
