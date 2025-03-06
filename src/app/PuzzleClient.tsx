@@ -1,14 +1,18 @@
 "use client";
 
 import React, {
+  useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
-} from 'react';
+} from "react";
 
-import clsx from 'clsx';
-import Image from 'next/image';
-import Confetti from 'react-confetti';
+import clsx from "clsx";
+import Image from "next/image";
+import Confetti from "react-confetti";
+
+import { getUserCity, recordPuzzleCompletion } from "../util/supabase-util";
 
 function useContainerSize() {
   const [containerSize, setContainerSize] = useState(0);
@@ -189,6 +193,42 @@ export default function PuzzleClient() {
   const [easyMode, setEasyMode] = useState(false);
   const [showEasyModePrompt, setShowEasyModePrompt] = useState(false);
 
+  // Timer related state
+  const [startTime, setStartTime] = useState<number | null>(null);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Email notification related state
+  const [emailSent, setEmailSent] = useState(false);
+
+  // Start the timer when the component loads or puzzle resets
+  useEffect(() => {
+    // Clear any existing timer
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+
+    // Reset timer state
+    setStartTime(Date.now());
+    setElapsedTime(0);
+    setEmailSent(false);
+
+    // Start new timer
+    timerRef.current = setInterval(() => {
+      if (startTime && !isWon) {
+        setElapsedTime(Math.floor((Date.now() - startTime) / 1000));
+      }
+    }, 1000);
+
+    // Cleanup function
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [puzzleImages, gridSize]); // Same dependencies as the puzzle reset effect
+
   useEffect(() => {
     const arr = randomLegalScramble(gridSize, 200);
     setTiles(arr);
@@ -200,12 +240,49 @@ export default function PuzzleClient() {
     setShowEasyModePrompt(false);
   }, [puzzleImages, gridSize]);
 
+  // Send email notification when puzzle is solved
+  const sendCompletionEmail = useCallback(async () => {
+    if (isWon && !emailSent) {
+      try {
+        const city = await getUserCity();
+
+        await recordPuzzleCompletion({
+          gridSize,
+          timeInSeconds: elapsedTime,
+          city,
+          moveCount,
+        });
+
+        // Mark email as sent to prevent duplicate emails
+        setEmailSent(true);
+      } catch (error) {
+        console.error("Failed to send completion email:", error);
+      }
+    }
+  }, [isWon, emailSent, gridSize, elapsedTime, moveCount]);
+
   // Whenever tiles change, check if puzzle is solved
   useEffect(() => {
     if (!isWon && isPuzzleSolved(tiles)) {
       setIsWon(true);
+
+      // Stop the timer
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+
+      // Send the email notification
+      sendCompletionEmail();
     }
-  }, [tiles, isWon]);
+  }, [tiles, isWon, sendCompletionEmail]);
+
+  // Format elapsed time for display
+  const formatTime = () => {
+    const minutes = Math.floor(elapsedTime / 60);
+    const seconds = elapsedTime % 60;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  };
 
   // Convert puzzle index => [row, col]
   function getRowCol(i: number) {
@@ -456,6 +533,12 @@ export default function PuzzleClient() {
   // ------------------------------------------------------
   return (
     <div className="flex items-center justify-center relative p-4 md:p-8">
+      {/* Timer display */}
+      <div className="absolute top-4 right-4 bg-white dark:bg-gray-800 px-3 py-1 rounded-md shadow-md z-10">
+        <div className="text-lg font-medium">Time: {formatTime()}</div>
+        <div className="text-sm">Moves: {moveCount}</div>
+      </div>
+
       {isWon && (
         <>
           <Confetti
@@ -467,9 +550,20 @@ export default function PuzzleClient() {
               height: "100vh",
             }}
           />
-          <h1 className="text-6xl text-white mb-4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 text-stroke-3 text-stroke-black font-handwritten">
-            OMG you solved it!
-          </h1>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white dark:bg-gray-800 p-6 rounded-lg text-center shadow-xl">
+            <h1 className="text-4xl md:text-6xl text-primary mb-4 font-handwritten">
+              OMG you solved it!
+            </h1>
+            <p className="text-xl mb-4">
+              You completed the {gridSize}x{gridSize} puzzle in {formatTime()}{" "}
+              and {moveCount} moves!
+            </p>
+            <p className="text-sm opacity-75">
+              {emailSent
+                ? "Thank you! We've recorded your achievement."
+                : "Recording your achievement..."}
+            </p>
+          </div>
         </>
       )}
 
