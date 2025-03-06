@@ -253,7 +253,7 @@ export default function PuzzleClient() {
     } catch (error) {
       console.error("Failed to send completion email:", error);
     }
-  }, []);
+  }, [gridSize, elapsedTime, moveCount]);
 
   // Whenever tiles change, check if puzzle is solved
   useEffect(() => {
