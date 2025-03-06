@@ -17,7 +17,7 @@ export interface PuzzleCompletionData {
 /**
  * Record a puzzle completion and send an email notification
  */
-export async function recordPuzzleCompletion(data: PuzzleCompletionData) {
+export async function sendPuzzleCompletionEmail(data: PuzzleCompletionData) {
   try {
     // Trigger the email sending function via Supabase Edge Function
     const { error: functionError } = await supabase.functions.invoke(
@@ -39,7 +39,7 @@ export async function recordPuzzleCompletion(data: PuzzleCompletionData) {
 
     return true;
   } catch (error) {
-    console.error("Error in recordPuzzleCompletion:", error);
+    console.error("Error in sendPuzzleCompletionEmail:", error);
     return false;
   }
 }

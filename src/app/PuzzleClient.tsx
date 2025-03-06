@@ -12,7 +12,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import Confetti from "react-confetti";
 
-import { getUserCity, recordPuzzleCompletion } from "../util/supabase-util";
+import { getUserCity, sendPuzzleCompletionEmail } from "../util/supabase-util";
 
 function useContainerSize() {
   const [containerSize, setContainerSize] = useState(0);
@@ -242,24 +242,18 @@ export default function PuzzleClient() {
 
   // Send email notification when puzzle is solved
   const sendCompletionEmail = useCallback(async () => {
-    if (isWon && !emailSent) {
-      try {
-        const city = await getUserCity();
-
-        await recordPuzzleCompletion({
-          gridSize,
-          timeInSeconds: elapsedTime,
-          city,
-          moveCount,
-        });
-
-        // Mark email as sent to prevent duplicate emails
-        setEmailSent(true);
-      } catch (error) {
-        console.error("Failed to send completion email:", error);
-      }
+    try {
+      const city = await getUserCity();
+      await sendPuzzleCompletionEmail({
+        gridSize,
+        timeInSeconds: elapsedTime,
+        city,
+        moveCount,
+      });
+    } catch (error) {
+      console.error("Failed to send completion email:", error);
     }
-  }, [isWon, emailSent, gridSize, elapsedTime, moveCount]);
+  }, []);
 
   // Whenever tiles change, check if puzzle is solved
   useEffect(() => {
@@ -273,7 +267,10 @@ export default function PuzzleClient() {
       }
 
       // Send the email notification
-      sendCompletionEmail();
+      if (!emailSent) {
+        setEmailSent(true);
+        sendCompletionEmail();
+      }
     }
   }, [tiles, isWon, sendCompletionEmail]);
 
@@ -544,20 +541,9 @@ export default function PuzzleClient() {
               height: "100vh",
             }}
           />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white dark:bg-gray-800 p-6 rounded-lg text-center shadow-xl">
-            <h1 className="text-4xl md:text-6xl text-primary mb-4 font-handwritten">
-              OMG you solved it!
-            </h1>
-            <p className="text-xl mb-4">
-              You completed the {gridSize}x{gridSize} puzzle in {formatTime()}{" "}
-              and {moveCount} moves!
-            </p>
-            <p className="text-sm opacity-75">
-              {emailSent
-                ? "Thank you! We've recorded your achievement."
-                : "Recording your achievement..."}
-            </p>
-          </div>
+          <h1 className="text-6xl text-white mb-4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 text-stroke-3 text-stroke-black font-handwritten">
+            OMG you solved it!
+          </h1>
         </>
       )}
 

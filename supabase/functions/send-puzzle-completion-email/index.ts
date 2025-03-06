@@ -25,10 +25,12 @@ serve(async (req) => {
     const timeFormatted = `${minutes} minutes and ${seconds} seconds`;
 
     // Your email service configuration
-    const EMAIL_SERVICE_API_KEY = Deno.env.get("EMAIL_SERVICE_API_KEY");
+    const RESEND_EMAIL_SERVICE_API_KEY = Deno.env.get(
+      "RESEND_EMAIL_SERVICE_API_KEY"
+    );
     const NOTIFICATION_EMAIL = Deno.env.get("NOTIFICATION_EMAIL");
 
-    if (!EMAIL_SERVICE_API_KEY || !NOTIFICATION_EMAIL) {
+    if (!RESEND_EMAIL_SERVICE_API_KEY || !NOTIFICATION_EMAIL) {
       throw new Error("Missing email configuration");
     }
 
@@ -45,10 +47,10 @@ serve(async (req) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${EMAIL_SERVICE_API_KEY}`,
+        Authorization: `Bearer ${RESEND_EMAIL_SERVICE_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "puzzle@yourdomain.com",
+        from: "robots@brainsbrainsbrains.com",
         to: NOTIFICATION_EMAIL,
         subject: subject,
         text: body,
