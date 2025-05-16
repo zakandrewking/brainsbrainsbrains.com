@@ -117,7 +117,7 @@ const ALL_FACTS = [
   // 8
   `BSE (Biomedical Eng) @ <a href="https://umich.edu" target="_blank">UMich</a> (2011) - Go blue!`,
   `<a href="https://scholar.google.com/citations?user=ESLgsdUAAAAJ" target="_blank">30+ publications, 5000+ citations</a>`,
-  `Favorite side project: <a href="https://brainshare.io" target="_blank">Brainshare</a> (code on <a href="https://github.com/zakandrewking/brainshare" target="_blank">GitHub</a>)`,
+  `Favorite side project: <a href="https://brainshare.io" target="_blank">Brainshare</a> (code on <a href="https://github.com/zakandrewking/brainshare-golden-eagle" target="_blank">GitHub</a>)`,
   `Primary/early dev of <a href="https://escher.github.io" target="_blank">Escher</a> & <a href="http://bigg.ucsd.edu" target="_blank">BiGG Models</a>`,
   `Software skills: Python, Typescript, Dart, Flutter, React/TS, Terraform, D3.js, ...`,
   // 12
