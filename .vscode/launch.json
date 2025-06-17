@@ -11,8 +11,8 @@
     {
       "name": "[Frontend] Debug Chrome",
       "type": "chrome",
-      // brew install homebrew/cask-versions/google-chrome-canary
-      "runtimeExecutable": "canary", // ctrl-command-y
+      // brew install homebrew/cask-versions/google-chrome@beta
+      "runtimeExecutable": "beta",
       "request": "launch",
       "url": "http://localhost:3009"
     }

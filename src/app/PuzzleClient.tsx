@@ -6,13 +6,15 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from "react";
+} from 'react';
 
-import clsx from "clsx";
-import Image from "next/image";
-import Confetti from "react-confetti";
+import clsx from 'clsx';
+import Image from 'next/image';
+import Confetti from 'react-confetti';
 
-import { getUserCity, sendPuzzleCompletionEmail } from "../util/supabase-util";
+import AccessibilityLinks from '@/components/accessibility-links';
+
+import { getUserCity, sendPuzzleCompletionEmail } from '../util/supabase-util';
 
 function useContainerSize() {
   const [containerSize, setContainerSize] = useState(0);
@@ -102,7 +104,7 @@ function isPuzzleSolved(tiles: (number | null)[]) {
 
 const ALL_FACTS = [
   // 1
-  `I'm Zak - this is my website`,
+  `I'm <b>Zak</b> - this is my website.`,
   // 2
   `Find me on <a href="https://www.linkedin.com/in/zakandrewking/" target="_blank">LinkedIn</a>`,
   // 3
@@ -530,6 +532,7 @@ export default function PuzzleClient() {
   // ------------------------------------------------------
   return (
     <div className="flex items-center justify-center relative p-4 md:p-8">
+      <AccessibilityLinks />
       {isWon && (
         <>
           <Confetti
