@@ -112,7 +112,7 @@ const ALL_FACTS = [
   // 4
   `Asc. Director DevOps (2019–2022) @ <a href="https://www.amyris.com" target="_blank">Amyris</a>`,
   // 5
-  `Project Scientist, Principle Investigator (2017–2019) @ <a href="https://ucsd.edu" target="_blank">UC San Diego</a>`,
+  `Project Scientist, Principal Investigator (2017–2019) @ <a href="https://ucsd.edu" target="_blank">UC San Diego</a>`,
   // 6
   `PhD in Bioengineering, UC San Diego, <a href="http://systemsbiology.ucsd.edu" target="_blank">SBRG Lab</a>`,
   // 7
