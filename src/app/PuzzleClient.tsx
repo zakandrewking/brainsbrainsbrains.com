@@ -283,6 +283,56 @@ export default function PuzzleClient() {
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isWon) return;
+
+      const blankIndex = tiles.indexOf(null);
+      if (blankIndex < 0) return;
+
+      let targetTileIndex: number | null = null;
+
+      switch (e.key) {
+        case "ArrowUp":
+          // Move tile down into blank space (blank is above the tile)
+          if (blankIndex + gridSize < tiles.length) {
+            targetTileIndex = blankIndex + gridSize;
+          }
+          break;
+        case "ArrowDown":
+          // Move tile up into blank space (blank is below the tile)
+          if (blankIndex - gridSize >= 0) {
+            targetTileIndex = blankIndex - gridSize;
+          }
+          break;
+        case "ArrowLeft":
+          // Move tile right into blank space (blank is to the left of the tile)
+          if (blankIndex % gridSize < gridSize - 1) {
+            targetTileIndex = blankIndex + 1;
+          }
+          break;
+        case "ArrowRight":
+          // Move tile left into blank space (blank is to the right of the tile)
+          if (blankIndex % gridSize > 0) {
+            targetTileIndex = blankIndex - 1;
+          }
+          break;
+        default:
+          return;
+      }
+
+      if (targetTileIndex !== null && isAdjacent(targetTileIndex, blankIndex)) {
+        e.preventDefault();
+        clickToSlide(targetTileIndex);
+      }
+    };
+
+    // Add event listener to document for global keyboard control
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [tiles, gridSize, isWon]);
+
   // Convert puzzle index => [row, col]
   function getRowCol(i: number) {
     return [Math.floor(i / gridSize), i % gridSize] as const;
