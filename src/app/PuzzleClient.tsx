@@ -203,6 +203,12 @@ export default function PuzzleClient() {
   // Email notification related state
   const [emailSent, setEmailSent] = useState(false);
 
+  // Arrow key indicator state
+  const [highlightedArrow, setHighlightedArrow] = useState<string | null>(null);
+
+  // Throttle state for preventing rapid moves
+  const [isMoveInProgress, setIsMoveInProgress] = useState(false);
+
   // Start the timer when the component loads or puzzle resets
   useEffect(() => {
     // Clear any existing timer
@@ -240,6 +246,7 @@ export default function PuzzleClient() {
     setMoveCount(0);
     setEasyMode(false);
     setShowEasyModePrompt(false);
+    setIsMoveInProgress(false);
   }, [puzzleImages, gridSize]);
 
   // Send email notification when puzzle is solved
@@ -286,12 +293,13 @@ export default function PuzzleClient() {
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (isWon) return;
+      if (isWon || isMoveInProgress) return;
 
       const blankIndex = tiles.indexOf(null);
       if (blankIndex < 0) return;
 
       let targetTileIndex: number | null = null;
+      let arrowKey: string | null = null;
 
       switch (e.key) {
         case "ArrowUp":
@@ -299,24 +307,28 @@ export default function PuzzleClient() {
           if (blankIndex + gridSize < tiles.length) {
             targetTileIndex = blankIndex + gridSize;
           }
+          arrowKey = "ArrowUp";
           break;
         case "ArrowDown":
           // Move tile up into blank space (blank is below the tile)
           if (blankIndex - gridSize >= 0) {
             targetTileIndex = blankIndex - gridSize;
           }
+          arrowKey = "ArrowDown";
           break;
         case "ArrowLeft":
           // Move tile right into blank space (blank is to the left of the tile)
           if (blankIndex % gridSize < gridSize - 1) {
             targetTileIndex = blankIndex + 1;
           }
+          arrowKey = "ArrowLeft";
           break;
         case "ArrowRight":
           // Move tile left into blank space (blank is to the right of the tile)
           if (blankIndex % gridSize > 0) {
             targetTileIndex = blankIndex - 1;
           }
+          arrowKey = "ArrowRight";
           break;
         default:
           return;
@@ -324,14 +336,72 @@ export default function PuzzleClient() {
 
       if (targetTileIndex !== null && isAdjacent(targetTileIndex, blankIndex)) {
         e.preventDefault();
+
+        // Set move in progress
+        setIsMoveInProgress(true);
+
+        // Highlight the arrow key indicator
+        if (arrowKey) {
+          setHighlightedArrow(arrowKey);
+          setTimeout(() => setHighlightedArrow(null), 150);
+        }
+
         clickToSlide(targetTileIndex);
+
+        // Clear move in progress after animation completes
+        setTimeout(() => setIsMoveInProgress(false), 200);
       }
     };
 
     // Add event listener to document for global keyboard control
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [tiles, gridSize, isWon]);
+  }, [tiles, gridSize, isWon, isMoveInProgress]);
+
+  // Handle arrow key indicator clicks
+  const handleArrowClick = (direction: string) => {
+    if (isWon || isMoveInProgress) return;
+
+    const blankIndex = tiles.indexOf(null);
+    if (blankIndex < 0) return;
+
+    let targetTileIndex: number | null = null;
+
+    switch (direction) {
+      case "ArrowUp":
+        if (blankIndex + gridSize < tiles.length) {
+          targetTileIndex = blankIndex + gridSize;
+        }
+        break;
+      case "ArrowDown":
+        if (blankIndex - gridSize >= 0) {
+          targetTileIndex = blankIndex - gridSize;
+        }
+        break;
+      case "ArrowLeft":
+        if (blankIndex % gridSize < gridSize - 1) {
+          targetTileIndex = blankIndex + 1;
+        }
+        break;
+      case "ArrowRight":
+        if (blankIndex % gridSize > 0) {
+          targetTileIndex = blankIndex - 1;
+        }
+        break;
+    }
+
+    if (targetTileIndex !== null && isAdjacent(targetTileIndex, blankIndex)) {
+      // Set move in progress
+      setIsMoveInProgress(true);
+
+      setHighlightedArrow(direction);
+      setTimeout(() => setHighlightedArrow(null), 150);
+      clickToSlide(targetTileIndex);
+
+      // Clear move in progress after animation completes
+      setTimeout(() => setIsMoveInProgress(false), 150);
+    }
+  };
 
   // Convert puzzle index => [row, col]
   function getRowCol(i: number) {
@@ -719,6 +789,63 @@ export default function PuzzleClient() {
             </div>
           );
         })}
+      </div>
+
+      {/* Arrow key indicator - desktop only */}
+      <div className="hidden md:block fixed bottom-6 left-6 z-10 opacity-60">
+        <div className="flex flex-col items-center gap-1">
+          {/* Top row - Up arrow */}
+          <button
+            onClick={() => handleArrowClick("ArrowUp")}
+            className={clsx(
+              "w-6 h-6 rounded border text-xs flex items-center justify-center transition-colors",
+              highlightedArrow === "ArrowUp"
+                ? "bg-blue-500 text-white border-blue-500"
+                : "bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600"
+            )}
+          >
+            ↑
+          </button>
+
+          {/* Bottom row - Left, Down, Right arrows */}
+          <div className="flex gap-1">
+            <button
+              onClick={() => handleArrowClick("ArrowLeft")}
+              className={clsx(
+                "w-6 h-6 rounded border text-xs flex items-center justify-center transition-colors",
+                highlightedArrow === "ArrowLeft"
+                  ? "bg-blue-500 text-white border-blue-500"
+                  : "bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600"
+              )}
+            >
+              ←
+            </button>
+
+            <button
+              onClick={() => handleArrowClick("ArrowDown")}
+              className={clsx(
+                "w-6 h-6 rounded border text-xs flex items-center justify-center transition-colors",
+                highlightedArrow === "ArrowDown"
+                  ? "bg-blue-500 text-white border-blue-500"
+                  : "bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600"
+              )}
+            >
+              ↓
+            </button>
+
+            <button
+              onClick={() => handleArrowClick("ArrowRight")}
+              className={clsx(
+                "w-6 h-6 rounded border text-xs flex items-center justify-center transition-colors",
+                highlightedArrow === "ArrowRight"
+                  ? "bg-blue-500 text-white border-blue-500"
+                  : "bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600"
+              )}
+            >
+              →
+            </button>
+          </div>
+        </div>
       </div>
 
       <style jsx global>{`
